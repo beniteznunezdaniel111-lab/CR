@@ -500,9 +500,11 @@ describe("Storage", () => {
     expect(await visible(u.bHr, "cvs")).toEqual([]);
   });
 
-  it("los documentos de la FAQ los ve cualquier miembro, solo de su empresa", async () => {
-    expect(await visible(u.aEmp, "kb-documents")).toEqual([orgA.id]);
-    expect(await visible(u.bEmp, "kb-documents")).toEqual([orgB.id]);
+  it("un fichero de la FAQ sin documento listo solo lo ve RRHH de su empresa", async () => {
+    // Los ficheros de documentos listos los ve toda la plantilla (faq.test.ts).
+    expect(await visible(u.aHr, "kb-documents")).toEqual([orgA.id]);
+    expect(await visible(u.bAdmin, "kb-documents")).toEqual([orgB.id]);
+    expect(await visible(u.aEmp, "kb-documents")).toEqual([]);
     expect(await visible(u.outsider, "kb-documents")).toEqual([]);
   });
 

@@ -423,6 +423,138 @@ export type Database = {
           },
         ];
       };
+      faq_conversations: {
+        Row: {
+          created_at: string;
+          id: string;
+          org_id: string;
+          title: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          org_id: string;
+          title: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          org_id?: string;
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "faq_conversations_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      faq_messages: {
+        Row: {
+          content: string;
+          conversation_id: string;
+          created_at: string;
+          embedding_model: string | null;
+          id: string;
+          org_id: string;
+          outcome: Database["public"]["Enums"]["faq_outcome"] | null;
+          question_embedding: string | null;
+          role: string;
+          segments: Json | null;
+          sources: Json;
+          user_id: string;
+        };
+        Insert: {
+          content: string;
+          conversation_id: string;
+          created_at?: string;
+          embedding_model?: string | null;
+          id?: string;
+          org_id: string;
+          outcome?: Database["public"]["Enums"]["faq_outcome"] | null;
+          question_embedding?: string | null;
+          role: string;
+          segments?: Json | null;
+          sources?: Json;
+          user_id?: string;
+        };
+        Update: {
+          content?: string;
+          conversation_id?: string;
+          created_at?: string;
+          embedding_model?: string | null;
+          id?: string;
+          org_id?: string;
+          outcome?: Database["public"]["Enums"]["faq_outcome"] | null;
+          question_embedding?: string | null;
+          role?: string;
+          segments?: Json | null;
+          sources?: Json;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "faq_messages_conversation_id_org_id_fkey";
+            columns: ["conversation_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "faq_conversations";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      hr_queries: {
+        Row: {
+          answer: string | null;
+          answered_at: string | null;
+          answered_by: string | null;
+          created_at: string;
+          id: string;
+          org_id: string;
+          question: string;
+          requester_id: string;
+          status: Database["public"]["Enums"]["hr_query_status"];
+        };
+        Insert: {
+          answer?: string | null;
+          answered_at?: string | null;
+          answered_by?: string | null;
+          created_at?: string;
+          id?: string;
+          org_id: string;
+          question: string;
+          requester_id?: string;
+          status?: Database["public"]["Enums"]["hr_query_status"];
+        };
+        Update: {
+          answer?: string | null;
+          answered_at?: string | null;
+          answered_by?: string | null;
+          created_at?: string;
+          id?: string;
+          org_id?: string;
+          question?: string;
+          requester_id?: string;
+          status?: Database["public"]["Enums"]["hr_query_status"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "hr_queries_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       interview_guides: {
         Row: {
           ai_usage_id: number | null;
@@ -722,6 +854,121 @@ export type Database = {
           },
         ];
       };
+      kb_chunks: {
+        Row: {
+          blocks: string[];
+          chunk_index: number;
+          content: string;
+          document_id: string;
+          embedding: string;
+          fts: unknown;
+          heading: string | null;
+          id: string;
+          org_id: string;
+          page_from: number | null;
+          page_to: number | null;
+          token_count: number;
+        };
+        Insert: {
+          blocks: string[];
+          chunk_index: number;
+          content: string;
+          document_id: string;
+          embedding: string;
+          fts?: never;
+          heading?: string | null;
+          id?: string;
+          org_id: string;
+          page_from?: number | null;
+          page_to?: number | null;
+          token_count?: number;
+        };
+        Update: {
+          blocks?: string[];
+          chunk_index?: number;
+          content?: string;
+          document_id?: string;
+          embedding?: string;
+          fts?: never;
+          heading?: string | null;
+          id?: string;
+          org_id?: string;
+          page_from?: number | null;
+          page_to?: number | null;
+          token_count?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "kb_chunks_document_id_org_id_fkey";
+            columns: ["document_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "kb_documents";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      kb_documents: {
+        Row: {
+          chunk_count: number;
+          created_at: string;
+          doc_type: Database["public"]["Enums"]["kb_doc_type"];
+          embedding_model: string | null;
+          error: string | null;
+          file_mime: string;
+          file_path: string;
+          file_size: number;
+          id: string;
+          org_id: string;
+          pages: number | null;
+          status: Database["public"]["Enums"]["kb_document_status"];
+          title: string;
+          updated_at: string;
+          uploaded_by: string | null;
+        };
+        Insert: {
+          chunk_count?: number;
+          created_at?: string;
+          doc_type?: Database["public"]["Enums"]["kb_doc_type"];
+          embedding_model?: string | null;
+          error?: string | null;
+          file_mime: string;
+          file_path: string;
+          file_size: number;
+          id?: string;
+          org_id: string;
+          pages?: number | null;
+          status?: Database["public"]["Enums"]["kb_document_status"];
+          title: string;
+          updated_at?: string;
+          uploaded_by?: string | null;
+        };
+        Update: {
+          chunk_count?: number;
+          created_at?: string;
+          doc_type?: Database["public"]["Enums"]["kb_doc_type"];
+          embedding_model?: string | null;
+          error?: string | null;
+          file_mime?: string;
+          file_path?: string;
+          file_size?: number;
+          id?: string;
+          org_id?: string;
+          pages?: number | null;
+          status?: Database["public"]["Enums"]["kb_document_status"];
+          title?: string;
+          updated_at?: string;
+          uploaded_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "kb_documents_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       memberships: {
         Row: {
           created_at: string;
@@ -766,6 +1013,47 @@ export type Database = {
             columns: ["user_id"];
             isOneToOne: false;
             referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      notifications: {
+        Row: {
+          created_at: string;
+          id: string;
+          kind: string;
+          link: string | null;
+          org_id: string;
+          params: Json;
+          read_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          kind: string;
+          link?: string | null;
+          org_id: string;
+          params?: Json;
+          read_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          kind?: string;
+          link?: string | null;
+          org_id?: string;
+          params?: Json;
+          read_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "notifications_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
             referencedColumns: ["id"];
           },
         ];
@@ -1062,6 +1350,14 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      accept_invitation: {
+        Args: { p_token: string };
+        Returns: string;
+      };
+      answer_hr_query: {
+        Args: { p_answer: string; p_query_id: string };
+        Returns: undefined;
+      };
       assign_onboarding_plan: {
         Args: {
           p_employee_email?: string;
@@ -1070,10 +1366,6 @@ export type Database = {
           p_plan_id: string;
           p_start_date: string;
         };
-        Returns: string;
-      };
-      accept_invitation: {
-        Args: { p_token: string };
         Returns: string;
       };
       create_organization: {
@@ -1087,6 +1379,10 @@ export type Database = {
         };
         Returns: Database["public"]["Tables"]["organizations"]["Row"];
       };
+      faq_question_clusters: {
+        Args: { p_days?: number; p_min_similarity?: number; p_org_id: string };
+        Returns: { last_asked_at: string; question: string; total: number; unanswered: number }[];
+      };
       get_invitation_preview: {
         Args: { p_token: string };
         Returns: {
@@ -1094,6 +1390,28 @@ export type Database = {
           organization_name: string;
           role: Database["public"]["Enums"]["member_role"];
           status: string;
+        }[];
+      };
+      match_kb_chunks: {
+        Args: {
+          p_embedding: string;
+          p_embedding_model: string;
+          p_match_count?: number;
+          p_min_similarity?: number;
+          p_org_id: string;
+          p_query: string;
+        };
+        Returns: {
+          blocks: string[];
+          chunk_id: string;
+          document_id: string;
+          document_title: string;
+          heading: string | null;
+          matched_terms: number;
+          page_from: number | null;
+          page_to: number | null;
+          score: number;
+          similarity: number;
         }[];
       };
       org_ai_spend_current_month: {
@@ -1146,10 +1464,14 @@ export type Database = {
       candidate_event_kind: "status_changed" | "identity_revealed";
       candidate_status: "pending" | "reviewed" | "advance" | "no_advance";
       cv_processing_status: "pending" | "processing" | "done" | "failed";
+      faq_outcome: "answered" | "not_found" | "error";
+      hr_query_status: "open" | "answered";
       job_level: "intern" | "junior" | "mid" | "senior" | "lead" | "manager" | "director";
       job_status: "draft" | "open" | "closed";
       job_tone: "professional" | "friendly" | "dynamic" | "formal";
       job_version_source: "ai" | "manual" | "restored";
+      kb_doc_type: "policy" | "handbook" | "agreement" | "benefits" | "other";
+      kb_document_status: "pending" | "processing" | "ready" | "failed";
       member_role: "admin" | "hr" | "employee";
       member_status: "active" | "disabled";
       onboarding_phase: "d30" | "d60" | "d90";
@@ -1178,10 +1500,14 @@ export const Constants = {
       candidate_event_kind: ["status_changed", "identity_revealed"],
       candidate_status: ["pending", "reviewed", "advance", "no_advance"],
       cv_processing_status: ["pending", "processing", "done", "failed"],
+      faq_outcome: ["answered", "not_found", "error"],
+      hr_query_status: ["open", "answered"],
       job_level: ["intern", "junior", "mid", "senior", "lead", "manager", "director"],
       job_status: ["draft", "open", "closed"],
       job_tone: ["professional", "friendly", "dynamic", "formal"],
       job_version_source: ["ai", "manual", "restored"],
+      kb_doc_type: ["policy", "handbook", "agreement", "benefits", "other"],
+      kb_document_status: ["pending", "processing", "ready", "failed"],
       member_role: ["admin", "hr", "employee"],
       member_status: ["active", "disabled"],
       onboarding_phase: ["d30", "d60", "d90"],
