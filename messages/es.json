@@ -207,7 +207,9 @@
     "newOrg": "Crear otra empresa",
     "chooseOrg": "Elige una empresa",
     "userMenu": "Menú de usuario",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "skipToContent": "Saltar al contenido",
+    "loading": "Cargando…"
   },
   "comingSoon": {
     "title": "Próximamente",
@@ -1688,5 +1690,12 @@
       "limit": "Ya tienes 3 empresas demo: cierra alguna antes de crear otra.",
       "generic": "No se ha podido crear la empresa demo. Inténtalo de nuevo."
     }
+  },
+  "errorPage": {
+    "title": "Algo ha fallado",
+    "description": "Ha ocurrido un error inesperado. Puedes reintentarlo; si sigue pasando, avisa a soporte con la referencia.",
+    "retry": "Reintentar",
+    "home": "Ir al inicio",
+    "reference": "Referencia: {digest}"
   }
 }

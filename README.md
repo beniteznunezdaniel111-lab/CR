@@ -6,7 +6,7 @@ nombre provisional (`src/lib/config/brand.ts`).
 - Plan y decisiones: [`docs/PLAN.md`](docs/PLAN.md)
 - Convenciones para desarrollar: [`CLAUDE.md`](CLAUDE.md)
 
-**Estado:** Fase 5 terminada.
+**Estado:** MVP completo (fases 0 a 6).
 
 - **Fase 0 (base):** registro, empresas con datos aislados (RLS), roles, invitaciones, capa de IA y
   layout.
@@ -26,7 +26,10 @@ nombre provisional (`src/lib/config/brand.ts`).
   duplicado, asignación con fecha límite y aviso, test con nota calculada en el servidor (70 %,
   mejor nota) y panel de progreso por formación y por persona.
 
-Queda la Fase 6 (pulido para la demo).
+- **Fase 6 (demo):** inicio adaptado a cada rol, empresa demo con datos ficticios (España o Costa
+  Rica, se borra sola a los 14 días), uso de IA con aviso al 80 % del tope, exportar y borrar los
+  datos de una persona, cierre de empresa, pantallas de error y de carga, y esta guía de
+  despliegue.
 
 ## Requisitos
 
@@ -106,16 +109,77 @@ La CI de GitHub Actions ejecuta todo lo anterior, incluidos los E2E con el Supab
 
 Documentadas en [`.env.example`](.env.example).
 
-## Despliegue
+## Despliegue (Vercel + Supabase)
 
-Vercel + Supabase (región UE). La guía completa se escribe en la Fase 6. Resumen:
+Guía para poner la app en producción con datos de prueba. **Antes de usar datos reales** hacen
+falta planes de pago (Supabase Pro y Vercel Pro), la revisión legal de los textos marcados como
+"pendiente de revisión legal" y los avisos de `docs/PLAN.md` (§ Avisos de cumplimiento).
 
-1. Crear el proyecto de Supabase en una región de la UE y aplicar las migraciones
-   (`supabase link` + `supabase db push`).
-2. En Supabase Auth: activar la confirmación de email, configurar SMTP propio (Brevo, Resend...) y
-   añadir la URL de la app a _Redirect URLs_ (`https://tu-dominio/auth/callback`).
-3. En Vercel: importar el repositorio y configurar las variables de `.env.example`. `vercel.json`
-   fija la región de las funciones (`fra1`) y el cron diario de retención de CVs
-   (`/api/cron/retention`); define `CRON_SECRET` para que Vercel pueda llamarlo.
-4. Antes de usar datos reales: planes de pago (Supabase Pro, Vercel Pro) y revisión legal
-   (ver `docs/PLAN.md` § Avisos de cumplimiento).
+### 1. Supabase (región UE)
+
+1. Crea un proyecto en una región de la UE (p. ej. Frankfurt) y guarda la contraseña de la base de
+   datos.
+2. Aplica las migraciones desde tu equipo:
+
+   ```bash
+   pnpm exec supabase link --project-ref <ref-del-proyecto>
+   ```
+
+   ```bash
+   pnpm exec supabase db push
+   ```
+
+   Crean tablas, RLS, funciones, la extensión `vector` y los buckets privados de Storage (`cvs`,
+   `kb-documents`, `training-sources`).
+
+3. **Authentication → Providers → Email:** activa _Confirm email_.
+4. **Authentication → URL Configuration:** _Site URL_ = `https://tu-dominio` y añade
+   `https://tu-dominio/auth/callback` y `https://tu-dominio/auth/confirm` a _Redirect URLs_.
+5. **Authentication → Emails → SMTP:** configura un SMTP propio (Brevo, Resend…): el de Supabase
+   solo sirve para pruebas y tiene un límite muy bajo.
+6. **Project Settings → API:** copia la URL, la clave publicable y la clave secreta.
+
+### 2. Vercel
+
+1. Importa el repositorio (framework Next.js; `vercel.json` fija la región `fra1`).
+2. Variables de entorno (todas documentadas en [`.env.example`](.env.example)):
+
+   | Variable                               | Valor                                                     |
+   | -------------------------------------- | --------------------------------------------------------- |
+   | `NEXT_PUBLIC_SITE_URL`                 | `https://tu-dominio`                                      |
+   | `NEXT_PUBLIC_SUPABASE_URL`             | URL del proyecto                                          |
+   | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | clave publicable                                          |
+   | `SUPABASE_SECRET_KEY`                  | clave secreta (solo servidor)                             |
+   | `AI_PROVIDER`                          | `anthropic` (o `mock` para una demo sin coste)            |
+   | `ANTHROPIC_API_KEY`                    | clave de la API de Anthropic                              |
+   | `ANTHROPIC_MODEL`                      | `claude-haiku-5-5`                                        |
+   | `VOYAGE_API_KEY`                       | clave de Voyage AI (búsqueda semántica de la FAQ)         |
+   | `SIGNUP_ACCESS_CODE`                   | código largo y aleatorio mientras el registro sea privado |
+   | `SMTP_*`                               | el mismo SMTP que en Supabase (emails de invitación)      |
+   | `CRON_SECRET`                          | `openssl rand -hex 32` (Vercel lo envía al cron)          |
+
+3. Despliega y comprueba la IA con `pnpm ai:smoke` en local con las mismas claves.
+
+### 3. Tareas programadas
+
+`vercel.json` programa cada día `/api/cron/retention` (03:17 UTC), que borra:
+
+- las candidaturas cuyo plazo de retención ha vencido (con su CV);
+- las conversaciones de la FAQ sin actividad en 12 meses y los avisos de más de 12 meses;
+- las empresas demo con más de 14 días (con sus ficheros).
+
+Sin `CRON_SECRET` el endpoint responde 401 y no borra nada.
+
+### 4. Después de desplegar
+
+- Regístrate (con el código de acceso), crea tu empresa o prueba una **empresa demo** (España o
+  Costa Rica) desde la pantalla de alta.
+- El tope de IA por empresa (`organizations.ai_monthly_budget_usd`, 20 $ por defecto) lo cambia la
+  plataforma por SQL; el admin ve el consumo en **Ajustes → Uso de IA** y un aviso al 80 %.
+- Si cambias de proveedor o modelo de embeddings, reprocesa los documentos de la FAQ.
+
+### Costes orientativos (piloto pequeño)
+
+Con Claude Haiku 5.5 (0,10 $ / 0,50 $ por millón de tokens) un análisis de CV o una guía de
+entrevista cuesta del orden de céntimos; los embeddings de Voyage, fracciones de céntimo. El tope
+mensual protege de sorpresas: al 100 % las funciones con IA se bloquean hasta el mes siguiente.

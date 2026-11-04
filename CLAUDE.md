@@ -1,7 +1,7 @@
 # CLAUDE.md — HRPilot (SaaS de RRHH con IA)
 
 Guía para trabajar en este repositorio. El plan completo y las decisiones acordadas están en
-[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 5 (formación y evaluaciones) terminada.** Cada fase termina con lint,
+[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 6 (pulido para la demo) terminada: MVP completo.** Cada fase termina con lint,
 typecheck y tests en verde, commit, resumen y OK explícito del usuario antes de seguir.
 
 ## Comandos
@@ -59,9 +59,10 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
 2. **Privilegios explícitos.** Cada migración hace `revoke all ... from anon, authenticated` y concede
    solo lo necesario, por columnas cuando aplica (p. ej. el admin no puede tocar
    `ai_monthly_budget_usd`). Nada se expone a `anon` salvo `get_invitation_preview`.
-3. **Service role solo en servidor y solo para:** auditoría, uso de IA, tope de gasto, cron, scripts
-   y el fichero del CV (URL firmada de subida, lectura para procesarlo y borrado), siempre después de
-   comprobar con la sesión del usuario que es RRHH/admin y ve la candidatura. Los datos de negocio se
+3. **Service role solo en servidor y solo para:** auditoría, uso de IA, tope de gasto, cron, scripts,
+   el fichero del CV (URL firmada de subida, lectura para procesarlo y borrado) y el borrado de los
+   ficheros de una empresa que se cierra (o de una demo caducada), siempre después de comprobar con
+   la sesión del usuario que es RRHH/admin. Los datos de negocio se
    leen y escriben SIEMPRE con `lib/supabase/server.ts` (sesión del usuario).
 4. **La IA solo pasa por `src/lib/ai`.** ESLint prohíbe importar `@anthropic-ai/sdk` fuera de ahí.
    - Modelo por `ANTHROPIC_MODEL` (por defecto `claude-haiku-5-5`, decisión del usuario).
@@ -148,6 +149,15 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
   nota la calcula `submit_training_attempt` (70 %, intentos ilimitados, mejor nota) y devuelve
   las explicaciones tras cada intento. Un test con intentos no se edita (se duplica) y una
   formación con intentos no se borra.
+
+- **Demo, privacidad y uso de IA (Fase 6).** `create_demo_organization` + `src/modules/demo/seed.ts`
+  rellenan una empresa demo con los mismos procesos de la app y la IA forzada a mock
+  (`runWithAiRuntime(createMockRuntime(), …)`); la FAQ usa el proveedor de embeddings real. Las demo
+  (`is_demo`) caducan a los 14 días (cron). Privacidad (`src/modules/privacy`): exportar mis datos
+  (`/app/[org]/my-data`), los de un miembro (admin) y los de una candidatura (RRHH);
+  `erase_member_data` borra la actividad personal de un miembro; `close_organization` cierra la
+  empresa tras borrar sus ficheros. Uso de IA: `org_ai_budget_status` (solo admin) para la página
+  `/settings/ai-usage` y el aviso al 80 %. Inicio por rol: `src/modules/dashboard`.
 
 ## Cómo añadir…
 

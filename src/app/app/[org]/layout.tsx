@@ -36,6 +36,7 @@ export default async function OrgLayout({
   const memberships = await getMyMemberships();
   const tRoles = await getTranslations("roles");
   const tDemo = await getTranslations("demo");
+  const tNav = await getTranslations("nav");
   const demoExpires = context.org.is_demo
     ? formatDate(
         new Date(new Date(context.org.created_at).getTime() + DEMO_TTL_DAYS * 24 * 3600 * 1000),
@@ -69,6 +70,12 @@ export default async function OrgLayout({
 
   return (
     <div className="flex min-h-dvh">
+      <a
+        href="#main"
+        className="sr-only z-50 rounded-md bg-background px-3 py-2 text-sm font-medium shadow focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+      >
+        {tNav("skipToContent")}
+      </a>
       <aside className="hidden w-64 shrink-0 flex-col gap-6 border-r bg-sidebar p-4 md:flex">
         <Logo href={orgPath(slug)} />
         <SidebarNav main={main} settings={settings} />
@@ -100,7 +107,11 @@ export default async function OrgLayout({
           </div>
         </header>
         <BudgetBanner status={budget} href={orgPath(slug, "/settings/ai-usage")} />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 lg:py-8">
+        <main
+          id="main"
+          tabIndex={-1}
+          className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 outline-none sm:px-6 lg:py-8"
+        >
           {children}
         </main>
       </div>
