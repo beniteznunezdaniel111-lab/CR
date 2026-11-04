@@ -47,7 +47,11 @@
     "dueDayPhase": "El día no corresponde a la fase (1-30, 31-60 o 61-90).",
     "planTitle": "El título del plan debe tener entre 2 y 200 caracteres.",
     "planTasks": "El plan debe tener entre 1 y 60 tareas.",
-    "date": "Indica una fecha válida."
+    "date": "Indica una fecha válida.",
+    "questionLength": "Escribe una pregunta de entre 2 y 1000 caracteres.",
+    "docTitle": "El título debe tener entre 2 y 200 caracteres.",
+    "hrQueryLength": "Escribe tu consulta (entre 5 y 2000 caracteres).",
+    "answerLength": "Escribe una respuesta de entre 2 y 4000 caracteres."
   },
   "landing": {
     "eyebrow": "MVP · España y Costa Rica",
@@ -1087,6 +1091,213 @@
       "save": "No hemos podido guardar el plan. Inténtalo de nuevo.",
       "assign": "No hemos podido asignar el plan. Inténtalo de nuevo.",
       "generic": "No hemos podido completar la acción. Inténtalo de nuevo."
+    }
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "description": "Pregunta sobre vacaciones, permisos, beneficios o normas internas. Las respuestas salen de los documentos de la empresa.",
+    "manageDocuments": "Documentos",
+    "myQueriesLink": "Mis consultas a RRHH",
+    "myQueries": {
+      "title": "Mis consultas a RRHH",
+      "description": "Las consultas que has enviado y sus respuestas.",
+      "back": "Volver a la FAQ",
+      "new": "Nueva consulta",
+      "empty": "Aún no has enviado ninguna consulta.",
+      "status": {
+        "open": "Pendiente",
+        "answered": "Respondida"
+      },
+      "sentAt": "Enviada el {date}",
+      "answer": "Respuesta de RRHH",
+      "answeredAt": "Respondida el {date}",
+      "waiting": "RRHH aún no ha respondido."
+    },
+    "chat": {
+      "newConversation": "Nueva conversación",
+      "conversations": "Tus conversaciones",
+      "noConversations": "Aún no has preguntado nada.",
+      "questionLabel": "Tu pregunta",
+      "placeholder": "Escribe tu pregunta…",
+      "send": "Preguntar",
+      "thinking": "Buscando en la documentación…",
+      "you": "Tú",
+      "assistant": "Asistente",
+      "privacyNotice": "Tus conversaciones solo las ves tú. RRHH ve las preguntas de forma anónima y agrupada para mejorar la documentación. Se borran a los 12 meses.",
+      "aiNotice": "Respuestas generadas con IA a partir de los documentos de la empresa. Comprueba la fuente citada: no es asesoramiento legal.",
+      "notFound": "No encuentro esto en la documentación, así que prefiero no inventar una respuesta.",
+      "notFoundHint": "Puedes enviar la pregunta a RRHH: te avisaremos aquí cuando respondan.",
+      "error": "No se ha podido responder a esta pregunta.",
+      "askHr": "Preguntar a RRHH",
+      "sources": "Fuentes",
+      "source": "Fuente {n}",
+      "page": "pág. {page}",
+      "pages": "págs. {from}-{to}",
+      "openDocument": "Abrir documento",
+      "delete": "Borrar conversación",
+      "deleteConfirm": {
+        "title": "¿Borrar esta conversación?",
+        "description": "Se borran la conversación y sus mensajes. No se puede deshacer.",
+        "cancel": "Cancelar",
+        "confirm": "Borrar"
+      },
+      "empty": {
+        "title": "Pregunta lo que necesites",
+        "description": "Por ejemplo: ¿cuántos días de vacaciones tengo?, ¿cómo pido un permiso?, ¿qué beneficios hay?"
+      },
+      "noDocuments": {
+        "title": "Todavía no hay documentos",
+        "hr": "Sube las políticas y manuales de la empresa para que la plantilla pueda preguntar.",
+        "employee": "RRHH aún no ha subido documentos. Mientras tanto, puedes enviar tus dudas directamente a RRHH.",
+        "upload": "Subir documentos"
+      },
+      "errors": {
+        "generic": "No se ha podido completar la pregunta. Inténtalo de nuevo.",
+        "session": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
+        "question": "Escribe una pregunta de entre 2 y 1000 caracteres.",
+        "network": "Se ha perdido la conexión. Inténtalo de nuevo."
+      }
+    },
+    "documents": {
+      "title": "Documentos de la FAQ",
+      "description": "Políticas, manuales y convenios en los que se basan las respuestas. La plantilla solo ve los documentos listos.",
+      "back": "Volver a la FAQ",
+      "upload": {
+        "title": "Subir un documento",
+        "description": "PDF o DOCX de hasta 25 MB. Los PDF escaneados (solo imagen) no se pueden leer: necesitan texto seleccionable.",
+        "file": "Fichero",
+        "titleLabel": "Título",
+        "titleHint": "Por defecto, el nombre del fichero.",
+        "type": "Tipo de documento",
+        "submit": "Subir y procesar",
+        "uploading": "Subiendo el fichero…",
+        "processing": "Procesando el documento…",
+        "done": "Documento listo: {chunks, plural, one {# fragmento} other {# fragmentos}}.",
+        "tooBig": "El fichero supera los 25 MB.",
+        "wrongType": "Solo se admiten ficheros PDF o DOCX."
+      },
+      "types": {
+        "policy": "Política interna",
+        "handbook": "Manual de la plantilla",
+        "agreement": "Convenio o reglamento",
+        "benefits": "Beneficios",
+        "other": "Otro"
+      },
+      "status": {
+        "pending": "Pendiente",
+        "processing": "Procesando",
+        "ready": "Listo",
+        "failed": "Error"
+      },
+      "columns": {
+        "title": "Documento",
+        "type": "Tipo",
+        "status": "Estado",
+        "chunks": "Fragmentos",
+        "updated": "Actualizado",
+        "actions": "Acciones"
+      },
+      "pagesCount": "{count, plural, one {# página} other {# páginas}}",
+      "reprocess": "Reprocesar",
+      "reprocessing": "Procesando…",
+      "download": "Descargar",
+      "delete": "Borrar",
+      "deleteConfirm": {
+        "title": "¿Borrar «{title}»?",
+        "description": "Se borran el fichero y sus fragmentos: dejará de usarse en las respuestas. Las respuestas ya dadas conservan el texto citado.",
+        "cancel": "Cancelar",
+        "confirm": "Borrar"
+      },
+      "deleted": "Documento borrado.",
+      "outdatedModel": "Procesado con otro modelo de búsqueda: reprocésalo para que se use en las respuestas.",
+      "basicSearch": "Búsqueda por palabras clave: falta configurar Voyage AI (VOYAGE_API_KEY) para la búsqueda semántica.",
+      "empty": {
+        "title": "Aún no hay documentos",
+        "description": "Sube la política de vacaciones, el manual de bienvenida o el convenio para que la plantilla pueda preguntar."
+      },
+      "processingErrors": {
+        "unsupported_type": "Tipo de fichero no admitido.",
+        "no_text": "No se ha encontrado texto (¿es un PDF escaneado?).",
+        "too_long": "El documento es demasiado largo (máximo unas 200 páginas de texto).",
+        "unreadable": "No se ha podido leer el fichero.",
+        "storage_error": "No se ha podido leer el fichero subido.",
+        "save_failed": "No se han podido guardar los fragmentos.",
+        "embeddings_failed": "Ha fallado el servicio de búsqueda semántica. Inténtalo más tarde.",
+        "budget_exceeded": "La empresa ha alcanzado el límite mensual de uso de IA.",
+        "not_configured": "El servicio de búsqueda semántica no está configurado."
+      },
+      "errors": {
+        "invalid": "Revisa el título, el tipo y el fichero.",
+        "forbidden": "No tienes permiso para gestionar los documentos.",
+        "fileType": "Solo se admiten ficheros PDF o DOCX.",
+        "upload": "No se ha podido subir el documento.",
+        "generic": "Ha ocurrido un error. Inténtalo de nuevo.",
+        "notFound": "El documento no existe o lo han borrado.",
+        "alreadyProcessing": "El documento ya se está procesando.",
+        "delete": "No se ha podido borrar el documento."
+      }
+    },
+    "askHr": {
+      "title": "Preguntar a RRHH",
+      "description": "Tu consulta llegará a RRHH con tu nombre. Te avisaremos aquí cuando respondan.",
+      "questionLabel": "Tu consulta",
+      "submit": "Enviar a RRHH",
+      "cancel": "Cancelar",
+      "sent": "Consulta enviada. Te avisaremos cuando RRHH responda.",
+      "errors": {
+        "forbidden": "No puedes enviar consultas en esta empresa.",
+        "generic": "No se ha podido enviar la consulta. Inténtalo de nuevo."
+      }
+    }
+  },
+  "hrQueries": {
+    "title": "Consultas a RRHH",
+    "description": "Consultas de la plantilla y preguntas que llegan a la FAQ (anónimas y agrupadas).",
+    "tabs": {
+      "queries": "Consultas",
+      "frequent": "Preguntas frecuentes",
+      "unanswered": "Sin respuesta"
+    },
+    "queries": {
+      "empty": "No hay consultas todavía.",
+      "openCount": "{count, plural, one {# consulta pendiente} other {# consultas pendientes}}",
+      "from": "De {name}",
+      "unknownPerson": "Persona sin nombre",
+      "sentAt": "Enviada el {date}",
+      "answerLabel": "Respuesta",
+      "submit": "Responder",
+      "answeredBy": "Respondida por {name} el {date}",
+      "status": {
+        "open": "Pendiente",
+        "answered": "Respondida"
+      }
+    },
+    "insights": {
+      "notice": "Preguntas de la FAQ de los últimos 90 días, agrupadas por similitud y sin saber quién las hizo.",
+      "question": "Pregunta (ejemplo del grupo)",
+      "total": "Veces",
+      "unanswered": "Sin respuesta",
+      "last": "Última vez",
+      "empty": "Aún no hay preguntas en la FAQ.",
+      "unansweredEmpty": "Todas las preguntas recientes tuvieron respuesta en la documentación.",
+      "unansweredHint": "Si una pregunta se repite sin respuesta, quizá falte información en los documentos."
+    },
+    "answered": "Respuesta enviada. La persona recibirá un aviso.",
+    "errors": {
+      "forbidden": "Solo RRHH puede responder consultas.",
+      "generic": "No se ha podido enviar la respuesta. Inténtalo de nuevo."
+    }
+  },
+  "notifications": {
+    "label": "Avisos",
+    "unread": "{count, plural, one {# aviso sin leer} other {# avisos sin leer}}",
+    "empty": "No tienes avisos.",
+    "markAllRead": "Marcar todo como leído",
+    "kinds": {
+      "hr_query_created": "Nueva consulta para RRHH",
+      "hr_query_answered": "RRHH ha respondido tu consulta",
+      "training_assigned": "Te han asignado la formación «{title}»",
+      "unknown": "Nuevo aviso"
     }
   }
 }

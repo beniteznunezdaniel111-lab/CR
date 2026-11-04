@@ -56,4 +56,4 @@ export function orgPath(slug: string, path = ""): string {
 }
 
 /** Fase del MVP ya construida: los módulos de fases posteriores se marcan "Próximamente". */
-export const CURRENT_PHASE = 3;
+export const CURRENT_PHASE = 4;

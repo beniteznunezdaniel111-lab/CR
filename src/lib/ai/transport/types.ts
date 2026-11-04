@@ -31,4 +31,50 @@ export interface AiTransport {
   generateStructured(request: TransportStructuredRequest): Promise<TransportResponse>;
   generateText(request: TransportRequest): Promise<TransportResponse>;
   countTokens(request: TransportRequest): Promise<number>;
+  /** Respuesta en streaming con citas nativas sobre resultados de búsqueda. */
+  streamCited(
+    request: TransportCitedRequest,
+    onEvent: (event: CitedStreamEvent) => void,
+  ): Promise<TransportCitedResponse>;
 }
+
+/** Fragmento de documento que se envía como bloque `search_result` citable. */
+export type SearchResultSource = {
+  /** Identificador estable (se devuelve en cada cita). */
+  source: string;
+  title: string;
+  /** Párrafos: cada uno es una unidad citable. */
+  blocks: string[];
+};
+
+export type TransportCitedRequest = {
+  model: string;
+  system: string;
+  /** Turnos anteriores de la conversación, como texto plano. */
+  history: TransportMessage[];
+  searchResults: SearchResultSource[];
+  /** Texto final del turno del usuario (la pregunta). */
+  question: string;
+  maxTokens: number;
+  effort: AiEffort;
+  signal?: AbortSignal;
+};
+
+/** Cita de la respuesta: rango de párrafos [start, end) de un resultado. */
+export type CitationLocation = {
+  searchResultIndex: number;
+  startBlockIndex: number;
+  endBlockIndex: number;
+  citedText: string;
+  source: string;
+};
+
+export type CitedTextBlock = { text: string; citations: CitationLocation[] };
+
+export type CitedStreamEvent =
+  | { type: "text"; block: number; text: string }
+  | { type: "citation"; block: number; citation: CitationLocation };
+
+export type TransportCitedResponse = Omit<TransportResponse, "parsed" | "text"> & {
+  blocks: CitedTextBlock[];
+};

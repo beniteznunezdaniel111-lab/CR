@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import type * as React from "react";
 import { Logo } from "@/components/brand/logo";
 import { MobileNav } from "@/components/app-shell/mobile-nav";
+import { NotificationsMenu } from "@/components/app-shell/notifications-menu";
 import { OrgSwitcher } from "@/components/app-shell/org-switcher";
 import type { SidebarLink } from "@/components/app-shell/sidebar-nav";
 import { SidebarNav } from "@/components/app-shell/sidebar-nav";
@@ -16,6 +17,7 @@ import {
   orgPath,
 } from "@/lib/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { listNotifications } from "@/modules/faq/queries";
 
 export default async function OrgLayout({
   children,
@@ -30,11 +32,10 @@ export default async function OrgLayout({
   const tRoles = await getTranslations("roles");
 
   const supabase = await createClient();
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, email")
-    .eq("id", context.user.id)
-    .maybeSingle();
+  const [{ data: profile }, notifications] = await Promise.all([
+    supabase.from("profiles").select("full_name, email").eq("id", context.user.id).maybeSingle(),
+    listNotifications(context.org.id),
+  ]);
 
   const toLinks = (items: readonly NavItem[]): SidebarLink[] =>
     navForRole(items, context.role).map((item) => ({
@@ -62,7 +63,12 @@ export default async function OrgLayout({
         <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background/95 px-3 backdrop-blur sm:px-4">
           <MobileNav main={main} settings={settings} homeHref={orgPath(slug)} />
           <OrgSwitcher current={current} options={options} />
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-1">
+            <NotificationsMenu
+              orgId={context.org.id}
+              items={notifications.items}
+              unread={notifications.unread}
+            />
             <UserMenu
               name={profile?.full_name ?? null}
               email={profile?.email ?? context.user.email ?? ""}

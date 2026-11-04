@@ -2,13 +2,16 @@ import type { AiProvider, AiUsageTotals } from "./types";
 
 export type AiUsageStatus = "ok" | "error" | "validation_failed" | "refused" | "budget_exceeded";
 
+/** Proveedores que generan consumo: el de los modelos de texto y el de embeddings. */
+export type UsageProvider = AiProvider | "voyage";
+
 export type AiUsageEntry = {
   orgId: string;
   userId: string | null;
   feature: string;
   promptId: string;
   promptVersion: number;
-  provider: AiProvider;
+  provider: UsageProvider;
   model: string;
   usage: AiUsageTotals;
   costUsd: number;

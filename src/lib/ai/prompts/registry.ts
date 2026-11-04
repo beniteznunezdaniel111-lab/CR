@@ -1,6 +1,7 @@
 import type { PromptDefinition } from "../types";
 import { cvAnalysisV1 } from "./cv/analysis.v1";
 import { cvIdentityV1 } from "./cv/identity.v1";
+import { faqAnswerV1 } from "./faq/answer.v1";
 import { interviewGuideV1 } from "./interviews/guide.v1";
 import { jobGenerateV1 } from "./jobs/generate.v1";
 import { jobInclusiveReviewV1 } from "./jobs/inclusive-review.v1";
@@ -22,6 +23,7 @@ const PROMPTS: readonly AnyPrompt[] = [
   cvAnalysisV1,
   interviewGuideV1,
   onboardingPlanV1,
+  faqAnswerV1,
 ];
 
 export function listPrompts(): readonly AnyPrompt[] {

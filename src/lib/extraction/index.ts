@@ -77,3 +77,47 @@ export async function extractDocumentText(
   if (text.length > MAX_EXTRACTED_CHARS) throw new ExtractionError("too_long");
   return { text };
 }
+
+/** Máximo de texto de un documento de la FAQ (unas 200 páginas). */
+export const MAX_DOCUMENT_CHARS = 600_000;
+
+export type PageText = {
+  /** Número de página (1, 2...) en PDF; null en DOCX, que no tiene páginas fijas. */
+  page: number | null;
+  text: string;
+};
+
+/**
+ * Texto de un documento conservando las páginas (para citar "pág. N").
+ * Mismas reglas que extractDocumentText: sin OCR y con límite de tamaño.
+ */
+export async function extractDocumentPages(
+  data: Uint8Array,
+  mime: string,
+): Promise<{ pages: PageText[]; totalPages: number | null }> {
+  if (!isSupportedMime(mime)) throw new ExtractionError("unsupported_type");
+
+  let pages: PageText[];
+  let totalPages: number | null = null;
+  try {
+    if (mime === PDF_MIME) {
+      const { extractText } = await import("unpdf");
+      const result = await extractText(data, { mergePages: false });
+      totalPages = result.totalPages;
+      pages = result.text.map((text, index) => ({ page: index + 1, text }));
+    } else {
+      pages = [{ page: null, text: await extractDocx(data) }];
+    }
+  } catch {
+    throw new ExtractionError("unreadable");
+  }
+
+  const normalized = pages
+    .map((page) => ({ page: page.page, text: normalizeExtractedText(page.text) }))
+    .filter((page) => page.text.length > 0);
+  const all = normalized.map((page) => page.text).join("\n");
+  const letters = all.match(/\p{L}/gu)?.length ?? 0;
+  if (letters < MIN_LETTERS) throw new ExtractionError("no_text");
+  if (all.length > MAX_DOCUMENT_CHARS) throw new ExtractionError("too_long");
+  return { pages: normalized, totalPages };
+}

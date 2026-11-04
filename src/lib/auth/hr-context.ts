@@ -2,16 +2,16 @@ import "server-only";
 import type { AiCallContext } from "@/lib/ai";
 import { getCountryOrDefault } from "@/lib/countries";
 import { createClient } from "@/lib/supabase/server";
-import { HR_ROLES } from "./roles";
+import { ALL_ROLES, HR_ROLES, type MemberRole } from "./roles";
 import { requireUser } from "./session";
 
 /**
- * Contexto para Server Actions de RRHH sobre una empresa concreta: usuario,
- * empresa, país, cliente con su sesión y contexto de IA. Devuelve null si la
- * persona no es admin ni RRHH activa de esa empresa (la RLS lo vuelve a comprobar
- * en cada consulta).
+ * Contexto para Server Actions y rutas sobre una empresa concreta: usuario,
+ * empresa, rol, país, cliente con su sesión y contexto de IA. Devuelve null si
+ * la persona no tiene una membresía activa con uno de los roles pedidos (la RLS
+ * lo vuelve a comprobar en cada consulta).
  */
-export async function requireHrContext(orgId: string) {
+export async function requireRoleContext(orgId: string, roles: readonly MemberRole[]) {
   const user = await requireUser();
   const supabase = await createClient();
   const [{ data: org }, { data: membership }] = await Promise.all([
@@ -24,7 +24,7 @@ export async function requireHrContext(orgId: string) {
       .eq("status", "active")
       .maybeSingle(),
   ]);
-  if (!org || !membership || !HR_ROLES.includes(membership.role)) return null;
+  if (!org || !membership || !roles.includes(membership.role)) return null;
   const country = getCountryOrDefault(org.country);
   const aiContext: AiCallContext = {
     orgId: org.id,
@@ -32,7 +32,18 @@ export async function requireHrContext(orgId: string) {
     organizationName: org.name,
     country,
   };
-  return { user, org, country, supabase, aiContext };
+  return { user, org, role: membership.role, country, supabase, aiContext };
 }
 
-export type HrContext = NonNullable<Awaited<ReturnType<typeof requireHrContext>>>;
+/** Admin o RRHH activos de la empresa. */
+export function requireHrContext(orgId: string) {
+  return requireRoleContext(orgId, HR_ROLES);
+}
+
+/** Cualquier miembro activo de la empresa (p. ej. la FAQ o las formaciones asignadas). */
+export function requireMemberContext(orgId: string) {
+  return requireRoleContext(orgId, ALL_ROLES);
+}
+
+export type HrContext = NonNullable<Awaited<ReturnType<typeof requireRoleContext>>>;
+export type MemberContext = HrContext;

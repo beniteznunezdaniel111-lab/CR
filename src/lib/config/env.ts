@@ -11,6 +11,14 @@ const optionalString = z
   .optional()
   .transform((value) => (value && value.trim() !== "" ? value.trim() : undefined));
 
+/** Una variable vacía (`FOO=`) cuenta como no definida. */
+function emptyAsUndefined<T extends z.ZodType>(schema: T) {
+  return z.preprocess(
+    (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+    schema,
+  );
+}
+
 const serverEnvSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.url(),
   supabasePublishableKey: z.string().min(1),
@@ -19,6 +27,13 @@ const serverEnvSchema = z.object({
   AI_PROVIDER: z.enum(["anthropic", "mock"]).default("anthropic"),
   ANTHROPIC_API_KEY: optionalString,
   ANTHROPIC_MODEL: z.string().min(1).default("claude-haiku-5-5"),
+  // Embeddings de la FAQ: voyage (Voyage AI) o mock (determinista, sin red).
+  // Sin valor: voyage si hay VOYAGE_API_KEY y mock si no.
+  EMBEDDINGS_PROVIDER: emptyAsUndefined(z.enum(["voyage", "mock"]).optional()),
+  VOYAGE_API_KEY: optionalString,
+  VOYAGE_MODEL: emptyAsUndefined(z.string().min(1).default("voyage-3.5")),
+  // Similitud mínima (0-1) para considerar relevante un fragmento de la FAQ.
+  FAQ_MIN_SIMILARITY: emptyAsUndefined(z.coerce.number().min(0).max(1).optional()),
   SIGNUP_ACCESS_CODE: optionalString,
   SMTP_HOST: optionalString,
   SMTP_PORT: z.coerce.number().int().positive().default(587),

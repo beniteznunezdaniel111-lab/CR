@@ -54,3 +54,20 @@ export function estimateCostUsd(model: string, usage: AiUsageTotals): number {
 
   return Math.round(cost) / 1_000_000;
 }
+
+/**
+ * Precio de los embeddings en USD por millón de tokens (solo para ESTIMAR; los
+ * precios oficiales de Voyage AI mandan). Modelos desconocidos y el mock: 0.
+ */
+export const EMBEDDING_PRICING_PER_MTOK: Record<string, number> = {
+  "voyage-3.5": 0.06,
+  "voyage-3.5-lite": 0.02,
+  "voyage-3-large": 0.18,
+  "voyage-context-3": 0.18,
+};
+
+export function estimateEmbeddingCostUsd(model: string, tokens: number): number {
+  const price = EMBEDDING_PRICING_PER_MTOK[model];
+  if (!price) return 0;
+  return Math.round(tokens * price) / 1_000_000;
+}

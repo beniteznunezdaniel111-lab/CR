@@ -45,7 +45,7 @@ function describeIssues(issues: { path: PropertyKey[]; message: string }[]): str
     .join("; ");
 }
 
-async function loadRuntime(runtime?: AiRuntime): Promise<AiRuntime> {
+export async function loadRuntime(runtime?: AiRuntime): Promise<AiRuntime> {
   if (runtime) return runtime;
   // Import dinámico: mantiene este módulo libre de dependencias de servidor
   // (Supabase, variables de entorno) para poder testearlo de forma aislada.

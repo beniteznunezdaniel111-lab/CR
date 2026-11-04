@@ -4,6 +4,9 @@ import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { AiError } from "../errors";
 import type {
   AiTransport,
+  CitationLocation,
+  CitedTextBlock,
+  TransportCitedRequest,
   TransportRequest,
   TransportResponse,
   TransportStructuredRequest,
@@ -11,32 +14,49 @@ import type {
 
 type SdkMessage = Anthropic.Message & { _request_id?: string | null };
 
+function stopReasonOf(message: Anthropic.Message): TransportResponse["stopReason"] {
+  return message.stop_reason === "end_turn" ||
+    message.stop_reason === "max_tokens" ||
+    message.stop_reason === "refusal"
+    ? message.stop_reason
+    : "other";
+}
+
+function usageOf(message: Anthropic.Message): TransportResponse["usage"] {
+  return {
+    inputTokens: message.usage.input_tokens,
+    outputTokens: message.usage.output_tokens,
+    cacheCreationInputTokens: message.usage.cache_creation_input_tokens ?? 0,
+    cacheReadInputTokens: message.usage.cache_read_input_tokens ?? 0,
+  };
+}
+
 function toTransportResponse(message: SdkMessage, parsed: unknown): TransportResponse {
   const text = message.content
     .filter((block): block is Anthropic.TextBlock => block.type === "text")
     .map((block) => block.text)
     .join("");
 
-  const stopReason =
-    message.stop_reason === "end_turn" ||
-    message.stop_reason === "max_tokens" ||
-    message.stop_reason === "refusal"
-      ? message.stop_reason
-      : "other";
-
   return {
-    stopReason,
+    stopReason: stopReasonOf(message),
     text,
     parsed,
-    usage: {
-      inputTokens: message.usage.input_tokens,
-      outputTokens: message.usage.output_tokens,
-      cacheCreationInputTokens: message.usage.cache_creation_input_tokens ?? 0,
-      cacheReadInputTokens: message.usage.cache_read_input_tokens ?? 0,
-    },
+    usage: usageOf(message),
     model: message.model,
     requestId: message._request_id ?? null,
     refusalCategory: message.stop_details?.category ?? null,
+  };
+}
+
+/** Solo interesan las citas sobre resultados de búsqueda (las que enviamos). */
+function toCitation(citation: Anthropic.CitationsDelta["citation"]): CitationLocation | null {
+  if (citation.type !== "search_result_location") return null;
+  return {
+    searchResultIndex: citation.search_result_index,
+    startBlockIndex: citation.start_block_index,
+    endBlockIndex: citation.end_block_index,
+    citedText: citation.cited_text,
+    source: citation.source,
   };
 }
 
@@ -114,6 +134,84 @@ export function createAnthropicTransport(
           output_config: { effort: request.effort },
         });
         return toTransportResponse(message, null);
+      } catch (error) {
+        throw mapError(error);
+      }
+    },
+
+    async streamCited(request: TransportCitedRequest, onEvent) {
+      try {
+        // Los resultados van en el último turno del usuario, con citas activadas
+        // en todos (las citas son "todo o nada" en una misma petición). Las
+        // respuestas anteriores viajan como texto plano.
+        const content: Anthropic.ContentBlockParam[] = [
+          ...request.searchResults.map((result): Anthropic.SearchResultBlockParam => ({
+            type: "search_result",
+            source: result.source,
+            title: result.title,
+            content: result.blocks.map((text) => ({ type: "text" as const, text })),
+            citations: { enabled: true },
+          })),
+          { type: "text", text: request.question },
+        ];
+
+        const stream = client.messages.stream(
+          {
+            model: request.model,
+            max_tokens: request.maxTokens,
+            system: [
+              {
+                type: "text" as const,
+                text: request.system,
+                cache_control: { type: "ephemeral" as const },
+              },
+            ],
+            messages: [...request.history, { role: "user", content }],
+            thinking: { type: "adaptive" as const },
+            output_config: { effort: request.effort },
+          },
+          { signal: request.signal },
+        );
+
+        // Índice del bloque de contenido → índice del bloque de texto (se ignoran
+        // los bloques de razonamiento).
+        const textBlocks = new Map<number, number>();
+        const blocks: CitedTextBlock[] = [];
+        for await (const event of stream) {
+          if (event.type === "content_block_start" && event.content_block.type === "text") {
+            const block = blocks.length;
+            textBlocks.set(event.index, block);
+            blocks.push({ text: "", citations: [] });
+            if (event.content_block.text) {
+              blocks[block]!.text += event.content_block.text;
+              onEvent({ type: "text", block, text: event.content_block.text });
+            }
+            continue;
+          }
+          if (event.type !== "content_block_delta") continue;
+          const block = textBlocks.get(event.index);
+          if (block === undefined) continue;
+          if (event.delta.type === "text_delta") {
+            blocks[block]!.text += event.delta.text;
+            onEvent({ type: "text", block, text: event.delta.text });
+          } else if (event.delta.type === "citations_delta") {
+            const citation = toCitation(event.delta.citation);
+            if (citation) {
+              blocks[block]!.citations.push(citation);
+              onEvent({ type: "citation", block, citation });
+            }
+          }
+        }
+
+        const message = await stream.finalMessage();
+        return {
+          stopReason: stopReasonOf(message),
+          blocks,
+          usage: usageOf(message),
+          model: message.model,
+          requestId: stream.request_id ?? null,
+          refusalCategory: message.stop_details?.category ?? null,
+        };
       } catch (error) {
         throw mapError(error);
       }

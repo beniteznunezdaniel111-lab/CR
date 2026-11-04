@@ -86,6 +86,23 @@ const SAMPLE_INPUTS: Record<string, unknown> = {
     responsibilities: "Coordinar envíos\nGestionar el almacén\nControlar inventarios",
     requirements: [{ text: "Experiencia en almacén", kind: "required" }],
   },
+  "faq.answer": {
+    question: "¿Cuántos días de vacaciones tengo al año?",
+    history: [
+      { role: "user", content: "¿Puedo teletrabajar?" },
+      { role: "assistant", content: "Sí, dos días por semana." },
+    ],
+    results: [
+      {
+        source: "chunk-1",
+        title: "Política de vacaciones · Vacaciones (pág. 2)",
+        blocks: [
+          "Cada persona tiene derecho a 23 días laborables de vacaciones al año.",
+          "Se solicitan con 15 días de antelación.",
+        ],
+      },
+    ],
+  },
   "cv.analysis": {
     job: {
       title: "Técnico/a de logística",

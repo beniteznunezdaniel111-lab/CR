@@ -1,6 +1,9 @@
 import type { AiRuntime } from "@/lib/ai/runtime";
 import type {
   AiTransport,
+  CitedStreamEvent,
+  TransportCitedRequest,
+  TransportCitedResponse,
   TransportRequest,
   TransportResponse,
   TransportStructuredRequest,
@@ -35,15 +38,34 @@ export function response(partial: Partial<TransportResponse>): TransportResponse
   };
 }
 
+/** Respuesta con citas preparada: eventos que se emiten y respuesta final. */
+export type CitedScript = { events: CitedStreamEvent[]; response: TransportCitedResponse };
+
+export function citedResponse(partial: Partial<TransportCitedResponse>): TransportCitedResponse {
+  const { text: _text, parsed: _parsed, ...base } = response({});
+  return { ...base, blocks: [], ...partial };
+}
+
 /** Transporte falso: devuelve las respuestas en orden y guarda las peticiones. */
 export class FakeTransport implements AiTransport {
   readonly provider = "anthropic" as const;
   readonly structuredRequests: TransportStructuredRequest[] = [];
   readonly countRequests: TransportRequest[] = [];
+  readonly citedRequests: TransportCitedRequest[] = [];
   constructor(
     private readonly responses: Array<TransportResponse | Error>,
     private readonly tokenCount = 100,
+    private readonly cited: Array<CitedScript | Error> = [],
   ) {}
+
+  async streamCited(request: TransportCitedRequest, onEvent: (event: CitedStreamEvent) => void) {
+    this.citedRequests.push(request);
+    const next = this.cited.shift();
+    if (!next) throw new Error("FakeTransport sin más respuestas con citas");
+    if (next instanceof Error) throw next;
+    for (const event of next.events) onEvent(event);
+    return next.response;
+  }
 
   async generateStructured(request: TransportStructuredRequest) {
     // Copia: el código bajo test sigue añadiendo mensajes al mismo array.
