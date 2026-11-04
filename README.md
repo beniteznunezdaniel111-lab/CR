@@ -6,7 +6,7 @@ nombre provisional (`src/lib/config/brand.ts`).
 - Plan y decisiones: [`docs/PLAN.md`](docs/PLAN.md)
 - Convenciones para desarrollar: [`CLAUDE.md`](CLAUDE.md)
 
-**Estado:** Fase 3 terminada.
+**Estado:** Fase 4 terminada.
 
 - **Fase 0 (base):** registro, empresas con datos aislados (RLS), roles, invitaciones, capa de IA y
   layout.
@@ -17,8 +17,11 @@ nombre provisional (`src/lib/config/brand.ts`).
   privacidad por país.
 - **Fase 3 (entrevistas y onboarding):** guías de entrevista por puesto o candidatura con rúbrica
   y PDF; planes 30/60/90 editables, asignación a nuevas incorporaciones y seguimiento de tareas.
+- **Fase 4 (FAQ interna):** documentos de la empresa (PDF/DOCX), búsqueda híbrida, respuestas en
+  streaming con citas (documento, página y fragmento), "no lo sé" cuando no hay respaldo,
+  consultas a RRHH con aviso dentro de la app y preguntas frecuentes anónimas para RRHH.
 
-Los módulos de las fases 4 y 5 llegan después.
+El módulo de formación (Fase 5) llega después.
 
 ## Requisitos
 
@@ -70,6 +73,16 @@ ANTHROPIC_MODEL=claude-haiku-5-5
 ```
 
 y comprueba la conexión con `pnpm ai:smoke`.
+
+Para la búsqueda semántica de la FAQ, añade también la clave de Voyage AI (sin ella, la FAQ funciona
+en modo básico: solo encuentra coincidencias de palabras):
+
+```bash
+VOYAGE_API_KEY=pa-...
+VOYAGE_MODEL=voyage-3.5
+```
+
+Al cambiar de modo (o de modelo) hay que reprocesar los documentos desde "Documentos de la FAQ".
 
 ## Tests
 

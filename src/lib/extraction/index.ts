@@ -78,6 +78,38 @@ export async function extractDocumentText(
   return { text };
 }
 
+const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" };
+
+/**
+ * HTML de mammoth → texto: los títulos de Word (Título 1, 2...) se marcan con
+ * "#" para que el troceo los reconozca; listas con "- " y celdas separadas.
+ */
+export function docxHtmlToText(html: string): string {
+  const stripTags = (value: string) => value.replace(/<[^>]+>/g, "");
+  return html
+    .replace(
+      /<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi,
+      (_, level: string, inner: string) =>
+        `\n\n${"#".repeat(Number(level))} ${stripTags(inner).trim()}\n\n`,
+    )
+    .replace(/<li[^>]*>/gi, "\n- ")
+    .replace(/<\/(p|li|tr|table|ul|ol)>/gi, "\n\n")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/t[dh]>/gi, " | ")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&(#\d+|[a-z]+);/gi, (entity, code: string) =>
+      code.startsWith("#")
+        ? String.fromCodePoint(Number(code.slice(1)))
+        : (ENTITIES[code.toLowerCase()] ?? entity),
+    );
+}
+
+async function extractDocxWithHeadings(data: Uint8Array): Promise<string> {
+  const mammoth = await import("mammoth");
+  const result = await mammoth.convertToHtml({ buffer: Buffer.from(data) });
+  return docxHtmlToText(result.value);
+}
+
 /** Máximo de texto de un documento de la FAQ (unas 200 páginas). */
 export const MAX_DOCUMENT_CHARS = 600_000;
 
@@ -106,7 +138,7 @@ export async function extractDocumentPages(
       totalPages = result.totalPages;
       pages = result.text.map((text, index) => ({ page: index + 1, text }));
     } else {
-      pages = [{ page: null, text: await extractDocx(data) }];
+      pages = [{ page: null, text: await extractDocxWithHeadings(data) }];
     }
   } catch {
     throw new ExtractionError("unreadable");

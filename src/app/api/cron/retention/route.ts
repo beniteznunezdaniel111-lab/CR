@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 import { getServerEnv } from "@/lib/config/env";
 import { purgeExpiredCandidates } from "@/modules/candidates/retention";
+import { purgeOldFaqData } from "@/modules/faq/retention";
 
 // Cron diario de Vercel (vercel.json). Vercel envía "Authorization: Bearer
 // <CRON_SECRET>" si la variable está definida; sin ella, el endpoint no hace nada.
@@ -18,6 +19,7 @@ export async function GET(request: Request) {
   if (!authorized(request.headers.get("authorization"), getServerEnv().CRON_SECRET)) {
     return new Response("No autorizado", { status: 401 });
   }
-  const result = await purgeExpiredCandidates();
-  return Response.json(result);
+  const candidates = await purgeExpiredCandidates();
+  const faq = await purgeOldFaqData();
+  return Response.json({ ...candidates, faq });
 }

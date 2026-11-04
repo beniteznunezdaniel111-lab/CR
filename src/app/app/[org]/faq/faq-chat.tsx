@@ -77,6 +77,19 @@ export function FaqChat({
   const [deleting, startDelete] = useTransition();
   const endRef = useRef<HTMLDivElement>(null);
 
+  // Al abrir otra conversación (o una nueva) se cargan sus mensajes. Cuando la
+  // URL cambia porque este chat acaba de crear la conversación, no se reinicia:
+  // así no se pierde lo que se esté escribiendo o recibiendo.
+  const [shownId, setShownId] = useState(initialConversationId);
+  if (initialConversationId !== shownId) {
+    setShownId(initialConversationId);
+    if (initialConversationId !== conversationId) {
+      setConversationId(initialConversationId);
+      setMessages(initialMessages);
+      setFailure(null);
+    }
+  }
+
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "end" });
   }, [messages, streaming, localQuestion, failure]);

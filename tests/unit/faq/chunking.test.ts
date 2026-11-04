@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { docxHtmlToText } from "@/lib/extraction";
 import {
   BLOCK_MAX_CHARS,
   CHUNK_TARGET_CHARS,
   chunkDocument,
   embeddingTextFor,
   isHeadingLine,
+  isShortTitle,
   splitLongParagraph,
   splitParagraphs,
 } from "@/modules/faq/chunking";
@@ -48,6 +50,40 @@ describe("splitParagraphs", () => {
       "- Días laborables por año",
       "- Se acumulan hasta marzo",
     ]);
+  });
+});
+
+describe("títulos cortos", () => {
+  it("una línea corta seguida de un párrafo es un título; una lista de elementos cortos, no", () => {
+    expect(isShortTitle("Horario")).toBe(true);
+    expect(isShortTitle("La jornada es de 9 a 17.")).toBe(false);
+    const chunks = chunkDocument([
+      {
+        page: 1,
+        text: "Horario\nLa jornada general es de 9:00 a 17:00 con una hora para comer.\n\nBeneficios\n\nSeguro médico\n\nGimnasio",
+      },
+    ]);
+    expect(chunks[0]).toMatchObject({ heading: "Horario" });
+    // «Beneficios», «Seguro médico» y «Gimnasio» no van seguidos de un párrafo: son contenido.
+    expect(chunks.flatMap((chunk) => chunk.blocks)).toEqual(
+      expect.arrayContaining(["Beneficios", "Seguro médico", "Gimnasio"]),
+    );
+  });
+});
+
+describe("docxHtmlToText", () => {
+  it("marca los títulos de Word y conserva listas, tablas y caracteres especiales", () => {
+    const html =
+      "<h1>Manual</h1><p>Texto &amp; más &lt;datos&gt;</p><h2>Vacaciones</h2><ul><li>23 días</li><li>Antelación</li></ul><table><tr><td>A</td><td>B</td></tr></table>";
+    const text = docxHtmlToText(html);
+    expect(text).toContain("# Manual");
+    expect(text).toContain("## Vacaciones");
+    expect(text).toContain("Texto & más <datos>");
+    expect(text).toContain("- 23 días");
+    expect(text).toContain("A | B |");
+    const [first, second] = chunkDocument([{ page: null, text }]);
+    expect(first).toMatchObject({ heading: "Manual", blocks: ["Texto & más <datos>"] });
+    expect(second).toMatchObject({ heading: "Vacaciones" });
   });
 });
 

@@ -124,7 +124,6 @@ export default async function FaqPage({
             </Card>
           ) : (
             <FaqChat
-              key={conversation?.id ?? "new"}
               orgId={org.id}
               orgSlug={slug}
               conversationId={conversation?.id ?? null}

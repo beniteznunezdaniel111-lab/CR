@@ -43,6 +43,17 @@ export function isHeadingLine(line: string): boolean {
   return letters.length >= 4 && upper.length / letters.length >= 0.7;
 }
 
+/**
+ * Título "débil": una línea corta que empieza en mayúscula y no termina en
+ * puntuación (p. ej. «Horario»). Solo cuenta como título si le sigue un párrafo
+ * normal; así una lista de elementos cortos no se pierde como títulos.
+ */
+export function isShortTitle(line: string): boolean {
+  const text = line.trim();
+  if (!text || text.length > 60 || /[.,;:!?]$/.test(text) || LIST_ITEM.test(text)) return false;
+  return text.split(/\s+/).length <= 8 && /^\p{Lu}/u.test(text) && /\p{L}{3,}/u.test(text);
+}
+
 function cleanHeading(line: string): string {
   return line
     .replace(/^#{1,6}\s+/, "")
@@ -55,26 +66,33 @@ export function splitParagraphs(text: string): string[] {
   const paragraphs: string[] = [];
   for (const part of text.split(/\n\s*\n/)) {
     let current = "";
+    let lines = 0;
     for (const raw of part.split("\n")) {
       const line = raw.trim();
       if (!line) continue;
       if (!current) {
         current = line;
+        lines = 1;
         continue;
       }
       const startsNew =
         isHeadingLine(line) ||
         isHeadingLine(current) ||
         LIST_ITEM.test(line) ||
-        /[.!?:;»”)]$/.test(current);
+        /[.!?:;»”)]$/.test(current) ||
+        // Una línea corta suelta seguida de otra en mayúscula: probable título.
+        (lines === 1 && isShortTitle(current) && /^\p{Lu}/u.test(line));
       if (startsNew) {
         paragraphs.push(current);
         current = line;
+        lines = 1;
       } else if (/\p{L}-$/u.test(current) && /^\p{Ll}/u.test(line)) {
         // Palabra partida con guion al final de la línea.
         current = current.slice(0, -1) + line;
+        lines += 1;
       } else {
         current = `${current} ${line}`;
+        lines += 1;
       }
     }
     if (current) paragraphs.push(current);
@@ -115,13 +133,20 @@ export function splitLongParagraph(text: string, max = BLOCK_MAX_CHARS): string[
 }
 
 export function chunkDocument(pages: readonly PageText[]): DocumentChunk[] {
-  const paragraphs: Paragraph[] = pages.flatMap((page) =>
-    splitParagraphs(page.text).map((text) => ({
-      text,
-      page: page.page,
-      heading: isHeadingLine(text),
-    })),
+  const raw = pages.flatMap((page) =>
+    splitParagraphs(page.text).map((text) => ({ text, page: page.page })),
   );
+  const paragraphs: Paragraph[] = raw.map((paragraph, index) => {
+    const next = raw[index + 1];
+    const heading =
+      isHeadingLine(paragraph.text) ||
+      (isShortTitle(paragraph.text) &&
+        next !== undefined &&
+        next.text.length >= 40 &&
+        !isHeadingLine(next.text) &&
+        !isShortTitle(next.text));
+    return { ...paragraph, heading };
+  });
 
   const chunks: DocumentChunk[] = [];
   let heading: string | null = null;

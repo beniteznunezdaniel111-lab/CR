@@ -1,7 +1,7 @@
 # CLAUDE.md — HRPilot (SaaS de RRHH con IA)
 
 Guía para trabajar en este repositorio. El plan completo y las decisiones acordadas están en
-[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 3 (guías de entrevista y onboarding) terminada.** Cada fase termina con lint,
+[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 4 (FAQ interna) terminada.** Cada fase termina con lint,
 typecheck y tests en verde, commit, resumen y OK explícito del usuario antes de seguir.
 
 ## Comandos
@@ -30,6 +30,7 @@ typecheck y tests en verde, commit, resumen y OK explícito del usuario antes de
 src/app/                 Rutas (App Router). /app/[org]/... = zona privada por empresa
 src/modules/<módulo>/    Lógica de cada módulo: actions.ts (Server Actions), queries.ts, schemas.ts
 src/lib/ai/              ÚNICA capa de IA (prompts versionados, Zod, reintentos, uso, tope)
+src/lib/ai/embeddings/   Embeddings (Voyage AI o mock determinista) con tope y registro de uso
 src/lib/supabase/        Clientes: server.ts (con sesión, RLS), client.ts (navegador), admin.ts (service role)
 src/lib/auth/            Sesión, contexto de empresa (getOrgContext/requireOrgRole) y roles
 src/lib/countries/       Configuración por país (ES, CR): formatos, normativa, trato tú/usted
@@ -41,6 +42,7 @@ src/lib/markdown.ts      Markdown → texto plano y nombres de fichero
 src/components/markdown/ Editor visual (TipTap, guarda Markdown) y visor seguro (react-markdown)
 src/app/print/           Vistas de impresión / PDF (sin la interfaz de la app; exigen sesión)
 src/app/api/cron/        Tareas programadas (vercel.json), autorizadas con CRON_SECRET
+src/app/api/faq/ask/     Pregunta a la FAQ con respuesta en streaming (NDJSON)
 src/lib/config/brand.ts  Nombre del producto (APP_NAME) — único sitio donde aparece "HRPilot"
 messages/es.json         Todos los textos de la interfaz (next-intl)
 supabase/migrations/     Esquema SQL (fuente de verdad de tablas, RLS y RPCs)
@@ -71,6 +73,9 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
    - Texto aportado por usuarios (CVs, documentos) va dentro de `asData()`.
    - Haiku 5.5 no admite `temperature` ni prefill y no tiene fallback de servidor ante `refusal`:
      los rechazos se convierten en `AiError("refused")`.
+   - Respuestas con citas: `streamCitedAnswer()` (bloques `search_result` con citas nativas, en
+     streaming). Las citas no se pueden combinar con salida estructurada.
+   - Embeddings: `embedTexts()` (también comprueba el tope y registra uso, proveedor `voyage`).
 5. **La IA nunca decide sobre personas.** Solo sugiere; las decisiones (p. ej. estado de un
    candidato) las toma un humano mediante RPCs auditadas (`set_candidate_status`: la columna
    `status` no tiene permiso de UPDATE). El código de procesado/IA nunca llama a esa RPC. No inferir
@@ -118,6 +123,20 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
   las tareas con su fecha (día 1 = incorporación) a `onboarding_assignment_tasks`; la persona puede
   no tener cuenta y no ve su plan. Al marcar una tarea, un trigger fija quién y cuándo.
 
+- **FAQ interna (`src/modules/faq`, Fase 4).** Documentos (admin/RRHH): el navegador sube directo
+  a Storage con URL firmada (sesión de RRHH) y `processKbDocument` extrae el texto por páginas
+  (DOCX con los títulos de Word), trocea por secciones (~700 tokens, un párrafo de solape; cada
+  párrafo es citable), calcula embeddings y guarda `kb_chunks`. La plantilla solo ve documentos
+  `ready` (tabla, fragmentos y fichero). `match_kb_chunks` (security invoker) combina similitud y
+  cobertura de términos en español con un umbral (`FAQ_MIN_SIMILARITY`, 0,4 con Voyage) y RRF.
+  Sin fragmentos relevantes no se llama a la IA; con ellos, `faq.answer@1` responde en streaming con
+  citas y `AnswerAssembler` valida cada cita contra los fragmentos enviados: sin citas válidas, "no
+  lo sé". El historial va como texto plano. Conversaciones privadas (ni RRHH las ve; se borran a
+  los 12 meses en el cron); RRHH ve preguntas agrupadas y anónimas (`faq_question_clusters`).
+  Consultas a RRHH (`hr_queries`) con aviso a RRHH al crearlas y a la persona al responder
+  (`answer_hr_query`). `notifications` es genérica: `kind` + `params`, texto en
+  `notifications.kinds.<kind>`.
+
 ## Cómo añadir…
 
 - **Una tabla:** migración nueva en `supabase/migrations/` (nunca editar una ya aplicada en remoto) →
@@ -125,6 +144,9 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
   (`pnpm db:types`) → tests en `tests/db/`.
 - **Un prompt:** fichero `vN` con `definePrompt` (id, versión, feature, effort, maxOutputTokens,
   esquemas Zod, system, user, mock) → registrarlo → test de que el mock cumple el esquema.
+- **Un aviso dentro de la app:** insertar en `notifications` desde una función `security definer`
+  (kind, params sin datos personales, link interno `/app/<slug>/...`) y añadir el texto en
+  `notifications.kinds.<kind>`.
 - **Una pantalla de módulo:** página en `src/app/app/[org]/<ruta>` con `requireOrgRole(slug, ROLES)`,
   lógica en `src/modules/<módulo>`, entrada en `src/lib/navigation.ts` y textos en `messages/es.json`.
   Al cerrar una fase, subir `CURRENT_PHASE` en `navigation.ts`.
@@ -146,7 +168,9 @@ ejecutan en GitHub Actions con el Supabase oficial (`.github/workflows/ci.yml`).
   la aceptación es una RPC que exige sesión y que el email coincida.
 - Registro abierto con `SIGNUP_ACCESS_CODE`; con invitación válida no se pide código.
 - Confirmación de email desactivada en local (`supabase/config.toml`); activarla en producción.
-- `pgvector` se activa en la Fase 4 (no hace falta antes).
+- `pgvector` (Fase 4) en el esquema `extensions`; vectores de 1024 dimensiones (Voyage
+  `voyage-3.5`). El modelo de embeddings se guarda por documento: si cambia, hay que reprocesar.
+  Sin `VOYAGE_API_KEY`, embeddings mock (búsqueda por palabras): la FAQ funciona igual en CI/demos.
 - Tope de IA por empresa en `organizations.ai_monthly_budget_usd` (20 $ por defecto), gestionado por
   la plataforma; aviso al 80 % (Fase 6) y bloqueo al 100 %.
 - Formularios con React 19: las Server Actions devuelven `values` (sin contraseñas) en los errores
