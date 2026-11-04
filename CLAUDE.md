@@ -1,7 +1,7 @@
 # CLAUDE.md — HRPilot (SaaS de RRHH con IA)
 
 Guía para trabajar en este repositorio. El plan completo y las decisiones acordadas están en
-[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 0 (base) terminada.** Cada fase termina con lint,
+[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 1 (puestos y ofertas) terminada.** Cada fase termina con lint,
 typecheck y tests en verde, commit, resumen y OK explícito del usuario antes de seguir.
 
 ## Comandos
@@ -32,6 +32,10 @@ src/lib/supabase/        Clientes: server.ts (con sesión, RLS), client.ts (nave
 src/lib/auth/            Sesión, contexto de empresa (getOrgContext/requireOrgRole) y roles
 src/lib/countries/       Configuración por país (ES, CR): formatos, normativa, trato tú/usted
 src/lib/audit/           Registro de auditoría desde el servidor
+src/lib/inclusive/        Reglas deterministas de lenguaje inclusivo (reutilizables por cualquier módulo)
+src/lib/markdown.ts      Markdown → texto plano y nombres de fichero
+src/components/markdown/ Editor visual (TipTap, guarda Markdown) y visor seguro (react-markdown)
+src/app/print/           Vistas de impresión / PDF (sin la interfaz de la app; exigen sesión)
 src/lib/config/brand.ts  Nombre del producto (APP_NAME) — único sitio donde aparece "HRPilot"
 messages/es.json         Todos los textos de la interfaz (next-intl)
 supabase/migrations/     Esquema SQL (fuente de verdad de tablas, RLS y RPCs)
@@ -70,6 +74,16 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
    tú en ES, usted en CR (`country.formOfAddress`).
 8. **Legal:** textos legales marcados "pendiente de revisión legal". No dar asesoramiento legal.
 
+## Módulos
+
+- **Puestos y ofertas (`src/modules/jobs`, Fase 1).** `save_job_position` (RPC, security invoker)
+  guarda puesto + requisitos en una transacción y conserva los ids de los requisitos (los usará el
+  análisis de CVs). Cada texto generado o editado es una versión inmutable de
+  `job_position_versions` (numeración automática por trigger); restaurar crea una versión nueva.
+  La revisión inclusiva combina `src/lib/inclusive` (instantánea) con el prompt
+  `job.inclusive_review`; de la IA solo se aceptan fragmentos que aparecen literalmente en el texto.
+  En España (`payTransparency`) se avisa si falta la banda salarial.
+
 ## Cómo añadir…
 
 - **Una tabla:** migración nueva en `supabase/migrations/` (nunca editar una ya aplicada en remoto) →
@@ -101,3 +115,8 @@ ejecutan en GitHub Actions con el Supabase oficial (`.github/workflows/ci.yml`).
 - `pgvector` se activa en la Fase 4 (no hace falta antes).
 - Tope de IA por empresa en `organizations.ai_monthly_budget_usd` (20 $ por defecto), gestionado por
   la plataforma; aviso al 80 % (Fase 6) y bloqueo al 100 %.
+- Formularios con React 19: las Server Actions devuelven `values` (sin contraseñas) en los errores
+  y los campos los usan como `defaultValue`; los selects de formularios usan `ControlledSelect`
+  (input oculto propio) para no perder el valor al reiniciarse el formulario.
+- Editor de textos: TipTap + `@tiptap/markdown` (se guarda Markdown). PDF mediante vista de
+  impresión (`/print/...` + «Guardar como PDF» del navegador), sin dependencias de servidor.
