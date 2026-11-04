@@ -245,6 +245,24 @@
       "hrQueries": "Consultas del equipo que necesitan respuesta de RRHH.",
       "trainings": "Materiales de formación y evaluaciones.",
       "myTrainings": "Las formaciones que tienes asignadas."
+    },
+    "pending": {
+      "title": "Pendiente",
+      "allClear": "No hay nada pendiente ahora mismo.",
+      "candidates": "{count, plural, one {# candidatura por revisar} other {# candidaturas por revisar}}",
+      "hrQueries": "{count, plural, one {# consulta de la plantilla sin responder} other {# consultas de la plantilla sin responder}}",
+      "onboarding": "{count, plural, one {# tarea de onboarding vencida} other {# tareas de onboarding vencidas}}",
+      "trainings": "{count, plural, one {# formación asignada vencida} other {# formaciones asignadas vencidas}}",
+      "faqUnanswered": "{count, plural, one {# pregunta de la FAQ sin respuesta (30 días)} other {# preguntas de la FAQ sin respuesta (30 días)}}",
+      "noDocuments": "La FAQ aún no tiene documentos: súbelos para que la plantilla pueda preguntar."
+    },
+    "forYou": {
+      "title": "Para ti",
+      "trainings": "{count, plural, one {# formación pendiente} other {# formaciones pendientes}}",
+      "nextDue": "La próxima vence el {date}.",
+      "answers": "{count, plural, one {RRHH ha respondido # consulta tuya} other {RRHH ha respondido # consultas tuyas}}",
+      "askFaq": "¿Tienes una duda? Pregunta a la FAQ",
+      "askFaqDescription": "Vacaciones, permisos, beneficios… con la fuente de cada respuesta."
     }
   },
   "members": {

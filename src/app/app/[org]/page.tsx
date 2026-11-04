@@ -1,14 +1,56 @@
-import { ArrowRightIcon, CheckCircle2Icon, CircleIcon } from "lucide-react";
+import {
+  ArrowRightIcon,
+  BellRingIcon,
+  CheckCircle2Icon,
+  CircleIcon,
+  ClipboardListIcon,
+  FilesIcon,
+  GraduationCapIcon,
+  InboxIcon,
+  MessageCircleQuestionIcon,
+  SearchXIcon,
+  UsersIcon,
+} from "lucide-react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { NAV_ICONS } from "@/components/app-shell/nav-icons";
 import { PageHeader } from "@/components/app-shell/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { isAdminRole } from "@/lib/auth/roles";
+import { isAdminRole, isHrRole } from "@/lib/auth/roles";
+import { formatDate } from "@/lib/countries";
 import { getOrgContext } from "@/lib/auth/session";
 import { CURRENT_PHASE, MAIN_NAV, navForRole, orgPath } from "@/lib/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getHrPending, getMyPending } from "@/modules/dashboard/queries";
+import { todayIn } from "@/modules/onboarding/plan";
+
+type PendingItem = { key: string; text: string; href: string; icon: ReactNode; tone?: "warn" };
+
+function PendingList({ items }: { items: PendingItem[] }) {
+  return (
+    <ul className="grid gap-3 sm:grid-cols-2">
+      {items.map((item) => (
+        <li key={item.key}>
+          <Link
+            href={item.href}
+            data-testid="dashboard-pending"
+            className={`flex h-full items-center gap-3 rounded-lg border p-4 text-sm transition-colors hover:border-primary/40 ${
+              item.tone === "warn" ? "border-amber-200 bg-amber-50 text-amber-950" : "bg-card"
+            }`}
+          >
+            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground">
+              {item.icon}
+            </span>
+            <span className="font-medium">{item.text}</span>
+            <ArrowRightIcon className="ml-auto size-4 shrink-0" aria-hidden />
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default async function DashboardPage({ params }: { params: Promise<{ org: string }> }) {
   const { org: slug } = await params;
@@ -24,6 +66,94 @@ export default async function DashboardPage({ params }: { params: Promise<{ org:
   const firstName = profile?.full_name?.split(" ")[0];
 
   const modules = navForRole(MAIN_NAV, context.role).filter((item) => item.key !== "home");
+  const isHr = isHrRole(context.role);
+  const today = todayIn(context.org.timezone);
+  const [hrPending, mine] = await Promise.all([
+    isHr ? getHrPending(context.org.id, today) : Promise.resolve(null),
+    getMyPending(context.org.id, context.user.id),
+  ]);
+  const icon = (Icon: typeof InboxIcon) => <Icon className="size-4" aria-hidden />;
+
+  const hrItems: PendingItem[] = [];
+  if (hrPending) {
+    if (hrPending.candidates > 0)
+      hrItems.push({
+        key: "candidates",
+        text: t("dashboard.pending.candidates", { count: hrPending.candidates }),
+        href: orgPath(slug, "/candidates"),
+        icon: icon(UsersIcon),
+      });
+    if (hrPending.hrQueries > 0)
+      hrItems.push({
+        key: "hrQueries",
+        text: t("dashboard.pending.hrQueries", { count: hrPending.hrQueries }),
+        href: orgPath(slug, "/hr-queries"),
+        icon: icon(InboxIcon),
+        tone: "warn",
+      });
+    if (hrPending.onboarding > 0)
+      hrItems.push({
+        key: "onboarding",
+        text: t("dashboard.pending.onboarding", { count: hrPending.onboarding }),
+        href: orgPath(slug, "/onboarding"),
+        icon: icon(ClipboardListIcon),
+        tone: "warn",
+      });
+    if (hrPending.trainings > 0)
+      hrItems.push({
+        key: "trainings",
+        text: t("dashboard.pending.trainings", { count: hrPending.trainings }),
+        href: orgPath(slug, "/trainings"),
+        icon: icon(GraduationCapIcon),
+        tone: "warn",
+      });
+    if (hrPending.faqUnanswered > 0)
+      hrItems.push({
+        key: "faqUnanswered",
+        text: t("dashboard.pending.faqUnanswered", { count: hrPending.faqUnanswered }),
+        href: orgPath(slug, "/hr-queries"),
+        icon: icon(SearchXIcon),
+      });
+    if (hrPending.readyDocuments === 0)
+      hrItems.push({
+        key: "noDocuments",
+        text: t("dashboard.pending.noDocuments"),
+        href: orgPath(slug, "/faq/documents"),
+        icon: icon(FilesIcon),
+      });
+  }
+
+  const myItems: PendingItem[] = [];
+  if (mine.trainings > 0)
+    myItems.push({
+      key: "myTrainings",
+      text: `${t("dashboard.forYou.trainings", { count: mine.trainings })}${
+        mine.nextDue
+          ? ` ${t("dashboard.forYou.nextDue", {
+              date: formatDate(`${mine.nextDue}T12:00:00Z`, context.country, {
+                dateStyle: "medium",
+                timeZone: "UTC",
+              }),
+            })}`
+          : ""
+      }`,
+      href: orgPath(slug, "/my-trainings"),
+      icon: icon(GraduationCapIcon),
+    });
+  if (mine.answeredQueries > 0)
+    myItems.push({
+      key: "answers",
+      text: t("dashboard.forYou.answers", { count: mine.answeredQueries }),
+      href: orgPath(slug, "/faq/my-queries"),
+      icon: icon(BellRingIcon),
+    });
+  if (!isHr)
+    myItems.push({
+      key: "askFaq",
+      text: t("dashboard.forYou.askFaq"),
+      href: orgPath(slug, "/faq"),
+      icon: icon(MessageCircleQuestionIcon),
+    });
 
   let setupSteps: { key: string; done: boolean; href: string }[] = [];
   if (isAdminRole(context.role)) {
@@ -85,6 +215,31 @@ export default async function DashboardPage({ params }: { params: Promise<{ org:
             </ol>
           </CardContent>
         </Card>
+      ) : null}
+
+      {isHr ? (
+        <section aria-labelledby="pending-heading" className="mb-6 space-y-3">
+          <h2 id="pending-heading" className="text-lg font-medium">
+            {t("dashboard.pending.title")}
+          </h2>
+          {hrItems.length ? (
+            <PendingList items={hrItems} />
+          ) : (
+            <p className="flex items-center gap-2 text-sm text-muted-foreground">
+              <CheckCircle2Icon className="size-4 text-emerald-600" aria-hidden />
+              {t("dashboard.pending.allClear")}
+            </p>
+          )}
+        </section>
+      ) : null}
+
+      {myItems.length ? (
+        <section aria-labelledby="for-you-heading" className="mb-6 space-y-3">
+          <h2 id="for-you-heading" className="text-lg font-medium">
+            {t("dashboard.forYou.title")}
+          </h2>
+          <PendingList items={myItems} />
+        </section>
       ) : null}
 
       <section aria-labelledby="modules-heading" className="space-y-3">
