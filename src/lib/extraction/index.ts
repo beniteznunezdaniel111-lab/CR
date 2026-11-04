@@ -1,0 +1,85 @@
+/**
+ * Extracción de texto de PDF (unpdf) y DOCX (mammoth). Sin OCR: un PDF escaneado
+ * (solo imágenes) no tiene texto y se rechaza con un error claro. Las imágenes
+ * (p. ej. la foto de un CV) nunca se extraen: a la IA solo le llega texto.
+ */
+export const PDF_MIME = "application/pdf";
+export const DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+export const SUPPORTED_MIME_TYPES = [PDF_MIME, DOCX_MIME] as const;
+export type SupportedMime = (typeof SUPPORTED_MIME_TYPES)[number];
+
+/** Máximo de caracteres de texto extraído (unas 25 páginas). */
+export const MAX_EXTRACTED_CHARS = 60_000;
+/** Por debajo de este número de letras se considera que no hay texto (escaneo). */
+const MIN_LETTERS = 40;
+
+export type ExtractionErrorCode = "unsupported_type" | "no_text" | "too_long" | "unreadable";
+
+export class ExtractionError extends Error {
+  constructor(public readonly code: ExtractionErrorCode) {
+    super(`extraction_${code}`);
+    this.name = "ExtractionError";
+  }
+}
+
+export function isExtractionError(error: unknown): error is ExtractionError {
+  return error instanceof ExtractionError;
+}
+
+export function isSupportedMime(mime: string): mime is SupportedMime {
+  return (SUPPORTED_MIME_TYPES as readonly string[]).includes(mime);
+}
+
+/** Tipo a partir de la extensión, por si el navegador no informa el MIME. */
+export function mimeFromFilename(filename: string): SupportedMime | null {
+  const extension = filename.toLowerCase().split(".").pop();
+  if (extension === "pdf") return PDF_MIME;
+  if (extension === "docx") return DOCX_MIME;
+  return null;
+}
+
+/** Normaliza el texto: NFC, saltos de línea, espacios sobrantes y líneas vacías repetidas. */
+export function normalizeExtractedText(text: string): string {
+  return text
+    .normalize("NFC")
+    .replaceAll("\u0000", "")
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\t ]+/g, " ")
+    .split("\n")
+    .map((line) => line.replace(/ {2,}/g, " ").trimEnd())
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+async function extractPdf(data: Uint8Array): Promise<string> {
+  const { extractText } = await import("unpdf");
+  const { text } = await extractText(data, { mergePages: true });
+  return text;
+}
+
+async function extractDocx(data: Uint8Array): Promise<string> {
+  const mammoth = await import("mammoth");
+  const result = await mammoth.extractRawText({ buffer: Buffer.from(data) });
+  return result.value;
+}
+
+export async function extractDocumentText(
+  data: Uint8Array,
+  mime: string,
+): Promise<{ text: string }> {
+  if (!isSupportedMime(mime)) throw new ExtractionError("unsupported_type");
+
+  let raw: string;
+  try {
+    raw = mime === PDF_MIME ? await extractPdf(data) : await extractDocx(data);
+  } catch {
+    throw new ExtractionError("unreadable");
+  }
+
+  const text = normalizeExtractedText(raw);
+  const letters = text.match(/\p{L}/gu)?.length ?? 0;
+  if (letters < MIN_LETTERS) throw new ExtractionError("no_text");
+  if (text.length > MAX_EXTRACTED_CHARS) throw new ExtractionError("too_long");
+  return { text };
+}

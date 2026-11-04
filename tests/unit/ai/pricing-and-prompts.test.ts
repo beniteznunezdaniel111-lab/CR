@@ -60,6 +60,23 @@ const SAMPLE_INPUTS: Record<string, unknown> = {
     jobBoard: "Se requiere nacionalidad española.",
     website: "Promovemos la igualdad entre mujeres y hombres.",
   },
+  "cv.identity": {
+    cvText: "Ana Martín Ruiz\nana.martin@example.com · +34 612 345 678\nExperiencia en almacén",
+  },
+  "cv.analysis": {
+    job: {
+      title: "Técnico/a de logística",
+      level: "mid",
+      responsibilities: "Coordinar envíos",
+      requirements: [
+        { id: "r1", text: "Experiencia en gestión de almacén", kind: "required" },
+        { id: "r2", text: "Inglés B2", kind: "preferred" },
+        { id: "r3", text: "Carné de carretillero", kind: "required" },
+      ],
+    },
+    cvText:
+      "[dato personal omitido]\nTécnica de logística\n2019 - actualidad · Coordinadora · Logística Norte\n- Experiencia en gestión de almacén\nIDIOMAS\nInglés B2\nHABILIDADES\nSAP, Excel",
+  },
 };
 
 describe("registro de prompts", () => {
