@@ -43,6 +43,16 @@ Cuentas demo (contraseña `Demo1234`):
 El registro de empresas nuevas pide el código `SIGNUP_ACCESS_CODE` (en local: `demo`). Los emails
 locales (invitaciones, recuperación de contraseña) se ven en http://127.0.0.1:54324.
 
+### Problemas frecuentes
+
+- **«Falta NEXT_PUBLIC_SUPABASE_URL…» al abrir la app:** no existe `.env.local`. Con Docker Desktop
+  abierto, ejecuta `pnpm db:start` (espera a que termine), después `pnpm env:local` y reinicia
+  `pnpm dev` (Ctrl+C y otra vez). Next.js solo lee las variables al arrancar.
+- **`pnpm db:start` falla:** comprueba que Docker Desktop está abierto. La primera vez descarga
+  varias imágenes y tarda unos minutos.
+- **Puertos ocupados (54321, 54322…):** hay otro Supabase local en marcha; páralo con
+  `pnpm exec supabase stop --all`.
+
 ### IA real
 
 Por defecto `AI_PROVIDER=mock` (respuestas fijas, sin coste). Para usar Claude, añade a `.env.local`:

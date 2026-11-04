@@ -4,7 +4,7 @@
  *
  *   pnpm env:local
  */
-import { execFileSync } from "node:child_process";
+import { execSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const ENV_FILE = ".env.local";
@@ -18,9 +18,22 @@ function parseEnv(text: string): Map<string, string> {
   return result;
 }
 
-const status = parseEnv(
-  execFileSync("pnpm", ["exec", "supabase", "status", "-o", "env"], { encoding: "utf8" }),
-);
+function supabaseStatus(): string {
+  try {
+    // execSync usa la shell del sistema: funciona igual en Windows (pnpm.cmd), macOS y Linux.
+    return execSync("pnpm exec supabase status -o env", {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch {
+    console.error(
+      "Supabase local no está en marcha. Abre Docker Desktop, ejecuta `pnpm db:start` y vuelve a lanzar `pnpm env:local`.",
+    );
+    process.exit(1);
+  }
+}
+
+const status = parseEnv(supabaseStatus());
 const pick = (...keys: string[]) => keys.map((key) => status.get(key)).find(Boolean);
 
 const supabaseUrl = pick("API_URL");
@@ -56,3 +69,4 @@ const content = [
 ].join("\n");
 writeFileSync(ENV_FILE, content);
 console.log(`✓ ${ENV_FILE} actualizado (${values.size} variables).`);
+console.log("  Si `pnpm dev` ya estaba en marcha, reinícialo para que lea las variables.");
