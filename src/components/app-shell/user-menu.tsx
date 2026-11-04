@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOutIcon } from "lucide-react";
+import { DownloadIcon, LogOutIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -20,8 +20,18 @@ function initials(name: string | null, email: string): string {
   return ((parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "")).toUpperCase() || "?";
 }
 
-export function UserMenu({ name, email }: { name: string | null; email: string }) {
+export function UserMenu({
+  name,
+  email,
+  exportHref,
+}: {
+  name: string | null;
+  email: string;
+  /** Descarga de los datos propios en la empresa actual. */
+  exportHref?: string;
+}) {
   const t = useTranslations("nav");
+  const tPrivacy = useTranslations("privacy");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -37,6 +47,14 @@ export function UserMenu({ name, email }: { name: string | null; email: string }
           <p className="truncate text-xs font-normal text-muted-foreground">{email}</p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {exportHref ? (
+          <DropdownMenuItem asChild>
+            <a href={exportHref} download>
+              <DownloadIcon aria-hidden />
+              {tPrivacy("exportMine")}
+            </a>
+          </DropdownMenuItem>
+        ) : null}
         <form action={signOutAction}>
           <DropdownMenuItem asChild>
             <button type="submit" className="w-full">

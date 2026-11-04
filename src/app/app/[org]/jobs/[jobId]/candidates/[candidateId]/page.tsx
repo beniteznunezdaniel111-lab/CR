@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   CheckCircle2Icon,
+  DownloadIcon,
   FileSearchIcon,
   HistoryIcon,
   ListChecksIcon,
@@ -49,6 +50,7 @@ export default async function CandidatePage({ params }: { params: Params }) {
   const { org: slug, jobId, candidateId } = await params;
   const { org, country } = await requireOrgRole(slug, HR_ROLES);
   const t = await getTranslations("candidates");
+  const tPrivacy = await getTranslations("privacy");
 
   const [job, detail] = await Promise.all([
     getJob(org.id, jobId),
@@ -88,6 +90,12 @@ export default async function CandidatePage({ params }: { params: Params }) {
                 <ArrowLeftIcon aria-hidden />
                 {t("title")}
               </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <a href={orgPath(slug, `/candidates/${candidate.id}/export`)} download>
+                <DownloadIcon aria-hidden />
+                {tPrivacy("candidate.export")}
+              </a>
             </Button>
             {analysis ? (
               <Button asChild variant="outline">

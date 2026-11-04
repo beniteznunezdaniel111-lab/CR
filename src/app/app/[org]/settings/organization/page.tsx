@@ -6,6 +6,7 @@ import { ADMIN_ROLES } from "@/lib/auth/roles";
 import { requireOrgRole } from "@/lib/auth/session";
 import { getCountryOrDefault, listCountries } from "@/lib/countries";
 import type { CurrencyCode } from "@/lib/countries/types";
+import { CloseOrganization } from "./close-organization";
 import { type CountryOptions, OrgSettingsForm } from "./org-settings-form";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -57,6 +58,9 @@ export default async function OrganizationSettingsPage({
           />
         </CardContent>
       </Card>
+      <div className="mt-6">
+        <CloseOrganization orgId={org.id} name={org.name} />
+      </div>
     </>
   );
 }

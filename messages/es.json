@@ -61,7 +61,8 @@
     "quizCorrect": "Marca la respuesta correcta de cada pregunta.",
     "quizQuestions": "El test debe tener entre 1 y 30 preguntas.",
     "assignPeople": "Elige al menos una persona.",
-    "dueDatePast": "La fecha límite no puede ser anterior a hoy."
+    "dueDatePast": "La fecha límite no puede ser anterior a hoy.",
+    "closeConfirm": "Escribe el nombre exacto de la empresa."
   },
   "landing": {
     "eyebrow": "MVP · España y Costa Rica",
@@ -1639,5 +1640,38 @@
     "warning": "Tu empresa ha usado el {percent} % del tope mensual de IA.",
     "exceeded": "Tu empresa ha alcanzado el tope mensual de IA: las funciones con IA están bloqueadas hasta el mes siguiente.",
     "link": "Ver el uso de IA"
+  },
+  "privacy": {
+    "exportMine": "Exportar mis datos",
+    "member": {
+      "export": "Exportar sus datos",
+      "erase": "Borrar sus datos",
+      "eraseDialog": {
+        "title": "¿Borrar los datos de {name}?",
+        "description": "Se borran sus conversaciones del chat, sus consultas a RRHH, sus avisos, sus formaciones (con sus intentos) y sus planes de onboarding, y deja de pertenecer a la empresa. No se puede deshacer: si los necesitas, exporta antes sus datos.",
+        "cancel": "Cancelar",
+        "confirm": "Borrar sus datos"
+      }
+    },
+    "candidate": {
+      "export": "Exportar datos"
+    },
+    "close": {
+      "title": "Cerrar la empresa",
+      "description": "Borra la empresa y todos sus datos: puestos, candidaturas y CVs, documentos, formaciones, auditoría y uso de IA. No se puede deshacer.",
+      "button": "Cerrar la empresa",
+      "dialogTitle": "¿Cerrar «{name}»?",
+      "dialogDescription": "Escribe el nombre exacto de la empresa para confirmar. Antes, exporta lo que necesites conservar.",
+      "confirmLabel": "Nombre de la empresa",
+      "confirm": "Cerrar definitivamente",
+      "cancel": "Cancelar"
+    },
+    "erased": "Datos borrados.",
+    "errors": {
+      "generic": "No se ha podido completar. Inténtalo de nuevo.",
+      "forbidden": "Solo un admin de la empresa puede hacerlo.",
+      "lastAdmin": "No se puede: la empresa se quedaría sin ningún admin activo.",
+      "files": "No se han podido borrar los ficheros de la empresa. Inténtalo de nuevo."
+    }
   }
 }

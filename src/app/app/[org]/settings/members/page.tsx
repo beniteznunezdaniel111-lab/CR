@@ -40,8 +40,10 @@ export default async function MembersPage({ params }: { params: Promise<{ org: s
           <CardContent>
             <MembersTable
               orgId={org.id}
+              orgSlug={org.slug}
               members={members.map((member) => ({
                 membershipId: member.membershipId,
+                userId: member.userId,
                 fullName: member.fullName,
                 email: member.email,
                 role: member.role,

@@ -75,6 +75,7 @@ export default async function OrgLayout({
             <UserMenu
               name={profile?.full_name ?? null}
               email={profile?.email ?? context.user.email ?? ""}
+              exportHref={orgPath(slug, "/my-data")}
             />
           </div>
         </header>

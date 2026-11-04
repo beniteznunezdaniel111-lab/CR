@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreHorizontalIcon } from "lucide-react";
+import { DownloadIcon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -37,10 +37,12 @@ import {
   removeMemberAction,
   setMemberStatusAction,
 } from "@/modules/members/actions";
+import { eraseMemberDataAction } from "@/modules/privacy/actions";
 import { RoleSelect } from "./role-select";
 
 export type MemberView = {
   membershipId: string;
+  userId: string;
   fullName: string | null;
   email: string | null;
   role: MemberRole;
@@ -54,11 +56,21 @@ function notify(result: FormState) {
   if (result.status === "error" && result.message) toast.error(result.message);
 }
 
-export function MembersTable({ orgId, members }: { orgId: string; members: MemberView[] }) {
+export function MembersTable({
+  orgId,
+  orgSlug,
+  members,
+}: {
+  orgId: string;
+  orgSlug: string;
+  members: MemberView[];
+}) {
   const t = useTranslations("members");
   const tStatus = useTranslations("memberStatus");
+  const tPrivacy = useTranslations("privacy.member");
   const [pending, startTransition] = useTransition();
   const [toRemove, setToRemove] = useState<MemberView | null>(null);
+  const [toErase, setToErase] = useState<MemberView | null>(null);
 
   const run = (action: (data: FormData) => Promise<FormState>, fields: Record<string, string>) => {
     const data = new FormData();
@@ -148,9 +160,21 @@ export function MembersTable({ orgId, members }: { orgId: string; members: Membe
                         {t("table.enable")}
                       </DropdownMenuItem>
                     )}
+                    <DropdownMenuItem asChild>
+                      <a href={`/app/${orgSlug}/settings/members/${member.userId}/export`} download>
+                        <DownloadIcon aria-hidden />
+                        {tPrivacy("export")}
+                      </a>
+                    </DropdownMenuItem>
                     <DropdownMenuItem variant="destructive" onSelect={() => setToRemove(member)}>
                       {t("table.remove")}
                     </DropdownMenuItem>
+                    {!member.isCurrentUser ? (
+                      <DropdownMenuItem variant="destructive" onSelect={() => setToErase(member)}>
+                        <Trash2Icon aria-hidden />
+                        {tPrivacy("erase")}
+                      </DropdownMenuItem>
+                    ) : null}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
@@ -176,6 +200,31 @@ export function MembersTable({ orgId, members }: { orgId: string; members: Membe
               }}
             >
               {t("removeDialog.confirm")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <AlertDialog open={toErase !== null} onOpenChange={(open) => !open && setToErase(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {tPrivacy("eraseDialog.title", { name: toErase?.fullName ?? toErase?.email ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{tPrivacy("eraseDialog.description")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{tPrivacy("eraseDialog.cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                const target = toErase;
+                setToErase(null);
+                if (!target) return;
+                startTransition(async () =>
+                  notify(await eraseMemberDataAction({ orgId, userId: target.userId })),
+                );
+              }}
+            >
+              {tPrivacy("eraseDialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
