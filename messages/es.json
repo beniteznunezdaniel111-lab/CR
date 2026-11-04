@@ -1,0 +1,375 @@
+{
+  "common": {
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "invitationLink": "Enlace de invitación"
+  },
+  "roles": {
+    "admin": "Admin",
+    "hr": "RRHH",
+    "employee": "Empleado"
+  },
+  "memberStatus": {
+    "active": "Activo",
+    "disabled": "Desactivado"
+  },
+  "countries": {
+    "placeholder": "Elige un país",
+    "ES": "España",
+    "CR": "Costa Rica"
+  },
+  "validation": {
+    "invalid": "El valor no es válido.",
+    "required": "Este campo es obligatorio.",
+    "email": "Introduce un email válido.",
+    "passwordMin": "La contraseña debe tener al menos 8 caracteres e incluir letras y números.",
+    "passwordMax": "La contraseña no puede superar los 72 caracteres.",
+    "passwordMismatch": "Las contraseñas no coinciden.",
+    "nameLength": "Escribe un nombre de entre 2 y 120 caracteres.",
+    "acceptTerms": "Para continuar debes aceptar los términos y la política de privacidad.",
+    "accessCode": "El código de acceso no es válido. Pídeselo a quien te dio acceso a la beta.",
+    "orgNameLength": "El nombre de la empresa debe tener entre 2 y 120 caracteres.",
+    "country": "Elige un país de la lista.",
+    "tooLong": "El texto es demasiado largo.",
+    "retentionMonths": "Indica un número de meses entre 1 y 60.",
+    "role": "Elige un rol válido.",
+    "alreadyMember": "Esta persona ya forma parte de la empresa."
+  },
+  "landing": {
+    "eyebrow": "MVP · España y Costa Rica",
+    "title": "Recursos humanos con IA, con las personas siempre al mando",
+    "subtitle": "{app} ayuda a los equipos de RRHH a redactar ofertas inclusivas, revisar CVs, preparar entrevistas y onboardings, resolver dudas internas y formar a la plantilla. La IA sugiere; las decisiones las toman personas.",
+    "cta": "Crear cuenta",
+    "goToApp": "Ir a la aplicación",
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta",
+    "modulesTitle": "Qué incluye",
+    "modules": {
+      "jobs": {
+        "title": "Descripciones de puesto y ofertas",
+        "description": "Descripciones internas y ofertas para LinkedIn, portales y tu web, con revisión de lenguaje inclusivo."
+      },
+      "cvs": {
+        "title": "Filtrado de CVs con revisión humana",
+        "description": "Resúmenes y encaje requisito por requisito, con evidencias. La IA nunca descarta: decide una persona."
+      },
+      "interviews": {
+        "title": "Entrevistas y onboarding",
+        "description": "Guías de entrevista con rúbrica y planes de 30/60/90 días listos para asignar."
+      },
+      "faq": {
+        "title": "FAQ interna con fuentes",
+        "description": "Respuestas sobre vacaciones, permisos y beneficios basadas solo en tus documentos y citando la fuente."
+      },
+      "training": {
+        "title": "Formación y evaluaciones",
+        "description": "Materiales de formación y tests generados a partir de un tema o de tus documentos."
+      }
+    },
+    "humanInTheLoop": "Los textos generados son borradores que revisa una persona. Ningún candidato es rechazado por la IA y todo análisis queda registrado.",
+    "terms": "Términos de uso",
+    "privacy": "Privacidad"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Contraseña",
+    "fullName": "Nombre y apellidos",
+    "passwordHelp": "Mínimo 8 caracteres, con letras y números.",
+    "accessCode": "Código de acceso",
+    "accessCodeHelp": "Durante la fase de validación el registro requiere un código de acceso.",
+    "backToLogin": "Volver a iniciar sesión",
+    "login": {
+      "title": "Inicia sesión",
+      "description": "Accede con tu email y contraseña.",
+      "submit": "Entrar",
+      "pending": "Entrando…",
+      "forgot": "¿Has olvidado tu contraseña?",
+      "noAccount": "¿No tienes cuenta?",
+      "signupLink": "Crea una",
+      "invalidCredentials": "El email o la contraseña no son correctos.",
+      "emailNotConfirmed": "Antes de entrar, confirma tu email con el enlace que te hemos enviado.",
+      "linkError": "El enlace no es válido o ha caducado. Inicia sesión o solicita uno nuevo."
+    },
+    "signup": {
+      "title": "Crea tu cuenta",
+      "description": "Después podrás crear tu empresa e invitar a tu equipo.",
+      "inviteFor": "Crea tu cuenta para unirte a {organization}.",
+      "submit": "Crear cuenta",
+      "pending": "Creando cuenta…",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "loginLink": "Inicia sesión",
+      "acceptTerms": "Acepto los <terms>términos de uso</terms> y la <privacy>política de privacidad</privacy>.",
+      "emailTaken": "Ya existe una cuenta con este email. Inicia sesión.",
+      "genericError": "No hemos podido crear la cuenta. Inténtalo de nuevo en unos minutos.",
+      "checkEmail": "¡Casi está! Te hemos enviado un email para confirmar tu cuenta."
+    },
+    "forgot": {
+      "title": "Recupera tu contraseña",
+      "description": "Te enviaremos un enlace para crear una contraseña nueva.",
+      "submit": "Enviar enlace",
+      "pending": "Enviando…",
+      "sent": "Si existe una cuenta con ese email, recibirás un enlace en unos minutos."
+    },
+    "reset": {
+      "title": "Nueva contraseña",
+      "description": "Elige una contraseña nueva para tu cuenta.",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Repite la contraseña",
+      "submit": "Guardar contraseña",
+      "pending": "Guardando…",
+      "error": "No hemos podido cambiar la contraseña. Solicita un enlace nuevo."
+    }
+  },
+  "newOrg": {
+    "title": "Crea tu empresa",
+    "description": "Quien crea la empresa queda como admin y puede invitar al resto del equipo. Podrás completar estos datos más tarde.",
+    "submit": "Crear empresa",
+    "pending": "Creando empresa…",
+    "error": "No hemos podido crear la empresa. Revisa los datos e inténtalo de nuevo."
+  },
+  "orgFields": {
+    "name": "Nombre de la empresa",
+    "country": "País",
+    "countryHelp": "Ajusta los textos legales, la normativa de referencia y los formatos (moneda, fechas).",
+    "legalName": "Razón social",
+    "optional": "opcional",
+    "taxIdES": "NIF",
+    "taxIdCR": "Cédula jurídica",
+    "address": "Dirección",
+    "privacyEmail": "Email de contacto para privacidad",
+    "privacyEmailHelp": "Aparecerá en los avisos de privacidad para candidatos y empleados.",
+    "currency": "Moneda",
+    "timezone": "Zona horaria",
+    "cvRetentionMonths": "Conservación de CVs (meses)",
+    "cvRetentionHelp": "Pasado este plazo, los CVs y sus análisis se borran automáticamente."
+  },
+  "orgSettings": {
+    "title": "Datos de la empresa",
+    "description": "Información legal, país y políticas de datos de tu empresa.",
+    "sections": {
+      "general": "General",
+      "legal": "Datos legales",
+      "data": "Protección de datos"
+    },
+    "countryChangeWarning": "Al cambiar de país se usarán las plantillas y la normativa del nuevo país en los textos que se generen a partir de ahora.",
+    "save": "Guardar cambios",
+    "saving": "Guardando…",
+    "saved": "Cambios guardados.",
+    "error": "No hemos podido guardar los cambios."
+  },
+  "nav": {
+    "home": "Inicio",
+    "jobs": "Puestos y ofertas",
+    "candidates": "Candidaturas",
+    "onboarding": "Onboarding",
+    "faq": "Preguntas frecuentes",
+    "hrQueries": "Consultas a RRHH",
+    "trainings": "Formación",
+    "myTrainings": "Mis formaciones",
+    "organization": "Empresa",
+    "members": "Usuarios",
+    "aiUsage": "Uso de IA",
+    "settings": "Ajustes",
+    "soon": "Pronto",
+    "mainLabel": "Navegación principal",
+    "openMenu": "Abrir menú",
+    "switchOrg": "Cambiar de empresa",
+    "yourOrgs": "Tus empresas",
+    "newOrg": "Crear otra empresa",
+    "chooseOrg": "Elige una empresa",
+    "userMenu": "Menú de usuario",
+    "signOut": "Cerrar sesión"
+  },
+  "comingSoon": {
+    "title": "Próximamente",
+    "phase": "Se construye en la fase {phase} del MVP.",
+    "modules": {
+      "jobs": "Aquí podrás generar descripciones de puesto y ofertas de empleo, revisar el lenguaje inclusivo y exportarlas.",
+      "candidates": "Aquí podrás subir CVs, ver las sugerencias de la IA y decidir qué candidaturas avanzan.",
+      "onboarding": "Aquí podrás crear planes de 30/60/90 días y seguir su progreso.",
+      "faq": "Aquí podrás preguntar sobre vacaciones, permisos y beneficios, con respuestas basadas en los documentos de la empresa.",
+      "hrQueries": "Aquí RRHH responderá las consultas que la FAQ no pueda resolver.",
+      "trainings": "Aquí podrás generar formaciones y evaluaciones y asignarlas al equipo.",
+      "myTrainings": "Aquí verás las formaciones que te asignen y tus resultados.",
+      "aiUsage": "Aquí verás el consumo de IA de la empresa por mes y por módulo."
+    }
+  },
+  "dashboard": {
+    "greeting": "Hola, {name}",
+    "greetingNoName": "Hola",
+    "subtitle": "Estás en {organization} con el rol de {role}.",
+    "setup": {
+      "title": "Primeros pasos",
+      "description": "Deja la empresa lista para empezar a usar los módulos.",
+      "done": "Hecho",
+      "pending": "Pendiente",
+      "steps": {
+        "createOrg": "Crear la empresa",
+        "completeOrg": "Completar los datos legales y el email de privacidad",
+        "inviteTeam": "Invitar a RRHH y al resto del equipo"
+      }
+    },
+    "modules": "Módulos",
+    "moduleDescriptions": {
+      "jobs": "Descripciones de puesto y ofertas con revisión de lenguaje inclusivo.",
+      "candidates": "CVs analizados con sugerencias de la IA y decisión siempre humana.",
+      "onboarding": "Planes de 30/60/90 días para nuevas incorporaciones.",
+      "faq": "Respuestas sobre vacaciones, permisos y beneficios con su fuente.",
+      "hrQueries": "Consultas del equipo que necesitan respuesta de RRHH.",
+      "trainings": "Materiales de formación y evaluaciones.",
+      "myTrainings": "Las formaciones que tienes asignadas."
+    }
+  },
+  "members": {
+    "title": "Usuarios",
+    "description": "Invita a personas a la empresa y gestiona su rol.",
+    "membersTitle": "{count, plural, one {# persona} other {# personas}}",
+    "rolesHelp": "Admin configura la empresa y tiene todo lo de RRHH. RRHH usa todos los módulos de RRHH. Empleado accede a la FAQ y a sus formaciones.",
+    "you": "tú",
+    "forbidden": "Solo una persona con rol de admin puede gestionar los usuarios.",
+    "inviteError": "No hemos podido crear la invitación. Inténtalo de nuevo.",
+    "genericError": "No hemos podido completar la acción. Inténtalo de nuevo.",
+    "lastAdmin": "La empresa debe tener al menos un admin activo.",
+    "invitationRevoked": "Invitación revocada.",
+    "roleChanged": "Rol actualizado.",
+    "memberEnabled": "Acceso reactivado.",
+    "memberDisabled": "Acceso desactivado.",
+    "memberRemoved": "Persona eliminada de la empresa.",
+    "invite": {
+      "open": "Invitar",
+      "title": "Invitar a una persona",
+      "description": "Recibirá un enlace para unirse a la empresa con el rol que elijas.",
+      "email": "Email",
+      "role": "Rol",
+      "roleHelp": "Podrás cambiarlo más tarde.",
+      "submit": "Crear invitación",
+      "pending": "Creando…",
+      "emailSent": "Hemos enviado la invitación por email. También puedes compartir este enlace:",
+      "emailNotSent": "El envío de emails aún no está configurado: comparte este enlace con la persona invitada.",
+      "linkHelp": "El enlace es personal, caduca en 7 días y solo funciona con el email invitado.",
+      "done": "Hecho"
+    },
+    "table": {
+      "person": "Persona",
+      "role": "Rol",
+      "status": "Estado",
+      "actions": "Acciones",
+      "changeRoleFor": "Cambiar el rol de {name}",
+      "disable": "Desactivar acceso",
+      "enable": "Reactivar acceso",
+      "remove": "Eliminar de la empresa"
+    },
+    "removeDialog": {
+      "title": "¿Eliminar a esta persona de la empresa?",
+      "description": "{name} perderá el acceso a la empresa. Su cuenta seguirá existiendo y podrás invitarla de nuevo.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    },
+    "invitations": {
+      "title": "Invitaciones pendientes",
+      "description": "Invitaciones enviadas que aún no se han aceptado.",
+      "empty": "No hay invitaciones pendientes.",
+      "email": "Email",
+      "role": "Rol",
+      "expires": "Caduca",
+      "expired": "Caducada",
+      "newLink": "Nuevo enlace",
+      "revoke": "Revocar",
+      "newLinkTitle": "Nuevo enlace de invitación",
+      "newLinkDescription": "El enlace anterior deja de funcionar. Este caduca en 7 días."
+    }
+  },
+  "invite": {
+    "title": "Invitación",
+    "summary": "Te han invitado a unirte a {organization} con el rol de {role}.",
+    "forEmail": "La invitación es para {email}.",
+    "createAccount": "Crear cuenta y unirme",
+    "haveAccount": "Ya tengo cuenta",
+    "wrongAccount": "Esta invitación es para {email}, pero has iniciado sesión como {current}. Cierra sesión y entra con la cuenta correcta.",
+    "accept": "Aceptar invitación",
+    "accepting": "Uniéndote…",
+    "error": "No hemos podido aceptar la invitación. Inténtalo de nuevo.",
+    "unavailableTitle": "Invitación no disponible",
+    "goBack": "Volver",
+    "status": {
+      "accepted": "Esta invitación ya se ha utilizado.",
+      "revoked": "Esta invitación ha sido revocada. Pide una nueva a la persona administradora.",
+      "expired": "Esta invitación ha caducado. Pide una nueva a la persona administradora.",
+      "invalid": "El enlace de invitación no es válido."
+    }
+  },
+  "legal": {
+    "pendingReview": "Texto provisional pendiente de revisión legal. No constituye asesoramiento legal ni debe usarse con clientes reales sin revisarlo.",
+    "terms": {
+      "title": "Términos de uso",
+      "intro": "Estos términos regulan el uso de {app} durante su fase de validación (MVP).",
+      "sections": {
+        "service": {
+          "title": "1. El servicio",
+          "body": "{app} es una herramienta de apoyo a equipos de recursos humanos. Los contenidos generados con inteligencia artificial son borradores que deben revisar personas."
+        },
+        "accounts": {
+          "title": "2. Cuentas y empresas",
+          "body": "Cada empresa es responsable de las personas a las que invita y de los roles que les asigna. Las credenciales son personales."
+        },
+        "ai": {
+          "title": "3. Uso de inteligencia artificial",
+          "body": "La IA de {app} solo sugiere. Ninguna decisión sobre candidaturas o personas la toma la IA: siempre la toma y la registra una persona."
+        },
+        "data": {
+          "title": "4. Datos",
+          "body": "Los datos de cada empresa están aislados del resto. El tratamiento de datos personales se describe en la política de privacidad."
+        },
+        "liability": {
+          "title": "5. Responsabilidad",
+          "body": "Durante la fase de validación el servicio se ofrece tal cual. Los textos generados no constituyen asesoramiento legal."
+        },
+        "changes": {
+          "title": "6. Cambios",
+          "body": "Podemos actualizar estos términos. Avisaremos de los cambios relevantes."
+        }
+      }
+    },
+    "privacy": {
+      "title": "Política de privacidad",
+      "intro": "Esta política explica cómo {app} trata los datos personales durante su fase de validación.",
+      "sections": {
+        "controller": {
+          "title": "1. Responsable y encargado",
+          "body": "Cada empresa cliente es responsable de los datos de sus empleados y candidaturas; {app} actúa como encargado del tratamiento. Pendiente: datos identificativos del titular del servicio."
+        },
+        "data": {
+          "title": "2. Qué datos tratamos",
+          "body": "Datos de cuenta (nombre, email), datos de la empresa y los contenidos que las empresas suben (por ejemplo, CVs y documentos internos)."
+        },
+        "purposes": {
+          "title": "3. Para qué",
+          "body": "Para prestar el servicio, mantener la seguridad, registrar la auditoría exigida y medir el consumo de IA de cada empresa."
+        },
+        "ai": {
+          "title": "4. Inteligencia artificial",
+          "body": "Algunos contenidos se envían a proveedores de IA para generar sugerencias. La IA no toma decisiones sobre personas y cada análisis queda registrado."
+        },
+        "processors": {
+          "title": "5. Proveedores",
+          "body": "Infraestructura en la Unión Europea (Supabase) y proveedores de IA (Anthropic y, para búsqueda en documentos, un proveedor de embeddings). Pendiente: lista definitiva de subencargados y transferencias internacionales."
+        },
+        "retention": {
+          "title": "6. Conservación",
+          "body": "Cada empresa configura cuánto tiempo se conservan los CVs; al vencer el plazo se borran automáticamente. Los registros de auditoría no contienen datos personales del contenido analizado."
+        },
+        "rights": {
+          "title": "7. Derechos",
+          "body": "Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad a través de la empresa que te dio de alta o del email de privacidad indicado por ella."
+        }
+      },
+      "byCountry": "Normativa de referencia por país",
+      "authority": "Autoridad de control"
+    }
+  },
+  "notFound": {
+    "title": "No hemos encontrado esta página",
+    "description": "Puede que el enlace sea incorrecto o que no tengas acceso a este contenido.",
+    "back": "Ir a la aplicación"
+  }
+}
