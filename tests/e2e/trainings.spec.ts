@@ -51,7 +51,7 @@ test.describe("formación y evaluaciones", () => {
     // 5. Leer y completar el primer módulo.
     await page.getByRole("button", { name: /^1\. / }).click();
     await page.getByRole("button", { name: "Marcar como completado" }).click();
-    await expect(page.getByText("Completado")).toBeVisible();
+    await expect(page.getByText("Completado", { exact: true })).toBeVisible();
     await page.getByRole("button", { name: "Módulos" }).first().click();
     await expect(page.getByText("1 de 2 módulos")).toBeVisible();
 
