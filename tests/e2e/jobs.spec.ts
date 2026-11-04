@@ -23,9 +23,11 @@ test.describe("puestos y ofertas", () => {
     await selectOption(page, "Nivel", "Intermedio");
     await selectOption(page, "Modalidad", "Híbrido");
     await page.getByLabel("Responsabilidades clave").fill("Coordinar envíos\nGestionar el almacén");
-    await page.getByLabel("Requisito 1").fill("Experiencia en gestión de almacén");
+    // exact: «Requisito 1» también está contenido en «Tipo del requisito 1» y «Quitar el requisito 1».
+    await page.getByLabel("Requisito 1", { exact: true }).fill("Experiencia en gestión de almacén");
     await page.getByRole("button", { name: "Añadir requisito" }).click();
-    await page.getByLabel("Requisito 2").fill("Buena presencia");
+    await page.getByLabel("Requisito 2", { exact: true }).fill("Buena presencia");
+    await selectOption(page, "Tipo del requisito 2", "Deseable");
     await expect(page.getByRole("status", { name: /podrían ser discriminatorios/ })).toContainText(
       "Buena presencia",
     );
@@ -63,7 +65,7 @@ test.describe("puestos y ofertas", () => {
     );
 
     // 6. Ver la versión 1 (solo lectura) y restaurarla → versión 3.
-    await page.getByRole("combobox").filter({ hasText: /^v2/ }).click();
+    await page.getByRole("combobox", { name: "Versión", exact: true }).click();
     await page.getByRole("option", { name: /^v1 · / }).click();
     await expect(page.getByText(/Estás viendo la versión 1/)).toBeVisible();
     await page.getByRole("button", { name: "Restaurar esta versión" }).click();
@@ -87,8 +89,8 @@ test.describe("puestos y ofertas", () => {
 
     // 9. Cambiar el estado y verlo en la lista.
     await page.goto(jobUrl);
-    await page.getByRole("combobox").filter({ hasText: "Borrador" }).click();
-    await page.getByRole("option", { name: "Abierto" }).click();
+    await expect(page.getByRole("combobox", { name: "Estado del puesto" })).toHaveText("Borrador");
+    await selectOption(page, "Estado del puesto", "Abierto");
     await expect(page.getByText("Estado actualizado.")).toBeVisible();
     await page.goto(`${orgUrl}/jobs`);
     const row = page.getByRole("row").filter({ hasText: title });

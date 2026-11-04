@@ -224,6 +224,7 @@ export function JobForm({
                     )
                   }
                   options={option(REQUIREMENT_KINDS, "requirementKinds")}
+                  ariaLabel={tForm("requirementKindLabel", { index: index + 1 })}
                   className="sm:w-40"
                 />
                 <Button

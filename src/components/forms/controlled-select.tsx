@@ -24,6 +24,7 @@ export function ControlledSelect<T extends string>({
   className,
   allowEmpty,
   emptyLabel,
+  ariaLabel,
 }: {
   id?: string;
   name: string;
@@ -36,6 +37,8 @@ export function ControlledSelect<T extends string>({
   /** Añade una opción para dejar el campo vacío. */
   allowEmpty?: boolean;
   emptyLabel?: string;
+  /** Nombre accesible cuando el select no tiene un <Label> asociado. */
+  ariaLabel?: string;
 }) {
   const EMPTY = "__empty__";
   return (
@@ -45,7 +48,12 @@ export function ControlledSelect<T extends string>({
         value={value === "" ? (allowEmpty ? EMPTY : undefined) : value}
         onValueChange={(next) => onChange(next === EMPTY ? "" : (next as T))}
       >
-        <SelectTrigger id={id} className={cn("w-full", className)} aria-invalid={invalid}>
+        <SelectTrigger
+          id={id}
+          className={cn("w-full", className)}
+          aria-invalid={invalid}
+          aria-label={ariaLabel}
+        >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>

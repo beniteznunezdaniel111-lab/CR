@@ -402,6 +402,7 @@
     "editJob": "Editar datos",
     "unknownAuthor": "persona eliminada",
     "statusChanged": "Estado actualizado.",
+    "statusLabel": "Estado del puesto",
     "versionSaved": "Guardada la versión {version}.",
     "versionRestored": "Versión {from} restaurada como versión {version}.",
     "reviewDone": "{count, plural, =0 {Revisión con IA completada: sin hallazgos.} one {Revisión con IA completada: # hallazgo.} other {Revisión con IA completada: # hallazgos.}}",
@@ -468,6 +469,7 @@
       "requirementsHelp": "Los CVs se compararán con cada requisito. Marca cuáles son imprescindibles y cuáles deseables.",
       "requirementLabel": "Requisito {index}",
       "requirementPlaceholder": "Por ejemplo: 2 años de experiencia en gestión de almacén",
+      "requirementKindLabel": "Tipo del requisito {index}",
       "removeRequirement": "Quitar el requisito {index}",
       "addRequirement": "Añadir requisito",
       "salary": "Banda salarial",
@@ -524,6 +526,7 @@
     "versionOf": "Versión {version} de {total}",
     "aiTrace": "{prompt} · {model}",
     "workspace": {
+      "version": "Versión",
       "unsaved": "Hay cambios sin guardar.",
       "aiDraft": "Borrador generado con IA: revísalo y ajústalo antes de publicarlo.",
       "oldVersion": "Estás viendo la versión {version} (la actual es la {latest}). Es de solo lectura.",

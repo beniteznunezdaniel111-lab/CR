@@ -182,6 +182,7 @@ export function ContentWorkspace({
           <div className="w-64">
             <ControlledSelect
               name="version"
+              ariaLabel={t("version")}
               value={String(version.number)}
               onChange={(next) => next && router.push(`${pathname}?v=${next}`)}
               options={versions.map((option) => ({

@@ -49,6 +49,7 @@ export function JobActions({
       <div className="w-36">
         <ControlledSelect
           name="status"
+          ariaLabel={t("statusLabel")}
           value={current}
           onChange={(next) => {
             if (!next || next === current) return;
