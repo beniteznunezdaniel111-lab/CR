@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { Badge } from "@/components/ui/badge";
 import type * as React from "react";
 import { Logo } from "@/components/brand/logo";
 import { BudgetBanner } from "@/components/app-shell/budget-banner";
@@ -18,7 +19,9 @@ import {
   orgPath,
 } from "@/lib/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { formatDate } from "@/lib/countries";
 import { getBudgetStatus } from "@/modules/ai-usage/queries";
+import { DEMO_TTL_DAYS } from "@/modules/demo/content";
 import { listNotifications } from "@/modules/faq/queries";
 
 export default async function OrgLayout({
@@ -32,6 +35,14 @@ export default async function OrgLayout({
   const context = await getOrgContext(slug);
   const memberships = await getMyMemberships();
   const tRoles = await getTranslations("roles");
+  const tDemo = await getTranslations("demo");
+  const demoExpires = context.org.is_demo
+    ? formatDate(
+        new Date(new Date(context.org.created_at).getTime() + DEMO_TTL_DAYS * 24 * 3600 * 1000),
+        context.country,
+        { dateStyle: "medium", timeZone: context.org.timezone },
+      )
+    : null;
 
   const supabase = await createClient();
   const [{ data: profile }, notifications, budget] = await Promise.all([
@@ -66,6 +77,15 @@ export default async function OrgLayout({
         <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background/95 px-3 backdrop-blur sm:px-4">
           <MobileNav main={main} settings={settings} homeHref={orgPath(slug)} />
           <OrgSwitcher current={current} options={options} />
+          {demoExpires ? (
+            <Badge
+              variant="secondary"
+              title={tDemo("expires", { date: demoExpires })}
+              aria-label={tDemo("expires", { date: demoExpires })}
+            >
+              {tDemo("badge")}
+            </Badge>
+          ) : null}
           <div className="ml-auto flex items-center gap-1">
             <NotificationsMenu
               orgId={context.org.id}

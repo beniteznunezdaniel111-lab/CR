@@ -1673,5 +1673,20 @@
       "lastAdmin": "No se puede: la empresa se quedaría sin ningún admin activo.",
       "files": "No se han podido borrar los ficheros de la empresa. Inténtalo de nuevo."
     }
+  },
+  "demo": {
+    "title": "¿Solo quieres probarlo?",
+    "description": "Crea una empresa demo con datos ficticios ya generados: puestos, candidaturas analizadas, guías de entrevista, onboarding, FAQ y formación. Se borra sola a los {days} días.",
+    "createES": "Demo de España",
+    "createCR": "Demo de Costa Rica",
+    "creating": "Preparando la demo…",
+    "creatingHint": "Tarda unos segundos: estamos creando los datos de ejemplo.",
+    "badge": "Demo",
+    "expires": "Empresa demo con datos ficticios: se borra el {date}.",
+    "partial": "La demo se ha creado, pero no se han podido preparar todos sus datos.",
+    "errors": {
+      "limit": "Ya tienes 3 empresas demo: cierra alguna antes de crear otra.",
+      "generic": "No se ha podido crear la empresa demo. Inténtalo de nuevo."
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 import { getServerEnv } from "@/lib/config/env";
 import { purgeExpiredCandidates } from "@/modules/candidates/retention";
+import { purgeExpiredDemos } from "@/modules/demo/retention";
 import { purgeOldFaqData } from "@/modules/faq/retention";
 
 // Cron diario de Vercel (vercel.json). Vercel envía "Authorization: Bearer
@@ -21,5 +22,6 @@ export async function GET(request: Request) {
   }
   const candidates = await purgeExpiredCandidates();
   const faq = await purgeOldFaqData();
-  return Response.json({ ...candidates, faq });
+  const demos = await purgeExpiredDemos();
+  return Response.json({ ...candidates, faq, ...demos });
 }

@@ -1,4 +1,5 @@
 import "server-only";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { getServerEnv } from "@/lib/config/env";
 import { AiError } from "./errors";
 import { createSupabaseBudgetGuard, createSupabaseUsageRecorder } from "./supabase-sinks";
@@ -19,8 +20,32 @@ export type AiRuntime = {
 };
 
 let defaultRuntime: AiRuntime | undefined;
+const forcedRuntime = new AsyncLocalStorage<AiRuntime>();
+
+/**
+ * Ejecuta `fn` con un runtime concreto en lugar del configurado. Lo usa la
+ * empresa demo para generar sus contenidos con las respuestas mock (sin coste)
+ * a través de los mismos procesos que la app.
+ */
+export function runWithAiRuntime<T>(runtime: AiRuntime, fn: () => Promise<T>): Promise<T> {
+  return forcedRuntime.run(runtime, fn);
+}
+
+/** Runtime de respuestas mock: registra el uso (coste 0) y respeta el tope. */
+export function createMockRuntime(): AiRuntime {
+  return {
+    provider: "mock",
+    model: "mock",
+    transport: null,
+    usage: createSupabaseUsageRecorder(),
+    budget: createSupabaseBudgetGuard(),
+    maxInputTokens: DEFAULT_MAX_INPUT_TOKENS,
+  };
+}
 
 export function getDefaultRuntime(): AiRuntime {
+  const forced = forcedRuntime.getStore();
+  if (forced) return forced;
   if (defaultRuntime) return defaultRuntime;
   const env = getServerEnv();
 
