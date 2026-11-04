@@ -1,7 +1,7 @@
 # CLAUDE.md — HRPilot (SaaS de RRHH con IA)
 
 Guía para trabajar en este repositorio. El plan completo y las decisiones acordadas están en
-[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 2 (filtrado de CVs con revisión humana) terminada.** Cada fase termina con lint,
+[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 3 (guías de entrevista y onboarding) terminada.** Cada fase termina con lint,
 typecheck y tests en verde, commit, resumen y OK explícito del usuario antes de seguir.
 
 ## Comandos
@@ -108,6 +108,15 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
   (subida + meses de la empresa, recalculada si cambian) y cron diario `/api/cron/retention`.
   Un puesto con candidaturas no se puede borrar. Aviso de privacidad por país
   (`privacy-notice.ts`, plantillas en `candidates.privacyTemplate`), marcado como borrador.
+- **Guías de entrevista (`src/modules/interviews`, Fase 3).** `interview.guide@1` genera
+  competencias, técnicas, STAR, foco de candidatura (solo requisitos parciales o que no constan de
+  su último análisis; nunca datos identificativos) y rúbrica de 1 a 5. `sanitizeGuide` retira
+  preguntas o criterios con atributos protegidos (y el salario anterior en ES). `interview_guides`
+  es inmutable (se regenera); PDF en `/print/[org]/interview-guides/[id]`.
+- **Onboarding (`src/modules/onboarding`, Fase 3).** `onboarding.plan@1` propone un plan 30/60/90
+  que se guarda como plantilla editable (`save_onboarding_plan`). `assign_onboarding_plan` copia
+  las tareas con su fecha (día 1 = incorporación) a `onboarding_assignment_tasks`; la persona puede
+  no tener cuenta y no ve su plan. Al marcar una tarea, un trigger fija quién y cuándo.
 
 ## Cómo añadir…
 

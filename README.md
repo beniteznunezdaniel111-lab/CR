@@ -6,7 +6,7 @@ nombre provisional (`src/lib/config/brand.ts`).
 - Plan y decisiones: [`docs/PLAN.md`](docs/PLAN.md)
 - Convenciones para desarrollar: [`CLAUDE.md`](CLAUDE.md)
 
-**Estado:** Fase 2 terminada.
+**Estado:** Fase 3 terminada.
 
 - **Fase 0 (base):** registro, empresas con datos aislados (RLS), roles, invitaciones, capa de IA y
   layout.
@@ -15,8 +15,10 @@ nombre provisional (`src/lib/config/brand.ts`).
 - **Fase 2 (filtrado de CVs):** subida de CVs, anonimización, encaje requisito por requisito con
   citas comprobadas, decisión siempre humana y auditada, revisión anónima, retención y aviso de
   privacidad por país.
+- **Fase 3 (entrevistas y onboarding):** guías de entrevista por puesto o candidatura con rúbrica
+  y PDF; planes 30/60/90 editables, asignación a nuevas incorporaciones y seguimiento de tareas.
 
-Los módulos de las fases 3–5 llegan después.
+Los módulos de las fases 4 y 5 llegan después.
 
 ## Requisitos
 
