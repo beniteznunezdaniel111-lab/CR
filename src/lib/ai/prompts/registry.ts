@@ -7,6 +7,9 @@ import { jobGenerateV1 } from "./jobs/generate.v1";
 import { jobInclusiveReviewV1 } from "./jobs/inclusive-review.v1";
 import { onboardingPlanV1 } from "./onboarding/plan.v1";
 import { healthcheckV1 } from "./system/healthcheck.v1";
+import { trainingModuleV1 } from "./trainings/module.v1";
+import { trainingOutlineV1 } from "./trainings/outline.v1";
+import { trainingQuizV1 } from "./trainings/quiz.v1";
 
 /**
  * Registro de prompts: id → versiones publicadas. La versión "actual" es la más
@@ -24,6 +27,9 @@ const PROMPTS: readonly AnyPrompt[] = [
   interviewGuideV1,
   onboardingPlanV1,
   faqAnswerV1,
+  trainingOutlineV1,
+  trainingModuleV1,
+  trainingQuizV1,
 ];
 
 export function listPrompts(): readonly AnyPrompt[] {

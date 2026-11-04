@@ -117,11 +117,16 @@ export function createAnthropicTransport(
 
     async generateStructured(request: TransportStructuredRequest) {
       try {
-        const message = await client.messages.parse({
+        // Solo el esquema JSON (sin el `parse` del helper): si la salida no valida,
+        // messages.parse lanzaría un error sin dejarnos reintentar ni registrar el
+        // consumo. La validación con Zod (y el reintento con feedback) la hace
+        // generateObject a partir del texto.
+        const { schema } = zodOutputFormat(request.schema);
+        const message = await client.messages.create({
           ...baseParams(request),
-          output_config: { effort: request.effort, format: zodOutputFormat(request.schema) },
+          output_config: { effort: request.effort, format: { type: "json_schema", schema } },
         });
-        return toTransportResponse(message, message.parsed_output);
+        return toTransportResponse(message, null);
       } catch (error) {
         throw mapError(error);
       }

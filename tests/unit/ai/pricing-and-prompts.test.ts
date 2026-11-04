@@ -103,6 +103,34 @@ const SAMPLE_INPUTS: Record<string, unknown> = {
       },
     ],
   },
+  "training.outline": {
+    topic: "Protección de datos en el día a día",
+    audience: "Toda la plantilla",
+    sourceText: null,
+    moduleCount: 4,
+  },
+  "training.module": {
+    trainingTitle: "Vacaciones y permisos",
+    moduleTitle: "Cómo pedir vacaciones",
+    objective: "Saber solicitar vacaciones correctamente.",
+    position: 1,
+    otherModules: ["Permisos retribuidos"],
+    audience: null,
+    sourceText:
+      "Cada persona tiene derecho a 23 días laborables de vacaciones al año. Las vacaciones se solicitan con quince días de antelación.",
+  },
+  "training.quiz": {
+    trainingTitle: "Vacaciones y permisos",
+    modules: [
+      {
+        title: "Cómo pedir vacaciones",
+        summary: "Se piden con quince días de antelación en el portal.",
+        content: "## Vacaciones\nSon 23 días laborables.",
+      },
+      { title: "Permisos", summary: "Hay permisos retribuidos por mudanza.", content: "" },
+    ],
+    questionCount: 5,
+  },
   "cv.analysis": {
     job: {
       title: "Técnico/a de logística",

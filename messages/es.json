@@ -51,7 +51,17 @@
     "questionLength": "Escribe una pregunta de entre 2 y 1000 caracteres.",
     "docTitle": "El título debe tener entre 2 y 200 caracteres.",
     "hrQueryLength": "Escribe tu consulta (entre 5 y 2000 caracteres).",
-    "answerLength": "Escribe una respuesta de entre 2 y 4000 caracteres."
+    "answerLength": "Escribe una respuesta de entre 2 y 4000 caracteres.",
+    "trainingSource": "Indica un tema o elige al menos un documento.",
+    "trainingTitle": "El título debe tener entre 2 y 200 caracteres.",
+    "moduleTitle": "El título del módulo debe tener entre 2 y 200 caracteres.",
+    "quizQuestion": "Cada pregunta debe tener entre 5 y 500 caracteres.",
+    "quizOption": "Cada opción debe tener entre 1 y 300 caracteres.",
+    "quizOptions": "Cada pregunta necesita entre 2 y 6 opciones distintas.",
+    "quizCorrect": "Marca la respuesta correcta de cada pregunta.",
+    "quizQuestions": "El test debe tener entre 1 y 30 preguntas.",
+    "assignPeople": "Elige al menos una persona.",
+    "dueDatePast": "La fecha límite no puede ser anterior a hoy."
   },
   "landing": {
     "eyebrow": "MVP · España y Costa Rica",
@@ -1298,6 +1308,248 @@
       "hr_query_answered": "RRHH ha respondido tu consulta",
       "training_assigned": "Te han asignado la formación «{title}»",
       "unknown": "Nuevo aviso"
+    }
+  },
+  "trainings": {
+    "title": "Formación",
+    "description": "Crea formaciones con IA a partir de un tema o de documentos, asígnalas y sigue el progreso del equipo.",
+    "new": "Nueva formación",
+    "untitled": "Nueva formación",
+    "copyTitle": "{title} (copia)",
+    "newModuleTitle": "Nuevo módulo",
+    "back": "Volver a formación",
+    "status": {
+      "draft": "Borrador",
+      "published": "Publicada"
+    },
+    "tabs": {
+      "trainings": "Formaciones",
+      "people": "Por persona"
+    },
+    "list": {
+      "empty": "Aún no hay formaciones. Crea la primera con IA a partir de un tema o de tus documentos.",
+      "columns": {
+        "title": "Formación",
+        "status": "Estado",
+        "modules": "Módulos",
+        "assigned": "Asignada a",
+        "passed": "Aprobadas",
+        "average": "Nota media",
+        "actions": "Acciones"
+      },
+      "open": "Abrir"
+    },
+    "people": {
+      "empty": "No hay personas en la empresa.",
+      "columns": {
+        "person": "Persona",
+        "assigned": "Asignadas",
+        "passed": "Aprobadas",
+        "overdue": "Vencidas"
+      }
+    },
+    "create": {
+      "title": "Nueva formación",
+      "description": "La IA propone un índice, escribe cada módulo con ejemplos y resumen, y prepara un test con explicaciones. Después puedes editarlo todo antes de publicar.",
+      "titleLabel": "Título (opcional)",
+      "topic": "Tema",
+      "topicHint": "Por ejemplo: «Protección de datos en el día a día» o «Cómo pedir vacaciones y permisos».",
+      "audience": "Destinatarios (opcional)",
+      "audienceHint": "Por ejemplo: personal de almacén, nuevas incorporaciones…",
+      "documents": "Documentos de la FAQ",
+      "documentsHint": "La formación se basará en su contenido.",
+      "noDocuments": "No hay documentos listos en la FAQ.",
+      "files": "Subir documentos (PDF o DOCX, opcional)",
+      "filesHint": "Hasta 5 ficheros de 25 MB. Solo los ve RRHH.",
+      "moduleCount": "Número de módulos",
+      "questionCount": "Preguntas del test",
+      "submit": "Generar formación",
+      "aiNotice": "Borrador generado con IA: revísalo antes de publicarlo.",
+      "steps": {
+        "create": "Preparando la formación",
+        "upload": "Subiendo documentos",
+        "outline": "Proponiendo el índice",
+        "module": "Escribiendo «{title}»",
+        "quiz": "Preparando el test",
+        "done": "Formación generada"
+      },
+      "failed": "La generación se ha detenido. Puedes completar lo que falte desde el editor.",
+      "openEditor": "Abrir el editor"
+    },
+    "editor": {
+      "tabs": {
+        "content": "Contenido",
+        "quiz": "Test",
+        "assignments": "Asignaciones y progreso"
+      },
+      "info": "Datos de la formación",
+      "titleLabel": "Título",
+      "descriptionLabel": "Descripción",
+      "audienceLabel": "Destinatarios",
+      "save": "Guardar",
+      "publish": "Publicar",
+      "publishHint": "Al publicar, podrás asignarla. La plantilla solo ve las formaciones publicadas que tiene asignadas.",
+      "duplicate": "Duplicar",
+      "delete": "Borrar",
+      "deleteConfirm": {
+        "title": "¿Borrar «{title}»?",
+        "description": "Se borran sus módulos, el test y las asignaciones. Una formación con intentos no se puede borrar.",
+        "cancel": "Cancelar",
+        "confirm": "Borrar"
+      },
+      "sources": "Fuentes: {sources}",
+      "generatedWith": "Generada con IA ({prompts}).",
+      "module": {
+        "heading": "Módulo {position}",
+        "titleLabel": "Título",
+        "objectiveLabel": "Objetivo",
+        "contentLabel": "Contenido",
+        "summaryLabel": "Resumen",
+        "examples": "Ejemplos",
+        "exampleTitle": "Título del ejemplo",
+        "exampleDescription": "Descripción del ejemplo",
+        "addExample": "Añadir ejemplo",
+        "removeExample": "Quitar ejemplo {index}",
+        "save": "Guardar módulo",
+        "edit": "Editar",
+        "cancel": "Cancelar",
+        "delete": "Borrar módulo",
+        "generate": "Generar contenido con IA",
+        "regenerate": "Regenerar con IA",
+        "generating": "Generando…",
+        "empty": "Este módulo aún no tiene contenido.",
+        "add": "Añadir módulo"
+      },
+      "quiz": {
+        "empty": "Aún no hay test.",
+        "generate": "Generar test con IA",
+        "generating": "Generando…",
+        "edit": "Editar test",
+        "save": "Guardar test",
+        "cancel": "Cancelar",
+        "question": "Pregunta {index}",
+        "questionLabel": "Enunciado de la pregunta {index}",
+        "option": "Opción {letter}",
+        "optionLabel": "Opción {letter} de la pregunta {index}",
+        "correct": "Correcta",
+        "correctLabel": "Marcar la opción {letter} como correcta",
+        "explanation": "Explicación (se muestra tras cada intento)",
+        "addOption": "Añadir opción",
+        "removeOption": "Quitar opción",
+        "addQuestion": "Añadir pregunta",
+        "removeQuestion": "Quitar pregunta {index}",
+        "secret": "Las respuestas correctas solo las ve RRHH. La plantilla las conoce al entregar cada intento.",
+        "count": "{count, plural, one {# pregunta} other {# preguntas}} · aprobado con {score} %",
+        "lockedHint": "Este test ya tiene intentos: no se puede cambiar. Duplica la formación para preparar una versión nueva."
+      },
+      "assignments": {
+        "notPublished": "Publica la formación para poder asignarla.",
+        "empty": "Aún no está asignada a nadie.",
+        "columns": {
+          "person": "Persona",
+          "due": "Fecha límite",
+          "modules": "Módulos",
+          "attempts": "Intentos",
+          "best": "Mejor nota",
+          "status": "Estado",
+          "actions": "Acciones"
+        },
+        "noDue": "Sin fecha",
+        "remove": "Quitar asignación",
+        "states": {
+          "passed": "Aprobada",
+          "inProgress": "En curso",
+          "pending": "Sin empezar",
+          "overdue": "Vencida"
+        }
+      }
+    },
+    "assign": {
+      "button": "Asignar",
+      "title": "Asignar la formación",
+      "description": "Elige a quién asignarla. Recibirán un aviso dentro de la app.",
+      "people": "Personas",
+      "selectAll": "Seleccionar todas",
+      "dueDate": "Fecha límite (opcional)",
+      "submit": "Asignar",
+      "cancel": "Cancelar",
+      "noMembers": "No hay personas en la empresa.",
+      "done": "{count, plural, =0 {No había asignaciones nuevas (se ha actualizado la fecha límite).} one {Asignada a # persona.} other {Asignada a # personas.}}"
+    },
+    "saved": "Cambios guardados.",
+    "moduleSaved": "Módulo guardado.",
+    "quizSaved": "Test guardado.",
+    "published": "Formación publicada. Ya puedes asignarla.",
+    "deleted": "Formación borrada.",
+    "duplicated": "Copia creada como borrador.",
+    "sourceErrors": {
+      "unsupported_type": "Uno de los ficheros no es PDF ni DOCX.",
+      "no_text": "Uno de los documentos no tiene texto (¿es un PDF escaneado?).",
+      "too_long": "Uno de los documentos es demasiado largo.",
+      "unreadable": "No se ha podido leer uno de los documentos.",
+      "storage_error": "No se ha podido leer uno de los ficheros subidos."
+    },
+    "errors": {
+      "invalid": "Revisa los datos de la formación.",
+      "forbidden": "Solo RRHH puede gestionar formaciones.",
+      "fileType": "«{name}» no es un PDF ni un DOCX.",
+      "documents": "Alguno de los documentos elegidos ya no está disponible.",
+      "upload": "No se han podido subir los documentos.",
+      "generic": "Ha ocurrido un error. Inténtalo de nuevo.",
+      "not_found": "La formación no existe o la han borrado.",
+      "locked": "Este test ya tiene intentos: duplica la formación para cambiarlo.",
+      "no_content": "Primero hay que generar el contenido de los módulos.",
+      "quizInvalid": "Revisa el test: cada pregunta necesita enunciado, opciones distintas y la respuesta correcta.",
+      "incomplete": "Para publicar, todos los módulos necesitan contenido y el test, preguntas con su respuesta correcta.",
+      "hasAttempts": "La formación ya tiene intentos: no se puede borrar.",
+      "notPublished": "Publica la formación antes de asignarla.",
+      "assign": "No se ha podido asignar la formación."
+    }
+  },
+  "myTrainings": {
+    "title": "Mis formaciones",
+    "description": "Las formaciones que te han asignado: lee los módulos y haz el test (se aprueba con un 70 %).",
+    "empty": "No tienes formaciones asignadas.",
+    "due": "Fecha límite: {date}",
+    "overdue": "Vencida",
+    "progress": "{done} de {total} módulos",
+    "best": "Mejor nota: {score} %",
+    "passed": "Aprobada",
+    "pending": "Pendiente",
+    "start": "Empezar",
+    "continue": "Continuar",
+    "review": "Repasar",
+    "back": "Mis formaciones",
+    "modules": "Módulos",
+    "completed": "Completado",
+    "markCompleted": "Marcar como completado",
+    "next": "Siguiente módulo",
+    "previous": "Módulo anterior",
+    "examples": "Ejemplos",
+    "summary": "Resumen",
+    "objective": "Objetivo",
+    "quiz": {
+      "title": "Test",
+      "description": "{count, plural, one {# pregunta} other {# preguntas}}. Se aprueba con un {score} % y puedes repetirlo las veces que quieras: se guarda tu mejor nota.",
+      "start": "Hacer el test",
+      "retry": "Volver a intentarlo",
+      "submit": "Entregar",
+      "submitting": "Corrigiendo…",
+      "question": "Pregunta {index} de {total}",
+      "answered": "{answered} de {total} respondidas",
+      "result": "Has sacado un {score} % ({correct} de {total}).",
+      "passed": "¡Aprobado!",
+      "failed": "Aún no has aprobado: repasa los módulos y vuelve a intentarlo.",
+      "correct": "Correcta",
+      "incorrect": "Incorrecta",
+      "rightAnswer": "Respuesta correcta: {answer}",
+      "history": "Tus intentos",
+      "historyRow": "{date}: {score} %",
+      "noQuiz": "Esta formación no tiene test."
+    },
+    "errors": {
+      "generic": "No se ha podido guardar. Inténtalo de nuevo.",
+      "answerAll": "Responde todas las preguntas antes de entregar."
     }
   }
 }
