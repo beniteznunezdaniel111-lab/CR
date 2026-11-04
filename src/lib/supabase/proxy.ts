@@ -4,7 +4,7 @@ import { getPublicSupabaseConfig } from "@/lib/config/public-env";
 import type { Database } from "./database.types";
 
 /** Rutas que exigen sesión. El resto es público (landing, auth, legales). */
-const PROTECTED_PREFIXES = ["/app"];
+const PROTECTED_PREFIXES = ["/app", "/print"];
 
 /**
  * Refresca la sesión de Supabase en cada petición y protege /app.

@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import messages from "../../messages/es.json";
-import { MAIN_NAV, SETTINGS_NAV } from "@/lib/navigation";
+import { CURRENT_PHASE, MAIN_NAV, SETTINGS_NAV } from "@/lib/navigation";
 
 type Tree = { [key: string]: string | Tree };
 
@@ -42,7 +42,7 @@ describe("mensajes en español", () => {
   it("cada elemento de navegación tiene texto y descripción de 'próximamente'", () => {
     for (const item of [...MAIN_NAV, ...SETTINGS_NAV]) {
       expect(has(tree, `nav.${item.key}`), `nav.${item.key}`).toBe(true);
-      if (item.phase > 0) {
+      if (item.phase > CURRENT_PHASE) {
         expect(has(tree, `comingSoon.modules.${item.key}`), item.key).toBe(true);
       }
     }

@@ -33,7 +33,14 @@
     "tooLong": "El texto es demasiado largo.",
     "retentionMonths": "Indica un número de meses entre 1 y 60.",
     "role": "Elige un rol válido.",
-    "alreadyMember": "Esta persona ya forma parte de la empresa."
+    "alreadyMember": "Esta persona ya forma parte de la empresa.",
+    "requirementLength": "Cada requisito debe tener entre 2 y 500 caracteres.",
+    "jobTitleLength": "El título del puesto debe tener entre 2 y 150 caracteres.",
+    "responsibilitiesLength": "Describe las responsabilidades con al menos 10 caracteres.",
+    "tooManyRequirements": "Puedes indicar como máximo 30 requisitos.",
+    "salaryAmount": "Introduce un importe válido.",
+    "salaryRange": "El máximo no puede ser inferior al mínimo.",
+    "salaryUnit": "Indica la moneda y el periodo de la banda salarial."
   },
   "landing": {
     "eyebrow": "MVP · España y Costa Rica",
@@ -184,7 +191,6 @@
     "title": "Próximamente",
     "phase": "Se construye en la fase {phase} del MVP.",
     "modules": {
-      "jobs": "Aquí podrás generar descripciones de puesto y ofertas de empleo, revisar el lenguaje inclusivo y exportarlas.",
       "candidates": "Aquí podrás subir CVs, ver las sugerencias de la IA y decidir qué candidaturas avanzan.",
       "onboarding": "Aquí podrás crear planes de 30/60/90 días y seguir su progreso.",
       "faq": "Aquí podrás preguntar sobre vacaciones, permisos y beneficios, con respuestas basadas en los documentos de la empresa.",
@@ -371,5 +377,225 @@
     "title": "No hemos encontrado esta página",
     "description": "Puede que el enlace sea incorrecto o que no tengas acceso a este contenido.",
     "back": "Ir a la aplicación"
+  },
+  "editor": {
+    "toolbar": "Formato del texto",
+    "bold": "Negrita",
+    "italic": "Cursiva",
+    "heading2": "Título de sección",
+    "heading3": "Subtítulo",
+    "bulletList": "Lista con viñetas",
+    "orderedList": "Lista numerada",
+    "undo": "Deshacer",
+    "redo": "Rehacer"
+  },
+  "print": {
+    "title": "Vista de impresión",
+    "help": "Usa «Imprimir» y elige «Guardar como PDF» para descargar el documento.",
+    "button": "Imprimir o guardar como PDF"
+  },
+  "jobs": {
+    "title": "Puestos y ofertas",
+    "description": "Crea puestos, genera la descripción interna y las ofertas con IA, revísalas y expórtalas.",
+    "job": "Puesto",
+    "newJob": "Nuevo puesto",
+    "editJob": "Editar datos",
+    "unknownAuthor": "persona eliminada",
+    "statusChanged": "Estado actualizado.",
+    "versionSaved": "Guardada la versión {version}.",
+    "versionRestored": "Versión {from} restaurada como versión {version}.",
+    "reviewDone": "{count, plural, =0 {Revisión con IA completada: sin hallazgos.} one {Revisión con IA completada: # hallazgo.} other {Revisión con IA completada: # hallazgos.}}",
+    "printFooter": "Generado con {app} · versión {version} · {date}",
+    "empty": {
+      "title": "Aún no hay puestos",
+      "description": "Crea el primer puesto: a partir de sus datos la IA redacta la descripción interna y las ofertas, y servirá de base para revisar CVs y preparar entrevistas."
+    },
+    "table": {
+      "title": "Puesto",
+      "department": "Departamento",
+      "level": "Nivel",
+      "status": "Estado",
+      "content": "Contenido",
+      "version": "Versión {version} · {date}",
+      "noContent": "Sin generar"
+    },
+    "levels": {
+      "intern": "Prácticas",
+      "junior": "Junior",
+      "mid": "Intermedio",
+      "senior": "Senior",
+      "lead": "Responsable de equipo",
+      "manager": "Mánager",
+      "director": "Dirección"
+    },
+    "workModes": {
+      "onsite": "Presencial",
+      "hybrid": "Híbrido",
+      "remote": "En remoto"
+    },
+    "statuses": {
+      "draft": "Borrador",
+      "open": "Abierto",
+      "closed": "Cerrado"
+    },
+    "tones": {
+      "professional": "Profesional",
+      "friendly": "Cercano",
+      "dynamic": "Dinámico",
+      "formal": "Formal"
+    },
+    "requirementKinds": {
+      "required": "Imprescindible",
+      "preferred": "Deseable"
+    },
+    "periods": {
+      "year": "Al año",
+      "month": "Al mes"
+    },
+    "form": {
+      "description": "Rellena los datos del puesto. Después podrás generar la descripción y las ofertas con IA.",
+      "title": "Título del puesto",
+      "titlePlaceholder": "Por ejemplo: Técnico/a de logística",
+      "department": "Departamento",
+      "level": "Nivel",
+      "choose": "Elige una opción",
+      "workMode": "Modalidad",
+      "location": "Ubicación",
+      "responsibilities": "Responsabilidades clave",
+      "responsibilitiesPlaceholder": "Una responsabilidad por línea",
+      "responsibilitiesHelp": "Escribe una responsabilidad por línea. Es lo que hará la persona en el día a día.",
+      "requirements": "Requisitos",
+      "requirementsHelp": "Los CVs se compararán con cada requisito. Marca cuáles son imprescindibles y cuáles deseables.",
+      "requirementLabel": "Requisito {index}",
+      "requirementPlaceholder": "Por ejemplo: 2 años de experiencia en gestión de almacén",
+      "removeRequirement": "Quitar el requisito {index}",
+      "addRequirement": "Añadir requisito",
+      "salary": "Banda salarial",
+      "salaryHelpEU": "En la UE (Directiva 2023/970) hay que informar a las personas candidatas del salario inicial o su banda. Recomendamos indicarla.",
+      "salaryHelp": "Indicar la banda salarial aumenta la confianza y las candidaturas adecuadas.",
+      "salaryMin": "Mínimo",
+      "salaryMax": "Máximo",
+      "currency": "Moneda",
+      "period": "Periodo",
+      "benefits": "Beneficios",
+      "benefitsPlaceholder": "Un beneficio por línea (seguro médico, formación, flexibilidad...)",
+      "tone": "Tono de los textos",
+      "warningsTitle": "Revisa estos datos: podrían ser discriminatorios",
+      "saving": "Guardando…",
+      "saveChanges": "Guardar cambios",
+      "create": "Crear puesto",
+      "optional": "opcional"
+    },
+    "errors": {
+      "forbidden": "Solo RRHH y admin pueden gestionar puestos.",
+      "save": "No hemos podido guardar los cambios. Inténtalo de nuevo.",
+      "generic": "No hemos podido completar la acción. Inténtalo de nuevo.",
+      "notFound": "No hemos encontrado el puesto o la versión.",
+      "tooLong": "Algún texto supera la longitud máxima (20.000 caracteres).",
+      "noChanges": "No hay cambios que guardar."
+    },
+    "delete": {
+      "button": "Eliminar puesto",
+      "title": "¿Eliminar este puesto?",
+      "description": "Se borrarán el puesto, sus requisitos y todas las versiones de la descripción y las ofertas. Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    },
+    "generate": {
+      "button": "Generar con IA",
+      "regenerate": "Generar de nuevo con IA",
+      "pending": "Generando…",
+      "pendingHelp": "La IA está redactando los cuatro textos y revisando el lenguaje. Puede tardar hasta un minuto.",
+      "done": "Contenido generado. Revísalo antes de publicarlo.",
+      "confirmTitle": "¿Generar una versión nueva?",
+      "confirmDescription": "La IA redactará de nuevo los cuatro textos a partir de los datos actuales del puesto. La versión actual se conserva en el historial.",
+      "cancel": "Cancelar"
+    },
+    "noContent": {
+      "title": "Aún no hay descripción ni ofertas",
+      "description": "La IA redactará la descripción interna y la oferta para LinkedIn, para portales de empleo y para tu web a partir de los datos del puesto. Podrás editarlo todo antes de publicarlo."
+    },
+    "versionSource": {
+      "ai": "Generada con IA",
+      "manual": "Editada a mano",
+      "restored": "Restaurada de la versión {from}"
+    },
+    "versionOption": "v{version} · {source} · {date}",
+    "versionOf": "Versión {version} de {total}",
+    "aiTrace": "{prompt} · {model}",
+    "workspace": {
+      "unsaved": "Hay cambios sin guardar.",
+      "aiDraft": "Borrador generado con IA: revísalo y ajústalo antes de publicarlo.",
+      "oldVersion": "Estás viendo la versión {version} (la actual es la {latest}). Es de solo lectura.",
+      "restore": "Restaurar esta versión",
+      "save": "Guardar como nueva versión",
+      "discard": "Descartar cambios",
+      "export": {
+        "button": "Exportar",
+        "copy": "Copiar este texto",
+        "markdown": "Descargar este texto (.md)",
+        "markdownAll": "Descargar todo (.md)",
+        "pdf": "Imprimir o PDF de este texto",
+        "pdfAll": "Imprimir o PDF de todo",
+        "copied": "Texto copiado al portapapeles.",
+        "copyError": "No hemos podido copiar el texto. Selecciónalo y cópialo a mano."
+      }
+    },
+    "summary": {
+      "title": "Datos del puesto",
+      "description": "Base para las ofertas, el análisis de CVs y las guías de entrevista.",
+      "noSalary": "Sin banda salarial",
+      "noRequirements": "Sin requisitos. Añádelos para poder comparar los CVs con ellos."
+    },
+    "modules": {
+      "title": "Siguientes pasos",
+      "description": "Este puesto será la base de:",
+      "candidates": "Revisión de CVs",
+      "interviews": "Guías de entrevista y onboarding",
+      "soon": "Fase {phase}"
+    },
+    "inclusive": {
+      "title": "Lenguaje inclusivo",
+      "notReviewed": "Sin revisar.",
+      "reviewedRules": "Revisado con las reglas automáticas. Puedes completar la revisión con IA.",
+      "reviewedRulesAndAi": "Revisado con las reglas automáticas y con IA.",
+      "stale": "Hay cambios sin guardar: la revisión corresponde a la versión guardada.",
+      "reviewWithAi": "Revisar con IA",
+      "reviewAgainWithAi": "Revisar de nuevo con IA",
+      "noFindings": "No se han detectado problemas.",
+      "findingsLabel": "{count, plural, one {# aviso} other {# avisos}}",
+      "sourceAi": "IA",
+      "sourceRules": "Reglas",
+      "inDoc": "en {doc}",
+      "suggestion": "Sugerencia",
+      "aiDiscarded": "{count, plural, one {Se ha descartado # aviso de la IA porque el fragmento no aparece en el texto.} other {Se han descartado # avisos de la IA porque el fragmento no aparece en el texto.}}",
+      "disclaimer": "Revisión orientativa, no es asesoramiento legal. Revisa siempre el texto antes de publicarlo.",
+      "notices": {
+        "missing_salary_range": "En España, la Directiva (UE) 2023/970 de transparencia retributiva obliga a informar del salario inicial o su banda. Añade la banda salarial al puesto."
+      },
+      "severities": {
+        "high": "Alta",
+        "medium": "Media",
+        "low": "Baja"
+      },
+      "categories": {
+        "age": "Edad",
+        "gender": "Sexo o género",
+        "family_marital": "Estado civil o situación familiar",
+        "origin_nationality": "Origen o nacionalidad",
+        "appearance": "Apariencia física",
+        "health_disability": "Salud o discapacidad",
+        "religion_beliefs": "Religión, creencias o ideología",
+        "salary_history": "Historial salarial",
+        "gendered_language": "Lenguaje no inclusivo",
+        "other": "Otros"
+      },
+      "docs": {
+        "internal": "Descripción interna",
+        "linkedin": "LinkedIn",
+        "jobBoard": "Portal de empleo",
+        "website": "Web propia"
+      }
+    }
   }
 }

@@ -40,10 +40,13 @@ export function formatCurrency(
   currency: CurrencyCode,
   country: CountryConfig,
 ): string {
+  // Importes redondos (salarios) sin decimales; los colones nunca llevan decimales.
+  const decimals = currency === "CRC" || Number.isInteger(amount) ? 0 : 2;
   return new Intl.NumberFormat(country.locale, {
     style: "currency",
     currency,
-    maximumFractionDigits: currency === "CRC" ? 0 : 2,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   }).format(amount);
 }
 

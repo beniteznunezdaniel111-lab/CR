@@ -1,5 +1,5 @@
 // Tipos de la base de datos en el formato de `supabase gen types typescript`.
-// Fase 0: escritos a mano a partir de supabase/migrations (el entorno de
+// Fases 0-1: escritos a mano a partir de supabase/migrations (el entorno de
 // desarrollo no tenía Docker). Con el stack oficial, regenerar con `pnpm db:types`.
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
@@ -178,6 +178,186 @@ export type Database = {
           },
         ];
       };
+      job_position_versions: {
+        Row: {
+          ai_usage_id: number | null;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          inclusive_review: Json | null;
+          inclusive_reviewed_at: string | null;
+          internal_description_md: string;
+          job_id: string;
+          model: string | null;
+          offer_linkedin_md: string;
+          offer_portal_md: string;
+          offer_web_md: string;
+          org_id: string;
+          prompt_id: string | null;
+          prompt_version: number | null;
+          restored_from_version: number | null;
+          source: Database["public"]["Enums"]["job_version_source"];
+          version_number: number;
+        };
+        Insert: {
+          ai_usage_id?: number | null;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          inclusive_review?: Json | null;
+          inclusive_reviewed_at?: string | null;
+          internal_description_md?: string;
+          job_id: string;
+          model?: string | null;
+          offer_linkedin_md?: string;
+          offer_portal_md?: string;
+          offer_web_md?: string;
+          org_id: string;
+          prompt_id?: string | null;
+          prompt_version?: number | null;
+          restored_from_version?: number | null;
+          source: Database["public"]["Enums"]["job_version_source"];
+          version_number?: number;
+        };
+        Update: {
+          ai_usage_id?: number | null;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          inclusive_review?: Json | null;
+          inclusive_reviewed_at?: string | null;
+          internal_description_md?: string;
+          job_id?: string;
+          model?: string | null;
+          offer_linkedin_md?: string;
+          offer_portal_md?: string;
+          offer_web_md?: string;
+          org_id?: string;
+          prompt_id?: string | null;
+          prompt_version?: number | null;
+          restored_from_version?: number | null;
+          source?: Database["public"]["Enums"]["job_version_source"];
+          version_number?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "job_position_versions_job_id_org_id_fkey";
+            columns: ["job_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "job_positions";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      job_positions: {
+        Row: {
+          benefits: string | null;
+          created_at: string;
+          created_by: string | null;
+          department: string | null;
+          id: string;
+          level: Database["public"]["Enums"]["job_level"];
+          location: string | null;
+          org_id: string;
+          responsibilities: string;
+          salary_currency: string | null;
+          salary_max: number | null;
+          salary_min: number | null;
+          salary_period: string | null;
+          status: Database["public"]["Enums"]["job_status"];
+          title: string;
+          tone: Database["public"]["Enums"]["job_tone"];
+          updated_at: string;
+          work_mode: Database["public"]["Enums"]["work_mode"];
+        };
+        Insert: {
+          benefits?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          department?: string | null;
+          id?: string;
+          level: Database["public"]["Enums"]["job_level"];
+          location?: string | null;
+          org_id: string;
+          responsibilities: string;
+          salary_currency?: string | null;
+          salary_max?: number | null;
+          salary_min?: number | null;
+          salary_period?: string | null;
+          status?: Database["public"]["Enums"]["job_status"];
+          title: string;
+          tone?: Database["public"]["Enums"]["job_tone"];
+          updated_at?: string;
+          work_mode: Database["public"]["Enums"]["work_mode"];
+        };
+        Update: {
+          benefits?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          department?: string | null;
+          id?: string;
+          level?: Database["public"]["Enums"]["job_level"];
+          location?: string | null;
+          org_id?: string;
+          responsibilities?: string;
+          salary_currency?: string | null;
+          salary_max?: number | null;
+          salary_min?: number | null;
+          salary_period?: string | null;
+          status?: Database["public"]["Enums"]["job_status"];
+          title?: string;
+          tone?: Database["public"]["Enums"]["job_tone"];
+          updated_at?: string;
+          work_mode?: Database["public"]["Enums"]["work_mode"];
+        };
+        Relationships: [
+          {
+            foreignKeyName: "job_positions_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      job_requirements: {
+        Row: {
+          created_at: string;
+          id: string;
+          job_id: string;
+          kind: Database["public"]["Enums"]["requirement_kind"];
+          org_id: string;
+          sort_order: number;
+          text: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          job_id: string;
+          kind?: Database["public"]["Enums"]["requirement_kind"];
+          org_id: string;
+          sort_order?: number;
+          text: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          job_id?: string;
+          kind?: Database["public"]["Enums"]["requirement_kind"];
+          org_id?: string;
+          sort_order?: number;
+          text?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "job_requirements_job_id_org_id_fkey";
+            columns: ["job_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "job_positions";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
       memberships: {
         Row: {
           created_at: string;
@@ -340,10 +520,25 @@ export type Database = {
         Args: { p_org: string };
         Returns: number;
       };
+      save_job_position: {
+        Args: {
+          p_fields: Json;
+          p_job_id?: string;
+          p_org_id: string;
+          p_requirements: Json;
+        };
+        Returns: string;
+      };
     };
     Enums: {
+      job_level: "intern" | "junior" | "mid" | "senior" | "lead" | "manager" | "director";
+      job_status: "draft" | "open" | "closed";
+      job_tone: "professional" | "friendly" | "dynamic" | "formal";
+      job_version_source: "ai" | "manual" | "restored";
       member_role: "admin" | "hr" | "employee";
       member_status: "active" | "disabled";
+      requirement_kind: "required" | "preferred";
+      work_mode: "onsite" | "hybrid" | "remote";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -363,8 +558,14 @@ export type Enums<T extends keyof PublicSchema["Enums"]> = PublicSchema["Enums"]
 export const Constants = {
   public: {
     Enums: {
+      job_level: ["intern", "junior", "mid", "senior", "lead", "manager", "director"],
+      job_status: ["draft", "open", "closed"],
+      job_tone: ["professional", "friendly", "dynamic", "formal"],
+      job_version_source: ["ai", "manual", "restored"],
       member_role: ["admin", "hr", "employee"],
       member_status: ["active", "disabled"],
+      requirement_kind: ["required", "preferred"],
+      work_mode: ["onsite", "hybrid", "remote"],
     },
   },
 } as const;

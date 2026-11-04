@@ -36,6 +36,32 @@ describe("estimateCostUsd", () => {
   });
 });
 
+/** Una entrada de ejemplo válida por prompt (un prompt nuevo sin ejemplo hace fallar el test). */
+const SAMPLE_INPUTS: Record<string, unknown> = {
+  "system.healthcheck": { name: "Ana" },
+  "job.generate": {
+    title: "Técnico/a de logística",
+    department: "Operaciones",
+    level: "mid",
+    workMode: "hybrid",
+    location: "Madrid",
+    responsibilities: "Coordinar envíos\nGestionar el almacén",
+    requirements: [
+      { text: "2 años de experiencia en logística", kind: "required" },
+      { text: "Inglés B2", kind: "preferred" },
+    ],
+    salary: "28.000 € – 34.000 € brutos al año",
+    benefits: "Seguro médico",
+    tone: "friendly",
+  },
+  "job.inclusive_review": {
+    internal: "Buscamos un candidato joven con buena presencia.",
+    linkedin: "Oferta sin problemas.",
+    jobBoard: "Se requiere nacionalidad española.",
+    website: "Promovemos la igualdad entre mujeres y hombres.",
+  },
+};
+
 describe("registro de prompts", () => {
   it("cada prompt tiene id@versión único y metadatos completos", () => {
     const keys = listPrompts().map((prompt) => `${prompt.id}@${prompt.version}`);
@@ -49,10 +75,14 @@ describe("registro de prompts", () => {
   });
 
   it("la respuesta mock de cada prompt cumple su propio esquema de salida", () => {
-    const ctx = { country: getCountry("ES"), organizationName: "Demo" };
-    for (const prompt of listPrompts()) {
-      const sample = prompt.input.parse({ name: "Ana" });
-      expect(() => prompt.output.parse(prompt.mock(sample, ctx))).not.toThrow();
+    for (const country of [getCountry("ES"), getCountry("CR")]) {
+      const ctx = { country, organizationName: "Demo" };
+      for (const prompt of listPrompts()) {
+        const sample = SAMPLE_INPUTS[prompt.id];
+        expect(sample, `falta un ejemplo de entrada para ${prompt.id}`).toBeDefined();
+        const input = prompt.input.parse(sample);
+        expect(() => prompt.output.parse(prompt.mock(input, ctx)), prompt.id).not.toThrow();
+      }
     }
   });
 });

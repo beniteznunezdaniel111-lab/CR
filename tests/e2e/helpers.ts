@@ -30,3 +30,25 @@ export async function signOut(page: Page) {
 export function sidebar(page: Page) {
   return page.getByRole("navigation", { name: "Navegación principal" }).first();
 }
+
+/** Registra a un admin y crea su empresa (España). Devuelve la ruta /app/<slug>. */
+export async function signUpAdminWithOrg(
+  page: Page,
+  { fullName, orgName }: { fullName: string; orgName: string },
+) {
+  await page.goto("/signup");
+  await fillSignup(page, { fullName, email: uniqueEmail("admin") });
+  await expect(page).toHaveURL(/\/app\/new$/);
+  await page.getByLabel("Nombre de la empresa").fill(orgName);
+  await page.getByRole("button", { name: "Crear empresa" }).click();
+  await expect(
+    page.getByRole("heading", { name: `Hola, ${fullName.split(" ")[0]}` }),
+  ).toBeVisible();
+  return new URL(page.url()).pathname;
+}
+
+/** Elige una opción de un select (Radix) asociado a una etiqueta. */
+export async function selectOption(page: Page, label: string, option: string) {
+  await page.getByLabel(label, { exact: true }).click();
+  await page.getByRole("option", { name: option, exact: true }).click();
+}

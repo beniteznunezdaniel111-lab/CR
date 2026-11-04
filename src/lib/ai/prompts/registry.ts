@@ -1,4 +1,6 @@
 import type { PromptDefinition } from "../types";
+import { jobGenerateV1 } from "./jobs/generate.v1";
+import { jobInclusiveReviewV1 } from "./jobs/inclusive-review.v1";
 import { healthcheckV1 } from "./system/healthcheck.v1";
 
 /**
@@ -8,7 +10,7 @@ import { healthcheckV1 } from "./system/healthcheck.v1";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyPrompt = PromptDefinition<any, any>;
 
-const PROMPTS: readonly AnyPrompt[] = [healthcheckV1];
+const PROMPTS: readonly AnyPrompt[] = [healthcheckV1, jobGenerateV1, jobInclusiveReviewV1];
 
 export function listPrompts(): readonly AnyPrompt[] {
   return PROMPTS;
