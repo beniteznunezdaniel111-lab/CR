@@ -423,6 +423,69 @@ export type Database = {
           },
         ];
       };
+      interview_guides: {
+        Row: {
+          ai_usage_id: number | null;
+          candidate_id: string | null;
+          content: Json;
+          created_at: string;
+          created_by: string | null;
+          focus_requirements: Json;
+          guard_flags: Json;
+          id: string;
+          job_id: string;
+          model: string;
+          org_id: string;
+          prompt_id: string;
+          prompt_version: number;
+        };
+        Insert: {
+          ai_usage_id?: number | null;
+          candidate_id?: string | null;
+          content: Json;
+          created_at?: string;
+          created_by?: string | null;
+          focus_requirements?: Json;
+          guard_flags?: Json;
+          id?: string;
+          job_id: string;
+          model: string;
+          org_id: string;
+          prompt_id: string;
+          prompt_version: number;
+        };
+        Update: {
+          ai_usage_id?: number | null;
+          candidate_id?: string | null;
+          content?: Json;
+          created_at?: string;
+          created_by?: string | null;
+          focus_requirements?: Json;
+          guard_flags?: Json;
+          id?: string;
+          job_id?: string;
+          model?: string;
+          org_id?: string;
+          prompt_id?: string;
+          prompt_version?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "interview_guides_job_id_org_id_fkey";
+            columns: ["job_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "job_positions";
+            referencedColumns: ["id", "org_id"];
+          },
+          {
+            foreignKeyName: "interview_guides_candidate_id_org_id_fkey";
+            columns: ["candidate_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "candidates";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
       invitations: {
         Row: {
           accepted_at: string | null;
@@ -707,6 +770,212 @@ export type Database = {
           },
         ];
       };
+      onboarding_assignment_tasks: {
+        Row: {
+          assignment_id: string;
+          completed_at: string | null;
+          completed_by: string | null;
+          description: string;
+          due_date: string;
+          id: string;
+          is_checkpoint: boolean;
+          materials: string;
+          org_id: string;
+          owner_label: string;
+          phase: Database["public"]["Enums"]["onboarding_phase"];
+          sort_order: number;
+          title: string;
+        };
+        Insert: {
+          assignment_id: string;
+          completed_at?: string | null;
+          completed_by?: string | null;
+          description?: string;
+          due_date: string;
+          id?: string;
+          is_checkpoint?: boolean;
+          materials?: string;
+          org_id: string;
+          owner_label?: string;
+          phase: Database["public"]["Enums"]["onboarding_phase"];
+          sort_order?: number;
+          title: string;
+        };
+        Update: {
+          assignment_id?: string;
+          completed_at?: string | null;
+          completed_by?: string | null;
+          description?: string;
+          due_date?: string;
+          id?: string;
+          is_checkpoint?: boolean;
+          materials?: string;
+          org_id?: string;
+          owner_label?: string;
+          phase?: Database["public"]["Enums"]["onboarding_phase"];
+          sort_order?: number;
+          title?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_assignment_tasks_assignment_id_org_id_fkey";
+            columns: ["assignment_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "onboarding_assignments";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      onboarding_assignments: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          employee_email: string | null;
+          employee_name: string;
+          id: string;
+          member_user_id: string | null;
+          org_id: string;
+          plan_id: string | null;
+          plan_title: string;
+          start_date: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          employee_email?: string | null;
+          employee_name: string;
+          id?: string;
+          member_user_id?: string | null;
+          org_id: string;
+          plan_id?: string | null;
+          plan_title: string;
+          start_date: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          employee_email?: string | null;
+          employee_name?: string;
+          id?: string;
+          member_user_id?: string | null;
+          org_id?: string;
+          plan_id?: string | null;
+          plan_title?: string;
+          start_date?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_assignments_plan_id_org_id_fkey";
+            columns: ["plan_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "onboarding_plans";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      onboarding_plan_tasks: {
+        Row: {
+          description: string;
+          due_day: number;
+          id: string;
+          is_checkpoint: boolean;
+          materials: string;
+          org_id: string;
+          owner_label: string;
+          phase: Database["public"]["Enums"]["onboarding_phase"];
+          plan_id: string;
+          sort_order: number;
+          title: string;
+        };
+        Insert: {
+          description?: string;
+          due_day: number;
+          id?: string;
+          is_checkpoint?: boolean;
+          materials?: string;
+          org_id: string;
+          owner_label?: string;
+          phase: Database["public"]["Enums"]["onboarding_phase"];
+          plan_id: string;
+          sort_order?: number;
+          title: string;
+        };
+        Update: {
+          description?: string;
+          due_day?: number;
+          id?: string;
+          is_checkpoint?: boolean;
+          materials?: string;
+          org_id?: string;
+          owner_label?: string;
+          phase?: Database["public"]["Enums"]["onboarding_phase"];
+          plan_id?: string;
+          sort_order?: number;
+          title?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_plan_tasks_plan_id_org_id_fkey";
+            columns: ["plan_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "onboarding_plans";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      onboarding_plans: {
+        Row: {
+          ai_usage_id: number | null;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          intro: string;
+          job_id: string;
+          model: string | null;
+          org_id: string;
+          prompt_id: string | null;
+          prompt_version: number | null;
+          title: string;
+          updated_at: string;
+        };
+        Insert: {
+          ai_usage_id?: number | null;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          intro?: string;
+          job_id: string;
+          model?: string | null;
+          org_id: string;
+          prompt_id?: string | null;
+          prompt_version?: number | null;
+          title: string;
+          updated_at?: string;
+        };
+        Update: {
+          ai_usage_id?: number | null;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          intro?: string;
+          job_id?: string;
+          model?: string | null;
+          org_id?: string;
+          prompt_id?: string | null;
+          prompt_version?: number | null;
+          title?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_plans_job_id_org_id_fkey";
+            columns: ["job_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "job_positions";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
       organizations: {
         Row: {
           address: string | null;
@@ -793,6 +1062,16 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      assign_onboarding_plan: {
+        Args: {
+          p_employee_email?: string;
+          p_employee_name: string;
+          p_member_user_id?: string;
+          p_plan_id: string;
+          p_start_date: string;
+        };
+        Returns: string;
+      };
       accept_invitation: {
         Args: { p_token: string };
         Returns: string;
@@ -838,6 +1117,18 @@ export type Database = {
         };
         Returns: string;
       };
+      save_onboarding_plan: {
+        Args: {
+          p_intro: string;
+          p_job_id: string;
+          p_meta?: Json;
+          p_org_id: string;
+          p_plan_id?: string;
+          p_tasks: Json;
+          p_title: string;
+        };
+        Returns: string;
+      };
       set_candidate_status: {
         Args: {
           p_candidate_id: string;
@@ -861,6 +1152,7 @@ export type Database = {
       job_version_source: "ai" | "manual" | "restored";
       member_role: "admin" | "hr" | "employee";
       member_status: "active" | "disabled";
+      onboarding_phase: "d30" | "d60" | "d90";
       requirement_kind: "required" | "preferred";
       requirement_match: "meets" | "partial" | "not_found";
       work_mode: "onsite" | "hybrid" | "remote";
@@ -892,6 +1184,7 @@ export const Constants = {
       job_version_source: ["ai", "manual", "restored"],
       member_role: ["admin", "hr", "employee"],
       member_status: ["active", "disabled"],
+      onboarding_phase: ["d30", "d60", "d90"],
       requirement_kind: ["required", "preferred"],
       requirement_match: ["meets", "partial", "not_found"],
       work_mode: ["onsite", "hybrid", "remote"],
