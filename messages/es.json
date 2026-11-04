@@ -41,7 +41,13 @@
     "salaryAmount": "Introduce un importe válido.",
     "salaryRange": "El máximo no puede ser inferior al mínimo.",
     "salaryUnit": "Indica la moneda y el periodo de la banda salarial.",
-    "revealReason": "Indica un motivo de entre 10 y 500 caracteres."
+    "revealReason": "Indica un motivo de entre 10 y 500 caracteres.",
+    "taskTitle": "Cada tarea necesita un título de entre 2 y 200 caracteres.",
+    "dueDay": "Indica un día entre 1 y 90.",
+    "dueDayPhase": "El día no corresponde a la fase (1-30, 31-60 o 61-90).",
+    "planTitle": "El título del plan debe tener entre 2 y 200 caracteres.",
+    "planTasks": "El plan debe tener entre 1 y 60 tareas.",
+    "date": "Indica una fecha válida."
   },
   "landing": {
     "eyebrow": "MVP · España y Costa Rica",
@@ -558,8 +564,11 @@
       "candidates": "Revisión de CVs",
       "candidatesCount": "{count, plural, =0 {Sin candidaturas} one {# candidatura} other {# candidaturas}}",
       "openCandidates": "Ver candidaturas",
-      "interviews": "Guías de entrevista y onboarding",
-      "soon": "Fase {phase}"
+      "interviews": "Guía de entrevista",
+      "soon": "Fase {phase}",
+      "openInterviews": "Preparar guía",
+      "onboarding": "Plan de onboarding",
+      "openOnboarding": "Crear plan"
     },
     "inclusive": {
       "title": "Lenguaje inclusivo",
@@ -775,7 +784,8 @@
       "noAnalysis": "Este CV aún no se ha analizado.",
       "analyzing": "El CV se está analizando…",
       "analysisDone": "Análisis completado.",
-      "unknownPerson": "persona eliminada"
+      "unknownPerson": "persona eliminada",
+      "interviewGuide": "Preparar guía de entrevista"
     },
     "decision": {
       "title": "Decisión",
@@ -904,6 +914,178 @@
       "cvHidden": "El CV original no está disponible (revisión anónima o fichero borrado).",
       "anonymousLocked": "No se puede desactivar la revisión anónima mientras haya candidaturas.",
       "delete": "No hemos podido eliminar la candidatura.",
+      "generic": "No hemos podido completar la acción. Inténtalo de nuevo."
+    }
+  },
+  "interviews": {
+    "title": "Guía de entrevista",
+    "pageTitle": "Guía de entrevista · {title}",
+    "description": "Preguntas por competencias, técnicas y de comportamiento (STAR), qué buscar en cada respuesta y una rúbrica de 1 a 5.",
+    "backToJob": "Ver el puesto",
+    "generated": "Guía generada.",
+    "generate": {
+      "title": "Generar una guía",
+      "target": "Para quién",
+      "forJob": "Para el puesto",
+      "forCandidate": "Adaptada a una candidatura",
+      "candidate": "Candidatura",
+      "choose": "Elige una candidatura",
+      "alias": "Candidatura n.º {number}",
+      "notAnalyzed": "{name} (sin analizar)",
+      "noCandidates": "Este puesto aún no tiene candidaturas analizadas.",
+      "button": "Generar guía",
+      "pending": "Generando…",
+      "help": "Las guías no se editan: si cambias el puesto, genera otra. Las anteriores se conservan."
+    },
+    "empty": {
+      "title": "Aún no hay guías para este puesto",
+      "description": "Genera la primera. Puedes adaptarla a una candidatura para aclarar los requisitos que su CV no acredita del todo."
+    },
+    "version": "Guía",
+    "versionOption": "{date} · {target}",
+    "targetJob": "Puesto",
+    "aiDraft": "Guía generada con IA: revísala antes de usarla en la entrevista.",
+    "print": "Imprimir o PDF",
+    "forCandidate": "Adaptada a: {candidate}",
+    "guard": "{count, plural, one {Se ha retirado # elemento que trataba datos personales protegidos.} other {Se han retirado # elementos que trataban datos personales protegidos.}}",
+    "trace": "{prompt} · {model} · {date} · por {person}",
+    "unknownPerson": "persona eliminada",
+    "sections": {
+      "intro": "Cómo usar esta guía",
+      "competencies": "Competencias",
+      "technical": "Preguntas técnicas",
+      "behavioral": "Preguntas de comportamiento (método STAR)",
+      "candidateFocus": "Para aclarar con esta candidatura",
+      "rubric": "Rúbrica de evaluación"
+    },
+    "lookFor": "Qué buscar",
+    "starHelp": "Pide un ejemplo real: Situación, Tarea, Acción y Resultado.",
+    "criterion": "Criterio",
+    "level": "Nivel {level}",
+    "notes": "Notas",
+    "score": "Puntuación (1-5)",
+    "printFooter": "Generado con {app} · {date}",
+    "errors": {
+      "forbidden": "Solo RRHH y admin pueden preparar entrevistas.",
+      "notFound": "No hemos encontrado el puesto o la guía.",
+      "noAnalysis": "Esta candidatura aún no tiene análisis: analiza su CV primero.",
+      "save": "No hemos podido guardar la guía. Inténtalo de nuevo.",
+      "generic": "No hemos podido completar la acción. Inténtalo de nuevo."
+    }
+  },
+  "onboarding": {
+    "title": "Onboarding",
+    "description": "Planes de incorporación de 30, 60 y 90 días y su seguimiento. Solo RRHH y admin los ven.",
+    "phases": {
+      "d30": "Días 1-30",
+      "d60": "Días 31-60",
+      "d90": "Días 61-90"
+    },
+    "plans": {
+      "title": "Planes",
+      "empty": "Aún no hay planes. Genera uno a partir de un puesto.",
+      "job": "Puesto",
+      "tasks": "Tareas",
+      "assignments": "Incorporaciones",
+      "open": "Editar"
+    },
+    "newPlan": {
+      "title": "Nuevo plan",
+      "job": "Puesto",
+      "choose": "Elige un puesto",
+      "button": "Generar plan con IA",
+      "pending": "Generando…",
+      "noJobs": "Primero crea un puesto.",
+      "createJob": "Crear un puesto",
+      "help": "La IA propone un plan 30/60/90 a partir del puesto; después puedes editarlo."
+    },
+    "assignments": {
+      "title": "Incorporaciones",
+      "empty": "Aún no has asignado ningún plan. Abre un plan y pulsa «Asignar a una persona».",
+      "person": "Persona",
+      "plan": "Plan",
+      "start": "Incorporación",
+      "progress": "Progreso",
+      "next": "Próxima tarea",
+      "overdue": "{count, plural, one {# tarea atrasada} other {# tareas atrasadas}}",
+      "done": "Completado",
+      "open": "Ver",
+      "progressValue": "{done}/{total}"
+    },
+    "plan": {
+      "jobLabel": "Puesto: {title}",
+      "aiDraft": "Plan generado con IA: revísalo y adáptalo a tu empresa antes de asignarlo.",
+      "fields": {
+        "title": "Título del plan",
+        "intro": "Introducción"
+      },
+      "tasksTitle": "Tareas",
+      "task": {
+        "heading": "Tarea {index}",
+        "phase": "Fase",
+        "day": "Día",
+        "title": "Título",
+        "owner": "Responsable",
+        "materials": "Materiales",
+        "description": "Descripción",
+        "checkpoint": "Checkpoint (reunión de seguimiento)",
+        "remove": "Quitar la tarea {index}",
+        "add": "Añadir tarea"
+      },
+      "save": "Guardar plan",
+      "saving": "Guardando…",
+      "saved": "Plan guardado.",
+      "delete": {
+        "button": "Eliminar plan",
+        "title": "¿Eliminar este plan?",
+        "description": "Las incorporaciones ya asignadas con este plan se conservan.",
+        "confirm": "Eliminar",
+        "cancel": "Cancelar"
+      },
+      "assign": {
+        "button": "Asignar a una persona",
+        "title": "Asignar el plan",
+        "description": "Las tareas se copian con su fecha a partir del día de incorporación. La persona no ve el plan.",
+        "name": "Nombre de la persona",
+        "email": "Email (opcional)",
+        "member": "Vincular a una cuenta (opcional)",
+        "noMember": "Sin cuenta todavía",
+        "start": "Fecha de incorporación",
+        "submit": "Asignar",
+        "cancel": "Cancelar"
+      }
+    },
+    "assignment": {
+      "pageTitle": "Incorporación de {name}",
+      "description": "{plan} · incorporación el {date}",
+      "progress": "{done} de {total} tareas completadas",
+      "progressLabel": "Progreso de la incorporación",
+      "due": "Vence el {date}",
+      "overdue": "Atrasada",
+      "completedBy": "Hecha por {person} el {date}",
+      "checkpoint": "Checkpoint",
+      "owner": "Responsable: {owner}",
+      "materials": "Materiales: {materials}",
+      "markDone": "Marcar «{title}» como hecha",
+      "linked": "Cuenta vinculada: {name}",
+      "noAccount": "Sin cuenta en la plataforma",
+      "email": "Email: {email}",
+      "unknownPerson": "persona eliminada",
+      "planLink": "Ver el plan",
+      "delete": {
+        "button": "Eliminar incorporación",
+        "title": "¿Eliminar esta incorporación?",
+        "description": "Se borrarán la persona asignada y el seguimiento de sus tareas. El plan no cambia.",
+        "confirm": "Eliminar",
+        "cancel": "Cancelar"
+      }
+    },
+    "errors": {
+      "forbidden": "Solo RRHH y admin pueden gestionar el onboarding.",
+      "notFound": "No hemos encontrado el plan o la incorporación.",
+      "invalidPlan": "Revisa los campos marcados.",
+      "save": "No hemos podido guardar el plan. Inténtalo de nuevo.",
+      "assign": "No hemos podido asignar el plan. Inténtalo de nuevo.",
       "generic": "No hemos podido completar la acción. Inténtalo de nuevo."
     }
   }

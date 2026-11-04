@@ -1,4 +1,4 @@
-import { FileSearchIcon, SparklesIcon, UsersRoundIcon } from "lucide-react";
+import { FileSearchIcon, MessagesSquareIcon, SparklesIcon, UsersRoundIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -231,11 +231,26 @@ export default async function JobPage({
                   {t("modules.openCandidates")}
                 </span>
               </Link>
-              <div className="flex items-center gap-3 rounded-md border p-3">
-                <UsersRoundIcon className="size-4 text-primary" aria-hidden />
+              <Link
+                href={orgPath(slug, `/jobs/${job.id}/interview`)}
+                className="flex items-center gap-3 rounded-md border p-3 transition-colors hover:bg-accent"
+              >
+                <MessagesSquareIcon className="size-4 text-primary" aria-hidden />
                 <span className="flex-1">{t("modules.interviews")}</span>
-                <Badge variant="secondary">{t("modules.soon", { phase: 3 })}</Badge>
-              </div>
+                <span className="text-xs font-medium text-primary">
+                  {t("modules.openInterviews")}
+                </span>
+              </Link>
+              <Link
+                href={orgPath(slug, `/onboarding?job=${job.id}`)}
+                className="flex items-center gap-3 rounded-md border p-3 transition-colors hover:bg-accent"
+              >
+                <UsersRoundIcon className="size-4 text-primary" aria-hidden />
+                <span className="flex-1">{t("modules.onboarding")}</span>
+                <span className="text-xs font-medium text-primary">
+                  {t("modules.openOnboarding")}
+                </span>
+              </Link>
             </CardContent>
           </Card>
         </div>

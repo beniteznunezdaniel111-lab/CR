@@ -82,12 +82,22 @@ export default async function CandidatePage({ params }: { params: Params }) {
           t("detail.retention", { date: when(candidate.retention_until, false) }),
         ].join(" · ")}
         actions={
-          <Button asChild variant="outline">
-            <Link href={pipelineHref}>
-              <ArrowLeftIcon aria-hidden />
-              {t("title")}
-            </Link>
-          </Button>
+          <>
+            <Button asChild variant="outline">
+              <Link href={pipelineHref}>
+                <ArrowLeftIcon aria-hidden />
+                {t("title")}
+              </Link>
+            </Button>
+            {analysis ? (
+              <Button asChild variant="outline">
+                <Link href={orgPath(slug, `/jobs/${jobId}/interview?candidate=${candidate.id}`)}>
+                  <MessageCircleQuestionIcon aria-hidden />
+                  {t("detail.interviewGuide")}
+                </Link>
+              </Button>
+            ) : null}
+          </>
         }
       />
 

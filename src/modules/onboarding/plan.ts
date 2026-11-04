@@ -81,3 +81,8 @@ export function progressOf(tasks: readonly { completed_at: string | null }[]): P
 export function isOverdue(task: { due_date: string; completed_at: string | null }, today: string) {
   return !task.completed_at && task.due_date < today;
 }
+
+/** Fecha de hoy (AAAA-MM-DD) en la zona horaria de la empresa. */
+export function todayIn(timeZone: string, now: Date = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone }).format(now);
+}
