@@ -147,3 +147,28 @@ $$;
 grant all on storage.buckets, storage.objects to authenticated, service_role;
 grant select on storage.buckets, storage.objects to anon;
 grant execute on all functions in schema storage to anon, authenticated, service_role;
+
+-- Como en Supabase: el borrado directo en storage.objects está bloqueado (se hace
+-- con la API de Storage, que borra también el fichero).
+create or replace function storage.protect_delete()
+returns trigger
+language plpgsql
+as $$
+begin
+  if coalesce(current_setting('storage.allow_delete_query', true), '') <> 'true' then
+    raise exception 'Direct deletion from storage tables is not allowed. Use the Storage API instead.'
+      using errcode = '42501';
+  end if;
+  return null;
+end
+$$;
+
+drop trigger if exists protect_objects_delete on storage.objects;
+create trigger protect_objects_delete before delete on storage.objects
+  for each statement execute function storage.protect_delete();
+
+-- Como en Supabase: lo que se crea en public concede privilegios por defecto a los
+-- tres roles; cada migración debe revocarlos explícitamente (y los tests lo vigilan).
+alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
+alter default privileges in schema public grant all on functions to anon, authenticated, service_role;
+alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;

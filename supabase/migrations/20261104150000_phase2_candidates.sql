@@ -609,6 +609,12 @@ grant execute on function
   public.set_candidate_status(uuid, public.candidate_status, text),
   public.reveal_candidate_identity(uuid, text)
   to authenticated;
+-- Supabase concede EXECUTE a service_role por defecto: decidir y revelar son
+-- acciones de una persona, así que tampoco puede el servidor con su clave.
+revoke execute on function
+  public.set_candidate_status(uuid, public.candidate_status, text),
+  public.reveal_candidate_identity(uuid, text)
+  from service_role;
 
 -- -----------------------------------------------------------------------------
 -- Storage: el CV original solo se puede leer si la identidad es visible.

@@ -1,7 +1,7 @@
 # CLAUDE.md — HRPilot (SaaS de RRHH con IA)
 
 Guía para trabajar en este repositorio. El plan completo y las decisiones acordadas están en
-[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 1 (puestos y ofertas) terminada.** Cada fase termina con lint,
+[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 2 (filtrado de CVs con revisión humana) terminada.** Cada fase termina con lint,
 typecheck y tests en verde, commit, resumen y OK explícito del usuario antes de seguir.
 
 ## Comandos
@@ -32,10 +32,13 @@ src/lib/supabase/        Clientes: server.ts (con sesión, RLS), client.ts (nave
 src/lib/auth/            Sesión, contexto de empresa (getOrgContext/requireOrgRole) y roles
 src/lib/countries/       Configuración por país (ES, CR): formatos, normativa, trato tú/usted
 src/lib/audit/           Registro de auditoría desde el servidor
-src/lib/inclusive/        Reglas deterministas de lenguaje inclusivo (reutilizables por cualquier módulo)
+src/lib/inclusive/        Reglas de lenguaje inclusivo y detector de atributos protegidos en textos de la IA
+src/lib/extraction/      Texto de PDF (unpdf) y DOCX (mammoth); sin OCR. mime.ts se puede usar en el navegador
+src/lib/privacy/         Anonimización de CVs (nombre, contacto, dirección, nacimiento, nacionalidad...)
 src/lib/markdown.ts      Markdown → texto plano y nombres de fichero
 src/components/markdown/ Editor visual (TipTap, guarda Markdown) y visor seguro (react-markdown)
 src/app/print/           Vistas de impresión / PDF (sin la interfaz de la app; exigen sesión)
+src/app/api/cron/        Tareas programadas (vercel.json), autorizadas con CRON_SECRET
 src/lib/config/brand.ts  Nombre del producto (APP_NAME) — único sitio donde aparece "HRPilot"
 messages/es.json         Todos los textos de la interfaz (next-intl)
 supabase/migrations/     Esquema SQL (fuente de verdad de tablas, RLS y RPCs)
@@ -52,8 +55,10 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
 2. **Privilegios explícitos.** Cada migración hace `revoke all ... from anon, authenticated` y concede
    solo lo necesario, por columnas cuando aplica (p. ej. el admin no puede tocar
    `ai_monthly_budget_usd`). Nada se expone a `anon` salvo `get_invitation_preview`.
-3. **Service role solo en servidor y solo para:** auditoría, uso de IA, tope de gasto, cron y scripts.
-   Los datos de negocio se leen y escriben SIEMPRE con `lib/supabase/server.ts` (sesión del usuario).
+3. **Service role solo en servidor y solo para:** auditoría, uso de IA, tope de gasto, cron, scripts
+   y el fichero del CV (URL firmada de subida, lectura para procesarlo y borrado), siempre después de
+   comprobar con la sesión del usuario que es RRHH/admin y ve la candidatura. Los datos de negocio se
+   leen y escriben SIEMPRE con `lib/supabase/server.ts` (sesión del usuario).
 4. **La IA solo pasa por `src/lib/ai`.** ESLint prohíbe importar `@anthropic-ai/sdk` fuera de ahí.
    - Modelo por `ANTHROPIC_MODEL` (por defecto `claude-haiku-5-5`, decisión del usuario).
    - Prompts en `src/lib/ai/prompts/<area>/<nombre>.v<N>.ts` con `definePrompt`. **Una versión
@@ -65,8 +70,11 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
    - Haiku 5.5 no admite `temperature` ni prefill y no tiene fallback de servidor ante `refusal`:
      los rechazos se convierten en `AiError("refused")`.
 5. **La IA nunca decide sobre personas.** Solo sugiere; las decisiones (p. ej. estado de un
-   candidato) las toma un humano mediante RPCs auditadas. No inferir ni mencionar edad, sexo,
-   origen, estado civil, salud, religión, etc.
+   candidato) las toma un humano mediante RPCs auditadas (`set_candidate_status`: la columna
+   `status` no tiene permiso de UPDATE). El código de procesado/IA nunca llama a esa RPC. No inferir
+   ni mencionar edad, sexo, origen, estado civil, salud, religión, etc.: lo prohíbe el prompt y
+   `src/lib/inclusive/protected-mentions.ts` retira lo que se cuele (se registra la salvaguarda).
+   Sin puntuaciones de IA: solo recuentos deterministas.
 6. **Auditoría solo inserción.** `audit_events` y `ai_usage` no admiten UPDATE/DELETE (trigger), salvo
    el borrado en cascada de una empresa completa. `details` nunca lleva datos personales.
 7. **Textos:** todo en `messages/es.json`; errores de validación Zod = claves de `validation.*`
@@ -83,6 +91,21 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
   La revisión inclusiva combina `src/lib/inclusive` (instantánea) con el prompt
   `job.inclusive_review`; de la IA solo se aceptan fragmentos que aparecen literalmente en el texto.
   En España (`payTransparency`) se avisa si falta la banda salarial.
+- **Candidaturas (`src/modules/candidates`, Fase 2).** Subida: `register_candidates` (RPC) +
+  URL firmada por fichero (el navegador sube directo a Storage, hasta 20 PDF/DOCX de 10 MB).
+  Procesado (una Server Action por CV): extracción → `cv.identity@1` localiza nombre y contacto →
+  `src/lib/privacy/redaction` anonimiza el texto (también por reglas) → `store_candidate_extraction`
+  guarda la identidad aparte (`candidate_pii`) → `cv.analysis@1` evalúa el texto anonimizado solo
+  contra los requisitos → `analysis.ts` verifica cada cita contra el texto, retira menciones a
+  atributos protegidos y calcula el recuento (solo "cumple" con cita verificada). Análisis
+  inmutables (`cv_analyses` + `cv_requirement_matches`); "volver a analizar" crea otro.
+  Decisiones e identidad: `set_candidate_status` y `reveal_candidate_identity` (con motivo) guardan
+  historial en `candidate_events` y auditan sin comentarios. Modo anónimo por puesto: `candidate_pii`
+  y el CV original solo son legibles si el puesto no es anónimo o se reveló la identidad (RLS en
+  tabla y en Storage); no se puede desactivar si hay candidaturas. Retención: `retention_until`
+  (subida + meses de la empresa, recalculada si cambian) y cron diario `/api/cron/retention`.
+  Un puesto con candidaturas no se puede borrar. Aviso de privacidad por país
+  (`privacy-notice.ts`, plantillas en `candidates.privacyTemplate`), marcado como borrador.
 
 ## Cómo añadir…
 
@@ -120,3 +143,9 @@ ejecutan en GitHub Actions con el Supabase oficial (`.github/workflows/ci.yml`).
   (input oculto propio) para no perder el valor al reiniciarse el formulario.
 - Editor de textos: TipTap + `@tiptap/markdown` (se guarda Markdown). PDF mediante vista de
   impresión (`/print/...` + «Guardar como PDF» del navegador), sin dependencias de servidor.
+- CVs: el análisis usa dos llamadas (identidad sobre el CV original; evaluación sobre el texto
+  anonimizado) para que la IA que evalúa nunca vea nombre ni contacto. `unpdf` y `mammoth` van en
+  `serverExternalPackages`. Las Server Actions se ejecutan en serie desde el navegador, así que una
+  tanda de 20 CVs se analiza uno a uno (con progreso).
+- `requireHrContext(orgId)` (`src/lib/auth/hr-context.ts`) es el contexto común de las Server
+  Actions de RRHH.

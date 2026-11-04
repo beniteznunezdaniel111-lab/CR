@@ -6,8 +6,17 @@ nombre provisional (`src/lib/config/brand.ts`).
 - Plan y decisiones: [`docs/PLAN.md`](docs/PLAN.md)
 - Convenciones para desarrollar: [`CLAUDE.md`](CLAUDE.md)
 
-**Estado:** Fase 0 (base) — registro, empresas multiempresa con RLS, roles, invitaciones, capa de IA
-y layout. Los módulos de RRHH llegan en las fases 1–5.
+**Estado:** Fase 2 terminada.
+
+- **Fase 0 (base):** registro, empresas con datos aislados (RLS), roles, invitaciones, capa de IA y
+  layout.
+- **Fase 1 (puestos y ofertas):** descripción interna y ofertas con IA, revisión de lenguaje
+  inclusivo, versiones y exportación.
+- **Fase 2 (filtrado de CVs):** subida de CVs, anonimización, encaje requisito por requisito con
+  citas comprobadas, decisión siempre humana y auditada, revisión anónima, retención y aviso de
+  privacidad por país.
+
+Los módulos de las fases 3–5 llegan después.
 
 ## Requisitos
 
@@ -71,7 +80,8 @@ Vercel + Supabase (región UE). La guía completa se escribe en la Fase 6. Resum
    (`supabase link` + `supabase db push`).
 2. En Supabase Auth: activar la confirmación de email, configurar SMTP propio (Brevo, Resend...) y
    añadir la URL de la app a _Redirect URLs_ (`https://tu-dominio/auth/callback`).
-3. En Vercel: importar el repositorio, configurar las variables de `.env.example` y fijar la región
-   de las funciones en `fra1`.
+3. En Vercel: importar el repositorio y configurar las variables de `.env.example`. `vercel.json`
+   fija la región de las funciones (`fra1`) y el cron diario de retención de CVs
+   (`/api/cron/retention`); define `CRON_SECRET` para que Vercel pueda llamarlo.
 4. Antes de usar datos reales: planes de pago (Supabase Pro, Vercel Pro) y revisión legal
    (ver `docs/PLAN.md` § Avisos de cumplimiento).

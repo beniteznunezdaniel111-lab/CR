@@ -119,8 +119,12 @@ beforeAll(async () => {
 afterAll(async () => {
   for (const org of [orgA, orgB]) {
     if (!org) continue;
-    await db.query("delete from storage.objects where name like $1", [`${org.id}/%`]);
     await db.query("delete from public.organizations where id = $1", [org.id]);
+    // Supabase bloquea el borrado directo en storage.objects (se hace por su API);
+    // son ficheros de prueba sin contenido, así que se ignora.
+    await db
+      .query("delete from storage.objects where name like $1", [`${org.id}/%`])
+      .catch(() => undefined);
   }
   await db?.end();
 });
@@ -551,8 +555,10 @@ describe("borrado de puestos y empresas", () => {
     const org = await createOrganization(db, admin, "Empresa Temporal CVs", "ES");
     const jobId = await createJob(admin, org);
     const [row] = await register(admin, jobId, [cv()]);
-    await db.query("delete from storage.objects where name = $1", [row!.cv_path]);
     await db.query("delete from public.organizations where id = $1", [org.id]);
+    await db
+      .query("delete from storage.objects where name = $1", [row!.cv_path])
+      .catch(() => undefined);
     const { rows } = await db.query(
       "select count(*)::int as n from public.candidates where id = $1",
       [row!.candidate_id],
