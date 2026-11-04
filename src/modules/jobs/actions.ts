@@ -4,15 +4,12 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { type AiCallContext, generateObject, isAiError } from "@/lib/ai";
+import { requireHrContext } from "@/lib/auth/hr-context";
 import { jobGenerateV1 } from "@/lib/ai/prompts/jobs/generate.v1";
 import { jobInclusiveReviewV1 } from "@/lib/ai/prompts/jobs/inclusive-review.v1";
 import { recordAuditEvent } from "@/lib/audit";
-import { HR_ROLES } from "@/lib/auth/roles";
-import { requireUser } from "@/lib/auth/session";
-import { getCountryOrDefault } from "@/lib/countries";
 import type { Json } from "@/lib/supabase/database.types";
 import { type FormState, formDataToObject, formError, zodFieldErrors } from "@/lib/forms";
-import { createClient } from "@/lib/supabase/server";
 import { JOB_DOC_COLUMNS, type JobDoc } from "./constants";
 import { toPromptInput } from "./format";
 import { type AiFinding, type JobDocs, buildInclusiveReview } from "./inclusive-review";
@@ -24,31 +21,6 @@ import {
   saveVersionSchema,
   versionRefSchema,
 } from "./schemas";
-
-/** Contexto de empresa para acciones de RRHH (la RLS lo vuelve a comprobar). */
-async function requireHrOf(orgId: string) {
-  const user = await requireUser();
-  const supabase = await createClient();
-  const [{ data: org }, { data: membership }] = await Promise.all([
-    supabase.from("organizations").select("id, name, slug, country").eq("id", orgId).maybeSingle(),
-    supabase
-      .from("memberships")
-      .select("role")
-      .eq("org_id", orgId)
-      .eq("user_id", user.id)
-      .eq("status", "active")
-      .maybeSingle(),
-  ]);
-  if (!org || !membership || !HR_ROLES.includes(membership.role)) return null;
-  const country = getCountryOrDefault(org.country);
-  const aiContext: AiCallContext = {
-    orgId: org.id,
-    userId: user.id,
-    organizationName: org.name,
-    country,
-  };
-  return { user, org, country, supabase, aiContext };
-}
 
 function jobPath(slug: string, jobId?: string) {
   return jobId ? `/app/${slug}/jobs/${jobId}` : `/app/${slug}/jobs`;
@@ -82,7 +54,7 @@ export async function saveJobAction(_prev: FormState, formData: FormData): Promi
   if (!parsed.success) return formError(formData, { fieldErrors: zodFieldErrors(parsed.error) });
   const input = parsed.data;
 
-  const hr = await requireHrOf(input.orgId);
+  const hr = await requireHrContext(input.orgId);
   if (!hr) return formError(formData, { message: t("errors.forbidden") });
 
   const { data: jobId, error } = await hr.supabase.rpc("save_job_position", {
@@ -133,7 +105,7 @@ export async function setJobStatusAction(formData: FormData): Promise<FormState>
   const t = await getTranslations("jobs");
   const parsed = jobStatusSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) return { status: "error", message: t("errors.generic") };
-  const hr = await requireHrOf(parsed.data.orgId);
+  const hr = await requireHrContext(parsed.data.orgId);
   if (!hr) return { status: "error", message: t("errors.forbidden") };
 
   const { data, error } = await hr.supabase
@@ -162,7 +134,7 @@ export async function deleteJobAction(formData: FormData): Promise<FormState> {
   const t = await getTranslations("jobs");
   const parsed = jobRefSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) return { status: "error", message: t("errors.generic") };
-  const hr = await requireHrOf(parsed.data.orgId);
+  const hr = await requireHrContext(parsed.data.orgId);
   if (!hr) return { status: "error", message: t("errors.forbidden") };
 
   const { data, error } = await hr.supabase
@@ -172,6 +144,7 @@ export async function deleteJobAction(formData: FormData): Promise<FormState> {
     .eq("org_id", parsed.data.orgId)
     .select("id")
     .maybeSingle();
+  if (error?.code === "23503") return { status: "error", message: t("errors.hasCandidates") };
   if (error || !data) return { status: "error", message: t("errors.generic") };
 
   await recordAuditEvent({
@@ -211,7 +184,7 @@ export async function generateJobContentAction(
   const t = await getTranslations("jobs");
   const parsed = jobRefSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) return { status: "error", message: t("errors.generic") };
-  const hr = await requireHrOf(parsed.data.orgId);
+  const hr = await requireHrContext(parsed.data.orgId);
   if (!hr) return { status: "error", message: t("errors.forbidden") };
 
   const job = await getJob(parsed.data.orgId, parsed.data.jobId);
@@ -294,7 +267,7 @@ export async function saveJobVersionAction(formData: FormData): Promise<FormStat
   const parsed = saveVersionSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) return { status: "error", message: t("errors.tooLong") };
   const { orgId, jobId, ...docs } = parsed.data;
-  const hr = await requireHrOf(orgId);
+  const hr = await requireHrContext(orgId);
   if (!hr) return { status: "error", message: t("errors.forbidden") };
 
   const [job, latest] = await Promise.all([getJob(orgId, jobId), getJobVersion(orgId, jobId)]);
@@ -346,7 +319,7 @@ export async function restoreJobVersionAction(
   const parsed = versionRefSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) return { status: "error", message: t("errors.generic") };
   const { orgId, jobId, versionNumber } = parsed.data;
-  const hr = await requireHrOf(orgId);
+  const hr = await requireHrContext(orgId);
   if (!hr) return { status: "error", message: t("errors.forbidden") };
 
   const source = await getJobVersion(orgId, jobId, versionNumber);
@@ -391,7 +364,7 @@ export async function reviewJobVersionWithAiAction(
   const parsed = versionRefSchema.safeParse(formDataToObject(formData));
   if (!parsed.success) return { status: "error", message: t("errors.generic") };
   const { orgId, jobId, versionNumber } = parsed.data;
-  const hr = await requireHrOf(orgId);
+  const hr = await requireHrContext(orgId);
   if (!hr) return { status: "error", message: t("errors.forbidden") };
 
   const [job, version] = await Promise.all([

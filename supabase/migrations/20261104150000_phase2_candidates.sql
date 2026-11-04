@@ -85,6 +85,8 @@ create table public.candidate_pii (
   cv_filename text check (char_length(cv_filename) <= 255),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
+  -- Hace explícita la relación 1:1 (la API la expone como objeto, no como lista).
+  unique (candidate_id, org_id),
   foreign key (candidate_id, org_id) references public.candidates (id, org_id) on delete cascade
 );
 comment on table public.candidate_pii is

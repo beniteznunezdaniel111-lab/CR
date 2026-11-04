@@ -12,6 +12,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Extracción de CVs: se cargan desde node_modules en el servidor (pdf.js usa
+  // importaciones dinámicas y ficheros propios que no conviene empaquetar).
+  serverExternalPackages: ["unpdf", "mammoth"],
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

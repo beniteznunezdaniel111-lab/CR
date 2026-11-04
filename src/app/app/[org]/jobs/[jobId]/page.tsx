@@ -1,5 +1,6 @@
 import { FileSearchIcon, SparklesIcon, UsersRoundIcon } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/app-shell/page-header";
@@ -61,9 +62,16 @@ export default async function JobPage({
     ...new Set(versions.map((item) => item.created_by).filter(Boolean)),
   ] as string[];
   const supabase = await createClient();
-  const { data: authors } = authorIds.length
-    ? await supabase.from("profiles").select("id, full_name, email").in("id", authorIds)
-    : { data: [] };
+  const [{ data: authors }, { count: candidateCount }] = await Promise.all([
+    authorIds.length
+      ? supabase.from("profiles").select("id, full_name, email").in("id", authorIds)
+      : Promise.resolve({ data: [] as { id: string; full_name: string | null; email: string }[] }),
+    supabase
+      .from("candidates")
+      .select("id", { count: "exact", head: true })
+      .eq("org_id", org.id)
+      .eq("job_id", job.id),
+  ]);
   const authorName = (id: string | null) => {
     const author = authors?.find((item) => item.id === id);
     return author?.full_name ?? author?.email ?? t("unknownAuthor");
@@ -208,11 +216,21 @@ export default async function JobPage({
               <CardDescription>{t("modules.description")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
-              <div className="flex items-center gap-3 rounded-md border p-3">
+              <Link
+                href={orgPath(slug, `/jobs/${job.id}/candidates`)}
+                className="flex items-center gap-3 rounded-md border p-3 transition-colors hover:bg-accent"
+              >
                 <FileSearchIcon className="size-4 text-primary" aria-hidden />
-                <span className="flex-1">{t("modules.candidates")}</span>
-                <Badge variant="secondary">{t("modules.soon", { phase: 2 })}</Badge>
-              </div>
+                <span className="flex-1">
+                  {t("modules.candidates")}
+                  <span className="block text-xs text-muted-foreground">
+                    {t("modules.candidatesCount", { count: candidateCount ?? 0 })}
+                  </span>
+                </span>
+                <span className="text-xs font-medium text-primary">
+                  {t("modules.openCandidates")}
+                </span>
+              </Link>
               <div className="flex items-center gap-3 rounded-md border p-3">
                 <UsersRoundIcon className="size-4 text-primary" aria-hidden />
                 <span className="flex-1">{t("modules.interviews")}</span>

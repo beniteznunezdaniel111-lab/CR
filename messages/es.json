@@ -40,7 +40,8 @@
     "tooManyRequirements": "Puedes indicar como máximo 30 requisitos.",
     "salaryAmount": "Introduce un importe válido.",
     "salaryRange": "El máximo no puede ser inferior al mínimo.",
-    "salaryUnit": "Indica la moneda y el periodo de la banda salarial."
+    "salaryUnit": "Indica la moneda y el periodo de la banda salarial.",
+    "revealReason": "Indica un motivo de entre 10 y 500 caracteres."
   },
   "landing": {
     "eyebrow": "MVP · España y Costa Rica",
@@ -494,7 +495,8 @@
       "generic": "No hemos podido completar la acción. Inténtalo de nuevo.",
       "notFound": "No hemos encontrado el puesto o la versión.",
       "tooLong": "Algún texto supera la longitud máxima (20.000 caracteres).",
-      "noChanges": "No hay cambios que guardar."
+      "noChanges": "No hay cambios que guardar.",
+      "hasCandidates": "Este puesto tiene candidaturas. Elimínalas antes de borrar el puesto o, si ya no buscas a nadie, ciérralo."
     },
     "delete": {
       "button": "Eliminar puesto",
@@ -552,8 +554,10 @@
     },
     "modules": {
       "title": "Siguientes pasos",
-      "description": "Este puesto será la base de:",
+      "description": "Este puesto es la base de:",
       "candidates": "Revisión de CVs",
+      "candidatesCount": "{count, plural, =0 {Sin candidaturas} one {# candidatura} other {# candidaturas}}",
+      "openCandidates": "Ver candidaturas",
       "interviews": "Guías de entrevista y onboarding",
       "soon": "Fase {phase}"
     },
@@ -599,6 +603,308 @@
         "jobBoard": "Portal de empleo",
         "website": "Web propia"
       }
+    }
+  },
+  "candidates": {
+    "title": "Candidaturas",
+    "description": "Revisa los CVs de cada puesto. La IA sugiere el encaje con los requisitos; las decisiones las toma siempre una persona.",
+    "jobTitle": "Candidaturas · {title}",
+    "jobDescription": "Sube los CVs, revisa el encaje con cada requisito y decide.",
+    "backToJob": "Ver el puesto",
+    "privacyNoticeLink": "Aviso de privacidad para candidaturas",
+    "candidateAlias": "Candidatura n.º {number}",
+    "deleted": "Candidatura eliminada.",
+    "aiNotice": {
+      "title": "Sugerencia de IA – requiere revisión humana",
+      "body": "La IA compara cada CV con los requisitos del puesto, sin puntuar ni descartar a nadie. Revisa siempre el CV: las decisiones las toma una persona y quedan registradas."
+    },
+    "overview": {
+      "empty": {
+        "title": "Aún no hay puestos",
+        "description": "Crea un puesto con sus requisitos y después sube los CVs desde la página de candidaturas del puesto.",
+        "action": "Crear un puesto"
+      },
+      "table": {
+        "job": "Puesto",
+        "total": "Candidaturas",
+        "pending": "Pendientes",
+        "reviewed": "Revisadas",
+        "advance": "Avanzan",
+        "noAdvance": "No avanzan"
+      },
+      "failed": "{count, plural, one {# con error} other {# con error}}",
+      "open": "Ver candidaturas"
+    },
+    "statuses": {
+      "pending": "Pendiente de revisar",
+      "reviewed": "Revisada",
+      "advance": "Avanza",
+      "no_advance": "No avanza"
+    },
+    "processing": {
+      "pending": "Sin analizar",
+      "processing": "Analizando…",
+      "done": "Analizada",
+      "failed": "Error"
+    },
+    "processingErrors": {
+      "no_text": "El PDF no tiene texto (parece escaneado). Sube una versión con texto seleccionable: no hacemos OCR.",
+      "too_long": "El CV es demasiado largo para analizarlo (más de 60.000 caracteres).",
+      "unreadable": "No hemos podido leer el fichero. Comprueba que no está dañado ni protegido con contraseña.",
+      "unsupported_type": "Formato no admitido. Sube el CV en PDF o DOCX.",
+      "file_missing": "No encontramos el fichero: puede que la subida no terminara. Elimina la candidatura y vuelve a subirlo.",
+      "no_requirements": "El puesto no tiene requisitos. Añádelos para poder analizar los CVs.",
+      "budget_exceeded": "Se ha alcanzado el tope mensual de uso de IA de la empresa.",
+      "ai_error": "El servicio de IA no ha respondido. Inténtalo de nuevo en unos minutos.",
+      "unexpected": "No hemos podido analizar el CV. Inténtalo de nuevo."
+    },
+    "results": {
+      "meets": "Cumple",
+      "partial": "Parcial",
+      "not_found": "No consta"
+    },
+    "upload": {
+      "title": "Subir CVs",
+      "description": "Hasta {max} ficheros PDF o DOCX de 10 MB como máximo. Cada CV se anonimiza antes de que la IA lo analice.",
+      "drop": "Arrastra aquí los CVs o",
+      "choose": "elige los ficheros",
+      "inputLabel": "Ficheros de CV",
+      "selected": "{count, plural, one {# fichero seleccionado} other {# ficheros seleccionados}}",
+      "remove": "Quitar {name}",
+      "submit": "Subir y analizar",
+      "clear": "Vaciar la lista",
+      "tooMany": "Puedes subir {max} CVs como máximo cada vez.",
+      "tooBig": "«{name}» supera los 10 MB.",
+      "wrongType": "«{name}» no es un PDF ni un DOCX.",
+      "steps": {
+        "queued": "En cola",
+        "uploading": "Subiendo…",
+        "analyzing": "Analizando…",
+        "done": "Analizado",
+        "failed": "Error"
+      },
+      "progress": "Progreso de la subida",
+      "finished": "{count, plural, one {Se ha procesado # CV.} other {Se han procesado # CVs.}} Revisa cada candidatura antes de decidir.",
+      "noRequirements": "Este puesto no tiene requisitos. Añádelos antes de subir CVs: la IA compara cada CV con ellos.",
+      "editJob": "Editar el puesto",
+      "privacyHint": "Informa a las personas candidatas con el aviso de privacidad antes de tratar sus CVs."
+    },
+    "anonymous": {
+      "title": "Revisión anónima",
+      "on": "Activada: se ocultan el nombre, los datos de contacto y el CV original hasta que alguien revele la identidad indicando un motivo.",
+      "off": "Desactivada: RRHH ve el nombre, los datos de contacto y el CV original. La IA analiza siempre el CV sin datos identificativos.",
+      "enable": "Activar revisión anónima",
+      "disable": "Desactivar",
+      "locked": "No se puede desactivar mientras el puesto tenga candidaturas.",
+      "enabled": "Revisión anónima activada.",
+      "disabled": "Revisión anónima desactivada.",
+      "badge": "Anónima"
+    },
+    "pipeline": {
+      "title": "Candidaturas recibidas",
+      "empty": {
+        "title": "Aún no hay candidaturas",
+        "description": "Sube los CVs recibidos para este puesto."
+      },
+      "filters": {
+        "status": "Filtrar por estado",
+        "all": "Todos los estados",
+        "onlyAllRequired": "Con todos los imprescindibles",
+        "onlyErrors": "Con errores de análisis",
+        "sort": "Ordenar",
+        "sortNumber": "Por orden de llegada",
+        "sortRequired": "Por imprescindibles cumplidos"
+      },
+      "columns": {
+        "candidate": "Candidatura",
+        "required": "Imprescindibles",
+        "preferred": "Deseables",
+        "status": "Decisión",
+        "analysis": "Análisis",
+        "uploaded": "Subida"
+      },
+      "count": "{met} de {total}",
+      "review": "Revisar",
+      "retry": "Reintentar",
+      "analyze": "Analizar",
+      "shown": "{shown} de {total} candidaturas",
+      "noMatches": "Ninguna candidatura cumple los filtros.",
+      "retention": "Los CVs se borran automáticamente {months, plural, one {# mes} other {# meses}} después de subirlos. Puedes cambiar el plazo en los ajustes de la empresa.",
+      "countHelp": "Requisitos que la IA marca como cumplidos con una cita comprobada en el CV. No es una puntuación."
+    },
+    "detail": {
+      "uploaded": "Subida el {date}",
+      "retention": "Se borrará automáticamente el {date}",
+      "matches": {
+        "title": "Encaje con los requisitos",
+        "summary": "{requiredMet} de {requiredTotal} imprescindibles y {preferredMet} de {preferredTotal} deseables, con cita comprobada.",
+        "verified": "Cita comprobada en el CV",
+        "unverified": "Esta cita no aparece literalmente en el CV: revísala antes de darla por buena.",
+        "noEvidence": "Sin cita del CV.",
+        "evidenceRemoved": "Cita omitida porque mencionaba un dato personal protegido.",
+        "notEvaluated": "La IA no evaluó este requisito: revísalo en el CV.",
+        "required": "Imprescindible",
+        "preferred": "Deseable"
+      },
+      "summary": "Resumen",
+      "summaryRemoved": "El resumen se ha retirado porque mencionaba datos personales protegidos.",
+      "guard": "{count, plural, one {Se ha retirado # fragmento que mencionaba datos personales protegidos.} other {Se han retirado # fragmentos que mencionaban datos personales protegidos.}}",
+      "questions": "Preguntas para la entrevista",
+      "noQuestions": "Sin preguntas sugeridas.",
+      "profile": {
+        "title": "Perfil profesional",
+        "experience": "Experiencia",
+        "education": "Formación",
+        "skills": "Habilidades",
+        "languages": "Idiomas",
+        "certifications": "Certificaciones",
+        "empty": "Sin datos."
+      },
+      "redacted": {
+        "title": "CV anonimizado",
+        "description": "Texto que ha analizado la IA, sin datos identificativos.",
+        "show": "Ver el texto",
+        "empty": "Aún no se ha extraído el texto."
+      },
+      "trace": "Análisis de IA · {prompt} · {model} · {date} · solicitado por {person}",
+      "traceCount": "{count, plural, one {# análisis en total} other {# análisis en total}}",
+      "reanalyze": "Volver a analizar",
+      "reanalyzeHelp": "Útil si has cambiado los requisitos del puesto. Se guarda como un análisis nuevo.",
+      "analyze": "Analizar ahora",
+      "retry": "Reintentar",
+      "noAnalysis": "Este CV aún no se ha analizado.",
+      "analyzing": "El CV se está analizando…",
+      "analysisDone": "Análisis completado.",
+      "unknownPerson": "persona eliminada"
+    },
+    "decision": {
+      "title": "Decisión",
+      "current": "Estado actual",
+      "by": "Por {person} el {date}",
+      "never": "Nadie ha decidido todavía.",
+      "newStatus": "Nuevo estado",
+      "comment": "Comentario (opcional)",
+      "commentHelp": "Queda en el historial de la candidatura. No escribas datos personales innecesarios.",
+      "save": "Guardar decisión",
+      "saved": "Decisión guardada.",
+      "humanOnly": "Solo una persona puede cambiar el estado. La IA no decide."
+    },
+    "identity": {
+      "title": "Identidad",
+      "hidden": "Revisión anónima: el nombre, los datos de contacto y el CV original están ocultos.",
+      "reveal": "Revelar identidad",
+      "revealTitle": "¿Revelar la identidad?",
+      "revealDescription": "Verás el nombre, los datos de contacto y el CV original de esta candidatura. Quedará registrado quién lo hizo, cuándo y por qué.",
+      "reason": "Motivo",
+      "reasonPlaceholder": "Por ejemplo: concertar la entrevista final",
+      "confirm": "Revelar",
+      "cancel": "Cancelar",
+      "revealed": "Identidad revelada.",
+      "revealedAt": "Identidad revelada el {date}.",
+      "name": "Nombre",
+      "email": "Email",
+      "phone": "Teléfono",
+      "location": "Ubicación",
+      "links": "Enlaces",
+      "file": "Fichero",
+      "notExtracted": "Los datos aparecerán cuando se analice el CV.",
+      "openCv": "Ver CV original",
+      "unknown": "No consta"
+    },
+    "history": {
+      "title": "Historial",
+      "empty": "Sin decisiones todavía.",
+      "statusChanged": "{from} → {to}",
+      "identityRevealed": "Identidad revelada",
+      "by": "{person} · {date}"
+    },
+    "delete": {
+      "button": "Eliminar candidatura",
+      "title": "¿Eliminar esta candidatura?",
+      "description": "Se borrarán el CV, los datos identificativos, los análisis y el historial. En la auditoría solo quedará constancia del borrado. Esta acción no se puede deshacer.",
+      "reason": "Motivo",
+      "reasons": {
+        "candidate_request": "A petición de la persona candidata",
+        "manual": "Otro motivo"
+      },
+      "confirm": "Eliminar",
+      "cancel": "Cancelar"
+    },
+    "privacyNotice": {
+      "title": "Aviso de privacidad para candidaturas",
+      "description": "Texto para informar a las personas candidatas de cómo se tratan sus datos. Se genera con los datos de tu empresa y la normativa de {country}.",
+      "draft": "Borrador pendiente de revisión legal. No es asesoramiento legal: revísalo con una persona experta antes de usarlo.",
+      "missing": "Faltan datos de la empresa (razón social, identificación fiscal, dirección o email de privacidad). Complétalos en los ajustes para que el aviso salga completo.",
+      "copy": "Copiar",
+      "download": "Descargar (.md)",
+      "copied": "Aviso copiado al portapapeles.",
+      "copyError": "No hemos podido copiar el texto. Selecciónalo y cópialo a mano.",
+      "filename": "aviso-privacidad-candidaturas",
+      "pending": "[pendiente: {field}]",
+      "fields": {
+        "legalName": "razón social",
+        "taxId": "identificación fiscal",
+        "address": "dirección",
+        "privacyEmail": "email de privacidad"
+      },
+      "settingsLink": "Ir a los ajustes de la empresa"
+    },
+    "privacyTemplate": {
+      "ES": {
+        "title": "Información sobre protección de datos para candidaturas · {company}",
+        "draft": "Borrador pendiente de revisión legal.",
+        "controllerTitle": "Quién trata tus datos",
+        "controller": "{legalName} ({taxIdLabel}: {taxId}), con domicilio en {address}. Para cualquier cuestión sobre tus datos puedes escribir a {privacyEmail}.",
+        "purposeTitle": "Para qué los usamos",
+        "purpose": "Para gestionar tu candidatura en los procesos de selección en los que participes: revisar tu CV, valorar si encaja con los requisitos del puesto y contactar contigo durante el proceso.",
+        "aiTitle": "Uso de inteligencia artificial",
+        "ai": "Usamos una herramienta de inteligencia artificial que ayuda a revisar los CVs. Antes de analizarlos oculta tu nombre y tus datos de contacto, y solo compara tu experiencia con los requisitos del puesto. No tiene en cuenta la edad, el sexo, el origen, el estado civil, la salud, las creencias ni otros datos personales protegidos. La herramienta no toma decisiones: las toma siempre una persona del equipo de selección y quedan registradas. Puedes pedir que tu candidatura la revise solo una persona y dar tu punto de vista.",
+        "aiRegulation": "Este uso está sujeto al {regulation}.",
+        "legalBasisTitle": "Base jurídica",
+        "legalBasis": "La aplicación de medidas precontractuales a petición tuya al presentar tu candidatura (artículo 6.1.b del RGPD).",
+        "retentionTitle": "Cuánto tiempo los conservamos",
+        "retention": "Conservamos tu CV y los datos de tu candidatura durante {months, plural, one {# mes} other {# meses}} desde que los recibimos. Después se borran automáticamente.",
+        "recipientsTitle": "Quién más puede tratarlos",
+        "recipients": "Proveedores que tratan los datos por nuestra cuenta: alojamiento en la Unión Europea y un proveedor de inteligencia artificial que puede tratarlos fuera de la UE con las garantías previstas en la normativa (cláusulas contractuales tipo). No cedemos tus datos a terceros para otros fines.",
+        "rightsTitle": "Tus derechos",
+        "rights": "Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad escribiendo a {privacyEmail}. También puedes presentar una reclamación ante la {authority} ({authorityUrl}).",
+        "laws": "Normativa de referencia: {laws}."
+      },
+      "CR": {
+        "title": "Aviso de privacidad para personas candidatas · {company}",
+        "draft": "Borrador pendiente de revisión legal.",
+        "controllerTitle": "Responsable de la base de datos",
+        "controller": "{legalName} ({taxIdLabel}: {taxId}), con domicilio en {address}. Para cualquier consulta sobre sus datos puede escribir a {privacyEmail}.",
+        "purposeTitle": "Finalidad",
+        "purpose": "Gestionar su candidatura en los procesos de selección en los que participe: revisar su CV, valorar si cumple los requisitos del puesto y contactarle durante el proceso.",
+        "aiTitle": "Uso de inteligencia artificial",
+        "ai": "Utilizamos una herramienta de inteligencia artificial que ayuda a revisar los CV. Antes de analizarlos oculta su nombre y sus datos de contacto, y solo compara su experiencia con los requisitos del puesto. No toma en cuenta la edad, el sexo, el origen, el estado civil, la salud, las creencias ni otros datos sensibles. La herramienta no toma decisiones: las toma siempre una persona del equipo de selección y quedan registradas. Puede solicitar que su candidatura la revise únicamente una persona.",
+        "legalBasisTitle": "Consentimiento",
+        "legalBasis": "Al enviar su CV, usted nos da su consentimiento informado para tratar sus datos con esta finalidad. Puede retirarlo en cualquier momento.",
+        "retentionTitle": "Plazo de conservación",
+        "retention": "Conservamos su CV y los datos de su candidatura durante {months, plural, one {# mes} other {# meses}} desde que los recibimos. Después se eliminan automáticamente.",
+        "recipientsTitle": "Destinatarios",
+        "recipients": "Proveedores que tratan los datos por nuestra cuenta: alojamiento en la Unión Europea y un proveedor de inteligencia artificial que puede tratarlos fuera de Costa Rica con las garantías contractuales correspondientes. No transferimos sus datos a terceros para otros fines.",
+        "rightsTitle": "Sus derechos",
+        "rights": "Puede ejercer sus derechos de acceso, rectificación y supresión escribiendo a {privacyEmail}. También puede acudir a la {authority} ({authorityUrl}).",
+        "laws": "Normativa de referencia: {laws}."
+      }
+    },
+    "errors": {
+      "forbidden": "Solo RRHH y admin pueden gestionar candidaturas.",
+      "notFound": "No hemos encontrado la candidatura.",
+      "invalidFiles": "Revisa los ficheros: hasta 20 PDF o DOCX de 10 MB como máximo.",
+      "fileType": "«{name}» no es un PDF ni un DOCX.",
+      "noRequirements": "El puesto no tiene requisitos. Añádelos antes de subir CVs.",
+      "upload": "No hemos podido preparar la subida. Inténtalo de nuevo.",
+      "uploadFile": "No se ha podido subir «{name}».",
+      "alreadyProcessing": "Este CV ya se está analizando.",
+      "sameStatus": "La candidatura ya tiene ese estado.",
+      "reveal": "No hemos podido revelar la identidad.",
+      "cvHidden": "El CV original no está disponible (revisión anónima o fichero borrado).",
+      "anonymousLocked": "No se puede desactivar la revisión anónima mientras haya candidaturas.",
+      "delete": "No hemos podido eliminar la candidatura.",
+      "generic": "No hemos podido completar la acción. Inténtalo de nuevo."
     }
   }
 }

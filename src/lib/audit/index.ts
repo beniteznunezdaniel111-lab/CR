@@ -19,9 +19,8 @@ export type AuditEventInput = {
   details?: Record<string, Json | undefined>;
 };
 
-export async function recordAuditEvent(event: AuditEventInput): Promise<void> {
-  const admin = createAdminClient();
-  const { error } = await admin.from("audit_events").insert({
+function toRow(event: AuditEventInput) {
+  return {
     org_id: event.orgId,
     actor_id: event.actorId,
     actor_type: event.actorId ? "user" : "system",
@@ -29,9 +28,20 @@ export async function recordAuditEvent(event: AuditEventInput): Promise<void> {
     entity_type: event.entityType,
     entity_id: event.entityId ?? null,
     details: (event.details ?? {}) as Json,
-  });
+  };
+}
+
+export async function recordAuditEvent(event: AuditEventInput): Promise<void> {
+  await recordAuditEvents([event]);
+}
+
+/** Varios eventos en una sola inserción (p. ej. una subida de 20 CVs). */
+export async function recordAuditEvents(events: readonly AuditEventInput[]): Promise<void> {
+  if (events.length === 0) return;
+  const admin = createAdminClient();
+  const { error } = await admin.from("audit_events").insert(events.map(toRow));
   if (error) {
     // La auditoría es obligatoria: si falla, la operación debe fallar.
-    throw new Error(`No se pudo registrar la auditoría (${event.action}): ${error.message}`);
+    throw new Error(`No se pudo registrar la auditoría (${events[0]!.action}): ${error.message}`);
   }
 }

@@ -3,10 +3,16 @@
  * (solo imágenes) no tiene texto y se rechaza con un error claro. Las imágenes
  * (p. ej. la foto de un CV) nunca se extraen: a la IA solo le llega texto.
  */
-export const PDF_MIME = "application/pdf";
-export const DOCX_MIME = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-export const SUPPORTED_MIME_TYPES = [PDF_MIME, DOCX_MIME] as const;
-export type SupportedMime = (typeof SUPPORTED_MIME_TYPES)[number];
+import { PDF_MIME, isSupportedMime } from "./mime";
+
+export {
+  DOCX_MIME,
+  PDF_MIME,
+  SUPPORTED_MIME_TYPES,
+  type SupportedMime,
+  isSupportedMime,
+  mimeFromFilename,
+} from "./mime";
 
 /** Máximo de caracteres de texto extraído (unas 25 páginas). */
 export const MAX_EXTRACTED_CHARS = 60_000;
@@ -26,25 +32,13 @@ export function isExtractionError(error: unknown): error is ExtractionError {
   return error instanceof ExtractionError;
 }
 
-export function isSupportedMime(mime: string): mime is SupportedMime {
-  return (SUPPORTED_MIME_TYPES as readonly string[]).includes(mime);
-}
-
-/** Tipo a partir de la extensión, por si el navegador no informa el MIME. */
-export function mimeFromFilename(filename: string): SupportedMime | null {
-  const extension = filename.toLowerCase().split(".").pop();
-  if (extension === "pdf") return PDF_MIME;
-  if (extension === "docx") return DOCX_MIME;
-  return null;
-}
-
 /** Normaliza el texto: NFC, saltos de línea, espacios sobrantes y líneas vacías repetidas. */
 export function normalizeExtractedText(text: string): string {
   return text
     .normalize("NFC")
     .replaceAll("\u0000", "")
     .replace(/\r\n?/g, "\n")
-    .replace(/[\t ]+/g, " ")
+    .replace(/[\t\u00a0]+/g, " ")
     .split("\n")
     .map((line) => line.replace(/ {2,}/g, " ").trimEnd())
     .join("\n")

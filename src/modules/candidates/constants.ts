@@ -1,4 +1,4 @@
-import { DOCX_MIME, PDF_MIME } from "@/lib/extraction";
+import { DOCX_MIME, PDF_MIME } from "@/lib/extraction/mime";
 import { Constants } from "@/lib/supabase/database.types";
 
 export const CANDIDATE_STATUSES = Constants.public.Enums.candidate_status;
@@ -34,6 +34,6 @@ export const PROCESSING_ERRORS = [
   "no_requirements",
   "budget_exceeded",
   "ai_error",
-  "interrupted",
+  "unexpected",
 ] as const;
 export type ProcessingError = (typeof PROCESSING_ERRORS)[number];
