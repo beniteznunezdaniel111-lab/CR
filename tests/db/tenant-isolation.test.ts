@@ -492,11 +492,12 @@ describe("Storage", () => {
       )
     ).map((r) => r.name.split("/")[0]);
 
-  it("los CVs solo los ven admin y RRHH de la propia empresa", async () => {
-    expect(await visible(u.aHr, "cvs")).toEqual([orgA.id]);
-    expect(await visible(u.aAdmin, "cvs")).toEqual([orgA.id]);
+  it("un fichero de CV que no pertenece a ninguna candidatura no lo ve nadie", async () => {
+    // La visibilidad por candidatura (y el modo anónimo) se prueba en candidates.test.ts.
+    expect(await visible(u.aHr, "cvs")).toEqual([]);
+    expect(await visible(u.aAdmin, "cvs")).toEqual([]);
     expect(await visible(u.aEmp, "cvs")).toEqual([]);
-    expect(await visible(u.bHr, "cvs")).toEqual([orgB.id]);
+    expect(await visible(u.bHr, "cvs")).toEqual([]);
   });
 
   it("los documentos de la FAQ los ve cualquier miembro, solo de su empresa", async () => {
@@ -512,13 +513,17 @@ describe("Storage", () => {
 
   it("no se puede subir a la carpeta de otra empresa ni con rutas manipuladas", async () => {
     const insert = "insert into storage.objects (bucket_id, name) values ($1, $2)";
-    expect(await exec(db, u.aHr, insert, ["cvs", `${orgA.id}/nuevo.pdf`])).toBe(1);
+    // Los CVs solo los sube el servidor (URL firmada): nadie escribe directamente.
+    await expect(exec(db, u.aHr, insert, ["cvs", `${orgA.id}/nuevo.pdf`])).rejects.toThrow(
+      /row-level security/,
+    );
     await expect(exec(db, u.aHr, insert, ["cvs", `${orgB.id}/intruso.pdf`])).rejects.toThrow(
       /row-level security/,
     );
     await expect(exec(db, u.aHr, insert, ["cvs", "sin-empresa/intruso.pdf"])).rejects.toThrow(
       /row-level security/,
     );
+    expect(await exec(db, u.aHr, insert, ["training-sources", `${orgA.id}/nuevo.pdf`])).toBe(1);
     await expect(
       exec(db, u.aEmp, insert, ["kb-documents", `${orgA.id}/del-empleado.pdf`]),
     ).rejects.toThrow(/row-level security/);

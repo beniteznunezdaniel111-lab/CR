@@ -128,6 +128,301 @@ export type Database = {
           },
         ];
       };
+      candidate_events: {
+        Row: {
+          actor_id: string | null;
+          candidate_id: string;
+          created_at: string;
+          from_status: Database["public"]["Enums"]["candidate_status"] | null;
+          id: string;
+          kind: Database["public"]["Enums"]["candidate_event_kind"];
+          note: string | null;
+          org_id: string;
+          to_status: Database["public"]["Enums"]["candidate_status"] | null;
+        };
+        Insert: {
+          actor_id?: string | null;
+          candidate_id: string;
+          created_at?: string;
+          from_status?: Database["public"]["Enums"]["candidate_status"] | null;
+          id?: string;
+          kind: Database["public"]["Enums"]["candidate_event_kind"];
+          note?: string | null;
+          org_id: string;
+          to_status?: Database["public"]["Enums"]["candidate_status"] | null;
+        };
+        Update: {
+          actor_id?: string | null;
+          candidate_id?: string;
+          created_at?: string;
+          from_status?: Database["public"]["Enums"]["candidate_status"] | null;
+          id?: string;
+          kind?: Database["public"]["Enums"]["candidate_event_kind"];
+          note?: string | null;
+          org_id?: string;
+          to_status?: Database["public"]["Enums"]["candidate_status"] | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "candidate_events_candidate_id_org_id_fkey";
+            columns: ["candidate_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "candidates";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      candidate_pii: {
+        Row: {
+          candidate_id: string;
+          created_at: string;
+          cv_filename: string | null;
+          email: string | null;
+          full_name: string | null;
+          links: string[];
+          location: string | null;
+          org_id: string;
+          phone: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          candidate_id: string;
+          created_at?: string;
+          cv_filename?: string | null;
+          email?: string | null;
+          full_name?: string | null;
+          links?: string[];
+          location?: string | null;
+          org_id: string;
+          phone?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          candidate_id?: string;
+          created_at?: string;
+          cv_filename?: string | null;
+          email?: string | null;
+          full_name?: string | null;
+          links?: string[];
+          location?: string | null;
+          org_id?: string;
+          phone?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "candidate_pii_candidate_id_org_id_fkey";
+            columns: ["candidate_id", "org_id"];
+            isOneToOne: true;
+            referencedRelation: "candidates";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      candidates: {
+        Row: {
+          candidate_number: number;
+          created_at: string;
+          created_by: string | null;
+          cv_mime: string;
+          cv_path: string;
+          cv_size: number;
+          id: string;
+          identity_revealed_at: string | null;
+          identity_revealed_by: string | null;
+          job_id: string;
+          org_id: string;
+          processing_error: string | null;
+          processing_started_at: string | null;
+          processing_status: Database["public"]["Enums"]["cv_processing_status"];
+          redacted_text: string | null;
+          retention_until: string;
+          status: Database["public"]["Enums"]["candidate_status"];
+          status_changed_at: string | null;
+          status_changed_by: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          candidate_number?: number;
+          created_at?: string;
+          created_by?: string | null;
+          cv_mime: string;
+          cv_path: string;
+          cv_size: number;
+          id?: string;
+          identity_revealed_at?: string | null;
+          identity_revealed_by?: string | null;
+          job_id: string;
+          org_id: string;
+          processing_error?: string | null;
+          processing_started_at?: string | null;
+          processing_status?: Database["public"]["Enums"]["cv_processing_status"];
+          redacted_text?: string | null;
+          retention_until?: string;
+          status?: Database["public"]["Enums"]["candidate_status"];
+          status_changed_at?: string | null;
+          status_changed_by?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          candidate_number?: number;
+          created_at?: string;
+          created_by?: string | null;
+          cv_mime?: string;
+          cv_path?: string;
+          cv_size?: number;
+          id?: string;
+          identity_revealed_at?: string | null;
+          identity_revealed_by?: string | null;
+          job_id?: string;
+          org_id?: string;
+          processing_error?: string | null;
+          processing_started_at?: string | null;
+          processing_status?: Database["public"]["Enums"]["cv_processing_status"];
+          redacted_text?: string | null;
+          retention_until?: string;
+          status?: Database["public"]["Enums"]["candidate_status"];
+          status_changed_at?: string | null;
+          status_changed_by?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "candidates_job_id_org_id_fkey";
+            columns: ["job_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "job_positions";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      cv_analyses: {
+        Row: {
+          ai_usage_ids: number[];
+          candidate_id: string;
+          created_at: string;
+          guard_flags: Json;
+          id: string;
+          identity_prompt_id: string | null;
+          identity_prompt_version: number | null;
+          interview_questions: Json;
+          model: string;
+          org_id: string;
+          preferred_met: number;
+          preferred_total: number;
+          profile: Json;
+          prompt_id: string;
+          prompt_version: number;
+          requested_by: string | null;
+          required_met: number;
+          required_total: number;
+          requirements_snapshot: Json;
+          summary: string;
+        };
+        Insert: {
+          ai_usage_ids?: number[];
+          candidate_id: string;
+          created_at?: string;
+          guard_flags?: Json;
+          id?: string;
+          identity_prompt_id?: string | null;
+          identity_prompt_version?: number | null;
+          interview_questions?: Json;
+          model: string;
+          org_id: string;
+          preferred_met?: number;
+          preferred_total?: number;
+          profile?: Json;
+          prompt_id: string;
+          prompt_version: number;
+          requested_by?: string | null;
+          required_met?: number;
+          required_total?: number;
+          requirements_snapshot?: Json;
+          summary: string;
+        };
+        Update: {
+          ai_usage_ids?: number[];
+          candidate_id?: string;
+          created_at?: string;
+          guard_flags?: Json;
+          id?: string;
+          identity_prompt_id?: string | null;
+          identity_prompt_version?: number | null;
+          interview_questions?: Json;
+          model?: string;
+          org_id?: string;
+          preferred_met?: number;
+          preferred_total?: number;
+          profile?: Json;
+          prompt_id?: string;
+          prompt_version?: number;
+          requested_by?: string | null;
+          required_met?: number;
+          required_total?: number;
+          requirements_snapshot?: Json;
+          summary?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cv_analyses_candidate_id_org_id_fkey";
+            columns: ["candidate_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "candidates";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      cv_requirement_matches: {
+        Row: {
+          analysis_id: string;
+          evidence: string | null;
+          evidence_verified: boolean;
+          explanation: string;
+          id: string;
+          org_id: string;
+          requirement_id: string | null;
+          requirement_kind: Database["public"]["Enums"]["requirement_kind"];
+          requirement_text: string;
+          result: Database["public"]["Enums"]["requirement_match"];
+          sort_order: number;
+        };
+        Insert: {
+          analysis_id: string;
+          evidence?: string | null;
+          evidence_verified?: boolean;
+          explanation?: string;
+          id?: string;
+          org_id: string;
+          requirement_id?: string | null;
+          requirement_kind: Database["public"]["Enums"]["requirement_kind"];
+          requirement_text: string;
+          result: Database["public"]["Enums"]["requirement_match"];
+          sort_order?: number;
+        };
+        Update: {
+          analysis_id?: string;
+          evidence?: string | null;
+          evidence_verified?: boolean;
+          explanation?: string;
+          id?: string;
+          org_id?: string;
+          requirement_id?: string | null;
+          requirement_kind?: Database["public"]["Enums"]["requirement_kind"];
+          requirement_text?: string;
+          result?: Database["public"]["Enums"]["requirement_match"];
+          sort_order?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cv_requirement_matches_analysis_id_org_id_fkey";
+            columns: ["analysis_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "cv_analyses";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
       invitations: {
         Row: {
           accepted_at: string | null;
@@ -251,6 +546,8 @@ export type Database = {
       };
       job_positions: {
         Row: {
+          anonymous_review: boolean;
+          candidate_seq: number;
           benefits: string | null;
           created_at: string;
           created_by: string | null;
@@ -271,6 +568,8 @@ export type Database = {
           work_mode: Database["public"]["Enums"]["work_mode"];
         };
         Insert: {
+          anonymous_review?: boolean;
+          candidate_seq?: number;
           benefits?: string | null;
           created_at?: string;
           created_by?: string | null;
@@ -291,6 +590,8 @@ export type Database = {
           work_mode: Database["public"]["Enums"]["work_mode"];
         };
         Update: {
+          anonymous_review?: boolean;
+          candidate_seq?: number;
           benefits?: string | null;
           created_at?: string;
           created_by?: string | null;
@@ -520,6 +821,14 @@ export type Database = {
         Args: { p_org: string };
         Returns: number;
       };
+      register_candidates: {
+        Args: { p_files: Json; p_job_id: string };
+        Returns: { candidate_id: string; candidate_number: number; cv_path: string }[];
+      };
+      reveal_candidate_identity: {
+        Args: { p_candidate_id: string; p_reason: string };
+        Returns: undefined;
+      };
       save_job_position: {
         Args: {
           p_fields: Json;
@@ -529,8 +838,23 @@ export type Database = {
         };
         Returns: string;
       };
+      set_candidate_status: {
+        Args: {
+          p_candidate_id: string;
+          p_comment?: string;
+          p_status: Database["public"]["Enums"]["candidate_status"];
+        };
+        Returns: undefined;
+      };
+      store_candidate_extraction: {
+        Args: { p_candidate_id: string; p_identity: Json; p_redacted_text: string };
+        Returns: undefined;
+      };
     };
     Enums: {
+      candidate_event_kind: "status_changed" | "identity_revealed";
+      candidate_status: "pending" | "reviewed" | "advance" | "no_advance";
+      cv_processing_status: "pending" | "processing" | "done" | "failed";
       job_level: "intern" | "junior" | "mid" | "senior" | "lead" | "manager" | "director";
       job_status: "draft" | "open" | "closed";
       job_tone: "professional" | "friendly" | "dynamic" | "formal";
@@ -538,6 +862,7 @@ export type Database = {
       member_role: "admin" | "hr" | "employee";
       member_status: "active" | "disabled";
       requirement_kind: "required" | "preferred";
+      requirement_match: "meets" | "partial" | "not_found";
       work_mode: "onsite" | "hybrid" | "remote";
     };
     CompositeTypes: {
@@ -558,6 +883,9 @@ export type Enums<T extends keyof PublicSchema["Enums"]> = PublicSchema["Enums"]
 export const Constants = {
   public: {
     Enums: {
+      candidate_event_kind: ["status_changed", "identity_revealed"],
+      candidate_status: ["pending", "reviewed", "advance", "no_advance"],
+      cv_processing_status: ["pending", "processing", "done", "failed"],
       job_level: ["intern", "junior", "mid", "senior", "lead", "manager", "director"],
       job_status: ["draft", "open", "closed"],
       job_tone: ["professional", "friendly", "dynamic", "formal"],
@@ -565,6 +893,7 @@ export const Constants = {
       member_role: ["admin", "hr", "employee"],
       member_status: ["active", "disabled"],
       requirement_kind: ["required", "preferred"],
+      requirement_match: ["meets", "partial", "not_found"],
       work_mode: ["onsite", "hybrid", "remote"],
     },
   },
