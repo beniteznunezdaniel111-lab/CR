@@ -1551,5 +1551,75 @@
       "generic": "No se ha podido guardar. Inténtalo de nuevo.",
       "answerAll": "Responde todas las preguntas antes de entregar."
     }
+  },
+  "aiUsage": {
+    "title": "Uso de IA",
+    "description": "Consumo estimado de IA de la empresa. El tope mensual lo gestiona la plataforma.",
+    "month": {
+      "title": "Este mes",
+      "spent": "{spent} de {limit}",
+      "percent": "{percent} % del tope mensual",
+      "progressLabel": "Consumo del tope mensual",
+      "ok": "Dentro del tope.",
+      "warning": "Has usado más del 80 % del tope. Al alcanzarlo, las funciones con IA se bloquean hasta el mes siguiente.",
+      "exceeded": "Se ha alcanzado el tope: las funciones con IA están bloqueadas hasta el mes siguiente. Si necesitas más, contacta con soporte.",
+      "estimate": "Costes estimados a partir de los tokens de cada llamada; la factura del proveedor es la que cuenta."
+    },
+    "features": {
+      "title": "Por módulo (este mes)",
+      "empty": "Este mes aún no se ha usado la IA.",
+      "columns": {
+        "feature": "Módulo",
+        "calls": "Llamadas",
+        "errors": "Con error",
+        "tokens": "Tokens (entrada / salida)",
+        "cost": "Coste"
+      },
+      "names": {
+        "jobs": "Puestos y ofertas",
+        "candidates": "Candidaturas",
+        "interviews": "Guías de entrevista",
+        "onboarding": "Onboarding",
+        "faq": "Preguntas frecuentes",
+        "trainings": "Formación",
+        "system": "Comprobaciones",
+        "other": "Otros"
+      }
+    },
+    "months": {
+      "title": "Últimos 6 meses",
+      "columns": {
+        "month": "Mes",
+        "calls": "Llamadas",
+        "cost": "Coste"
+      }
+    },
+    "recent": {
+      "title": "Últimas llamadas",
+      "empty": "Aún no hay llamadas.",
+      "columns": {
+        "date": "Fecha",
+        "feature": "Módulo",
+        "prompt": "Prompt",
+        "model": "Modelo",
+        "tokens": "Tokens",
+        "cost": "Coste",
+        "status": "Estado",
+        "person": "Persona"
+      },
+      "statuses": {
+        "ok": "Correcta",
+        "error": "Error",
+        "validation_failed": "Formato no válido",
+        "refused": "Rechazada",
+        "budget_exceeded": "Tope alcanzado"
+      },
+      "system": "Sistema"
+    }
+  },
+  "budgetBanner": {
+    "warning": "Tu empresa ha usado el {percent} % del tope mensual de IA.",
+    "exceeded": "Tu empresa ha alcanzado el tope mensual de IA: las funciones con IA están bloqueadas hasta el mes siguiente.",
+    "link": "Ver el uso de IA"
   }
 }

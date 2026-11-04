@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import type * as React from "react";
 import { Logo } from "@/components/brand/logo";
+import { BudgetBanner } from "@/components/app-shell/budget-banner";
 import { MobileNav } from "@/components/app-shell/mobile-nav";
 import { NotificationsMenu } from "@/components/app-shell/notifications-menu";
 import { OrgSwitcher } from "@/components/app-shell/org-switcher";
@@ -17,6 +18,7 @@ import {
   orgPath,
 } from "@/lib/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getBudgetStatus } from "@/modules/ai-usage/queries";
 import { listNotifications } from "@/modules/faq/queries";
 
 export default async function OrgLayout({
@@ -32,9 +34,10 @@ export default async function OrgLayout({
   const tRoles = await getTranslations("roles");
 
   const supabase = await createClient();
-  const [{ data: profile }, notifications] = await Promise.all([
+  const [{ data: profile }, notifications, budget] = await Promise.all([
     supabase.from("profiles").select("full_name, email").eq("id", context.user.id).maybeSingle(),
     listNotifications(context.org.id),
+    context.role === "admin" ? getBudgetStatus(context.org.id) : Promise.resolve(null),
   ]);
 
   const toLinks = (items: readonly NavItem[]): SidebarLink[] =>
@@ -75,6 +78,7 @@ export default async function OrgLayout({
             />
           </div>
         </header>
+        <BudgetBanner status={budget} href={orgPath(slug, "/settings/ai-usage")} />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 lg:py-8">
           {children}
         </main>
