@@ -67,7 +67,9 @@ test.describe("alta de empresa e invitaciones", () => {
     await page.goto(new URL(inviteLink).pathname);
     await expect(page.getByText("Esta invitación ya se ha utilizado.")).toBeVisible();
 
-    // 7. El admin ve al empleado activo en la lista.
+    // 7. El admin ve al empleado activo en la lista. (La página de invitación no
+    //    tiene menú de usuario: se cierra sesión desde la app.)
+    await page.goto(orgUrl);
     await signOut(page);
     await page.goto(`/login?next=${encodeURIComponent(`${orgUrl}/settings/members`)}`);
     await page.getByLabel("Email").fill(adminEmail);
