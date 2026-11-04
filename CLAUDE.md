@@ -1,7 +1,7 @@
 # CLAUDE.md — HRPilot (SaaS de RRHH con IA)
 
 Guía para trabajar en este repositorio. El plan completo y las decisiones acordadas están en
-[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 4 (FAQ interna) terminada.** Cada fase termina con lint,
+[`docs/PLAN.md`](docs/PLAN.md). **Fase actual: 5 (formación y evaluaciones) terminada.** Cada fase termina con lint,
 typecheck y tests en verde, commit, resumen y OK explícito del usuario antes de seguir.
 
 ## Comandos
@@ -136,6 +136,18 @@ tests/unit|db|e2e        Vitest unitarios · Vitest contra Postgres · Playwrigh
   Consultas a RRHH (`hr_queries`) con aviso a RRHH al crearlas y a la persona al responder
   (`answer_hr_query`). `notifications` es genérica: `kind` + `params`, texto en
   `notifications.kinds.<kind>`.
+
+- **Formación (`src/modules/trainings`, Fase 5).** Fuentes: tema, documentos de la FAQ (se copia su
+  texto al crear) o ficheros subidos a `training-sources` (URL firmada con la sesión de RRHH; el
+  texto se extrae una vez y se guarda en `training_sources`). La generación va por pasos desde el
+  navegador (una Server Action por paso, con progreso): `training.outline@1` → `training.module@1`
+  por módulo → `training.quiz@1`; si un paso falla, se completa desde el editor. RRHH edita
+  módulos (Markdown con TipTap) y test (`save_training_quiz`), publica (`publish_training` exige
+  contenido y respuestas), duplica (`duplicate_training`) y asigna (`assign_training`, con aviso
+  `training_assigned`). Las respuestas correctas están en `training_quiz_keys` (solo RRHH); la
+  nota la calcula `submit_training_attempt` (70 %, intentos ilimitados, mejor nota) y devuelve
+  las explicaciones tras cada intento. Un test con intentos no se edita (se duplica) y una
+  formación con intentos no se borra.
 
 ## Cómo añadir…
 

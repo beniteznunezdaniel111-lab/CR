@@ -6,7 +6,7 @@ nombre provisional (`src/lib/config/brand.ts`).
 - Plan y decisiones: [`docs/PLAN.md`](docs/PLAN.md)
 - Convenciones para desarrollar: [`CLAUDE.md`](CLAUDE.md)
 
-**Estado:** Fase 4 terminada.
+**Estado:** Fase 5 terminada.
 
 - **Fase 0 (base):** registro, empresas con datos aislados (RLS), roles, invitaciones, capa de IA y
   layout.
@@ -21,7 +21,12 @@ nombre provisional (`src/lib/config/brand.ts`).
   streaming con citas (documento, página y fragmento), "no lo sé" cuando no hay respaldo,
   consultas a RRHH con aviso dentro de la app y preguntas frecuentes anónimas para RRHH.
 
-El módulo de formación (Fase 5) llega después.
+- **Fase 5 (formación y evaluaciones):** formaciones generadas con IA desde un tema o documentos
+  (índice, módulos con ejemplos y resumen, test con explicaciones), edición, publicación,
+  duplicado, asignación con fecha límite y aviso, test con nota calculada en el servidor (70 %,
+  mejor nota) y panel de progreso por formación y por persona.
+
+Queda la Fase 6 (pulido para la demo).
 
 ## Requisitos
 
