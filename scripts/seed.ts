@@ -6,11 +6,12 @@
  *
  * SOLO para desarrollo y demos: las contraseñas son conocidas.
  */
-import { loadEnvConfig } from "@next/env";
+// @next/env es CommonJS: en ESM hay que importarlo por defecto.
+import nextEnv from "@next/env";
 import { type SupabaseClient, createClient } from "@supabase/supabase-js";
 import type { Database } from "../src/lib/supabase/database.types";
 
-loadEnvConfig(process.cwd());
+nextEnv.loadEnvConfig(process.cwd());
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const anonKey =

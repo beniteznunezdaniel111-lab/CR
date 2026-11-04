@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { requireUser } from "@/lib/auth/session";
 import { getCountry } from "@/lib/countries";
-import { type FormState, formDataToObject, zodFieldErrors } from "@/lib/forms";
+import { type FormState, formDataToObject, formError, zodFieldErrors } from "@/lib/forms";
 import { createClient } from "@/lib/supabase/server";
 import { createOrganizationSchema, updateOrganizationSchema } from "./schemas";
 
@@ -16,7 +16,7 @@ export async function createOrganizationAction(
   await requireUser("/app/new");
   const t = await getTranslations("newOrg");
   const parsed = createOrganizationSchema.safeParse(formDataToObject(formData));
-  if (!parsed.success) return { status: "error", fieldErrors: zodFieldErrors(parsed.error) };
+  if (!parsed.success) return formError(formData, { fieldErrors: zodFieldErrors(parsed.error) });
 
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("create_organization", {
@@ -27,7 +27,7 @@ export async function createOrganizationAction(
     p_address: parsed.data.address,
     p_privacy_email: parsed.data.privacyEmail,
   });
-  if (error || !data) return { status: "error", message: t("error") };
+  if (error || !data) return formError(formData, { message: t("error") });
 
   redirect(`/app/${data.slug}`);
 }
@@ -39,7 +39,7 @@ export async function updateOrganizationAction(
   await requireUser();
   const t = await getTranslations("orgSettings");
   const parsed = updateOrganizationSchema.safeParse(formDataToObject(formData));
-  if (!parsed.success) return { status: "error", fieldErrors: zodFieldErrors(parsed.error) };
+  if (!parsed.success) return formError(formData, { fieldErrors: zodFieldErrors(parsed.error) });
 
   const data = parsed.data;
   const country = getCountry(data.country);
@@ -70,7 +70,7 @@ export async function updateOrganizationAction(
     .select("slug")
     .maybeSingle();
 
-  if (error || !updated) return { status: "error", message: t("error") };
+  if (error || !updated) return formError(formData, { message: t("error") });
   revalidatePath(`/app/${updated.slug}`, "layout");
   return { status: "success", message: t("saved") };
 }

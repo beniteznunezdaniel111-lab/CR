@@ -7,7 +7,7 @@ import { requireUser } from "@/lib/auth/session";
 import { getSiteUrl } from "@/lib/config/public-env";
 import { sendEmail } from "@/lib/email";
 import { invitationEmail } from "@/lib/email/templates";
-import { type FormState, formDataToObject, zodFieldErrors } from "@/lib/forms";
+import { type FormState, formDataToObject, formError, zodFieldErrors } from "@/lib/forms";
 import {
   INVITATION_TTL_DAYS,
   generateInvitationToken,
@@ -52,11 +52,11 @@ export async function inviteMemberAction(
 ): Promise<FormState<InvitationLinkResult>> {
   const t = await getTranslations("members");
   const parsed = inviteMemberSchema.safeParse(formDataToObject(formData));
-  if (!parsed.success) return { status: "error", fieldErrors: zodFieldErrors(parsed.error) };
+  if (!parsed.success) return formError(formData, { fieldErrors: zodFieldErrors(parsed.error) });
   const { orgId, email, role } = parsed.data;
 
   const admin = await requireAdminOf(orgId);
-  if (!admin) return { status: "error", message: t("forbidden") };
+  if (!admin) return formError(formData, { message: t("forbidden") });
   const { supabase, org, user } = admin;
 
   const { data: existing } = await supabase
@@ -66,7 +66,7 @@ export async function inviteMemberAction(
     .eq("profiles.email", email)
     .maybeSingle();
   if (existing?.status === "active") {
-    return { status: "error", fieldErrors: { email: ["alreadyMember"] } };
+    return formError(formData, { fieldErrors: { email: ["alreadyMember"] } });
   }
 
   // Una sola invitación pendiente por email: se revocan las anteriores.
@@ -86,7 +86,7 @@ export async function inviteMemberAction(
     token_hash: hash,
     expires_at: invitationExpiry().toISOString(),
   });
-  if (error) return { status: "error", message: t("inviteError") };
+  if (error) return formError(formData, { message: t("inviteError") });
 
   const link = `${getSiteUrl()}/invite/${token}`;
   const tRoles = await getTranslations("roles");

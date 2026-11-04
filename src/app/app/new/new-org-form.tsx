@@ -8,7 +8,7 @@ import { SubmitButton } from "@/components/forms/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { CountryCode } from "@/lib/countries/types";
-import { idleState } from "@/lib/forms";
+import { idleState, valuesFrom } from "@/lib/forms";
 import { createOrganizationAction } from "@/modules/organizations/actions";
 
 export function NewOrgForm() {
@@ -17,12 +17,19 @@ export function NewOrgForm() {
   const [state, formAction] = useActionState(createOrganizationAction, idleState);
   const [country, setCountry] = useState<CountryCode>("ES");
   const fieldErrors = state.status === "error" ? state.fieldErrors : undefined;
+  const values = valuesFrom(state);
 
   return (
     <form action={formAction} className="space-y-4" noValidate>
       <div className="space-y-2">
         <Label htmlFor="name">{tOrg("name")}</Label>
-        <Input id="name" name="name" required aria-invalid={Boolean(fieldErrors?.name)} />
+        <Input
+          id="name"
+          name="name"
+          required
+          defaultValue={values.name}
+          aria-invalid={Boolean(fieldErrors?.name)}
+        />
         <FieldError messages={fieldErrors?.name} />
       </div>
       <div className="space-y-2">
@@ -41,7 +48,7 @@ export function NewOrgForm() {
           <Label htmlFor="legalName">
             {tOrg("legalName")} <span className="text-muted-foreground">({tOrg("optional")})</span>
           </Label>
-          <Input id="legalName" name="legalName" />
+          <Input id="legalName" name="legalName" defaultValue={values.legalName} />
           <FieldError messages={fieldErrors?.legalName} />
         </div>
         <div className="space-y-2">
@@ -49,7 +56,7 @@ export function NewOrgForm() {
             {country === "CR" ? tOrg("taxIdCR") : tOrg("taxIdES")}{" "}
             <span className="text-muted-foreground">({tOrg("optional")})</span>
           </Label>
-          <Input id="taxId" name="taxId" />
+          <Input id="taxId" name="taxId" defaultValue={values.taxId} />
           <FieldError messages={fieldErrors?.taxId} />
         </div>
       </div>
@@ -57,7 +64,12 @@ export function NewOrgForm() {
         <Label htmlFor="privacyEmail">
           {tOrg("privacyEmail")} <span className="text-muted-foreground">({tOrg("optional")})</span>
         </Label>
-        <Input id="privacyEmail" name="privacyEmail" type="email" />
+        <Input
+          id="privacyEmail"
+          name="privacyEmail"
+          type="email"
+          defaultValue={values.privacyEmail}
+        />
         <p className="text-xs text-muted-foreground">{tOrg("privacyEmailHelp")}</p>
         <FieldError messages={fieldErrors?.privacyEmail} />
       </div>

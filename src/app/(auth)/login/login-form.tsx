@@ -7,13 +7,14 @@ import { FieldError, FormMessage } from "@/components/forms/field-error";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { idleState } from "@/lib/forms";
+import { idleState, valuesFrom } from "@/lib/forms";
 import { signInAction } from "@/modules/auth/actions";
 
 export function LoginForm({ next, defaultEmail }: { next?: string; defaultEmail?: string }) {
   const t = useTranslations("auth");
   const [state, formAction] = useActionState(signInAction, idleState);
   const fieldErrors = state.status === "error" ? state.fieldErrors : undefined;
+  const values = valuesFrom(state);
 
   return (
     <form action={formAction} className="space-y-4" noValidate>
@@ -25,7 +26,7 @@ export function LoginForm({ next, defaultEmail }: { next?: string; defaultEmail?
           name="email"
           type="email"
           autoComplete="email"
-          defaultValue={defaultEmail}
+          defaultValue={values.email ?? defaultEmail}
           required
           aria-invalid={Boolean(fieldErrors?.email)}
         />

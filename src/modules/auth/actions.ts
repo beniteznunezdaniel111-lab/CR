@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getSiteUrl } from "@/lib/config/public-env";
-import { type FormState, formDataToObject, zodFieldErrors } from "@/lib/forms";
+import { type FormState, formDataToObject, formError, zodFieldErrors } from "@/lib/forms";
 import { createClient } from "@/lib/supabase/server";
 import { getInvitationPreview } from "@/modules/members/invitation-preview";
 import { isAccessCodeRequired, isValidAccessCode } from "./access-code";
@@ -18,7 +18,7 @@ import {
 export async function signInAction(_prev: FormState, formData: FormData): Promise<FormState> {
   const t = await getTranslations("auth");
   const parsed = loginSchema.safeParse(formDataToObject(formData));
-  if (!parsed.success) return { status: "error", fieldErrors: zodFieldErrors(parsed.error) };
+  if (!parsed.success) return formError(formData, { fieldErrors: zodFieldErrors(parsed.error) });
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({
@@ -26,13 +26,12 @@ export async function signInAction(_prev: FormState, formData: FormData): Promis
     password: parsed.data.password,
   });
   if (error) {
-    return {
-      status: "error",
+    return formError(formData, {
       message:
         error.code === "email_not_confirmed"
           ? t("login.emailNotConfirmed")
           : t("login.invalidCredentials"),
-    };
+    });
   }
   redirect(safeNextPath(parsed.data.next));
 }
@@ -40,7 +39,7 @@ export async function signInAction(_prev: FormState, formData: FormData): Promis
 export async function signUpAction(_prev: FormState, formData: FormData): Promise<FormState> {
   const t = await getTranslations("auth");
   const parsed = signupSchema.safeParse(formDataToObject(formData));
-  if (!parsed.success) return { status: "error", fieldErrors: zodFieldErrors(parsed.error) };
+  if (!parsed.success) return formError(formData, { fieldErrors: zodFieldErrors(parsed.error) });
   const { fullName, email, password, accessCode, invite } = parsed.data;
 
   // Con una invitación válida para este email no hace falta código de acceso.
@@ -52,7 +51,7 @@ export async function signUpAction(_prev: FormState, formData: FormData): Promis
     }
   }
   if (!invitedTo && isAccessCodeRequired() && !isValidAccessCode(accessCode)) {
-    return { status: "error", fieldErrors: { accessCode: ["accessCode"] } };
+    return formError(formData, { fieldErrors: { accessCode: ["accessCode"] } });
   }
 
   const next = invitedTo ? `/invite/${invitedTo}` : "/app";
@@ -68,12 +67,12 @@ export async function signUpAction(_prev: FormState, formData: FormData): Promis
 
   if (error) {
     if (error.code === "user_already_exists" || error.code === "email_exists") {
-      return { status: "error", message: t("signup.emailTaken") };
+      return formError(formData, { message: t("signup.emailTaken") });
     }
     if (error.code === "weak_password") {
-      return { status: "error", fieldErrors: { password: ["passwordMin"] } };
+      return formError(formData, { fieldErrors: { password: ["passwordMin"] } });
     }
-    return { status: "error", message: t("signup.genericError") };
+    return formError(formData, { message: t("signup.genericError") });
   }
 
   // Sin confirmación de email (desarrollo) Supabase devuelve ya la sesión.
@@ -87,7 +86,7 @@ export async function requestPasswordResetAction(
 ): Promise<FormState> {
   const t = await getTranslations("auth");
   const parsed = forgotPasswordSchema.safeParse(formDataToObject(formData));
-  if (!parsed.success) return { status: "error", fieldErrors: zodFieldErrors(parsed.error) };
+  if (!parsed.success) return formError(formData, { fieldErrors: zodFieldErrors(parsed.error) });
 
   const supabase = await createClient();
   await supabase.auth.resetPasswordForEmail(parsed.data.email, {
@@ -103,11 +102,11 @@ export async function updatePasswordAction(
 ): Promise<FormState> {
   const t = await getTranslations("auth");
   const parsed = resetPasswordSchema.safeParse(formDataToObject(formData));
-  if (!parsed.success) return { status: "error", fieldErrors: zodFieldErrors(parsed.error) };
+  if (!parsed.success) return formError(formData, { fieldErrors: zodFieldErrors(parsed.error) });
 
   const supabase = await createClient();
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
-  if (error) return { status: "error", message: t("reset.error") };
+  if (error) return formError(formData, { message: t("reset.error") });
   redirect("/app");
 }
 

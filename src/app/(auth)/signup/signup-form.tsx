@@ -7,7 +7,7 @@ import { FieldError, FormMessage } from "@/components/forms/field-error";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { idleState } from "@/lib/forms";
+import { idleState, valuesFrom } from "@/lib/forms";
 import { signUpAction } from "@/modules/auth/actions";
 
 type Props = {
@@ -19,6 +19,7 @@ export function SignupForm({ requireAccessCode, invite }: Props) {
   const t = useTranslations("auth");
   const [state, formAction] = useActionState(signUpAction, idleState);
   const fieldErrors = state.status === "error" ? state.fieldErrors : undefined;
+  const values = valuesFrom(state);
 
   if (state.status === "success") {
     return <FormMessage status="success" message={state.message} />;
@@ -34,6 +35,7 @@ export function SignupForm({ requireAccessCode, invite }: Props) {
           name="fullName"
           autoComplete="name"
           required
+          defaultValue={values.fullName}
           aria-invalid={Boolean(fieldErrors?.fullName)}
         />
         <FieldError messages={fieldErrors?.fullName} />
@@ -46,7 +48,7 @@ export function SignupForm({ requireAccessCode, invite }: Props) {
           type="email"
           autoComplete="email"
           required
-          defaultValue={invite?.email}
+          defaultValue={invite?.email ?? values.email}
           readOnly={Boolean(invite)}
           aria-invalid={Boolean(fieldErrors?.email)}
         />
@@ -76,6 +78,7 @@ export function SignupForm({ requireAccessCode, invite }: Props) {
             name="accessCode"
             autoComplete="off"
             required
+            defaultValue={values.accessCode}
             aria-describedby="access-code-help"
             aria-invalid={Boolean(fieldErrors?.accessCode)}
           />
@@ -90,6 +93,7 @@ export function SignupForm({ requireAccessCode, invite }: Props) {
           <input
             type="checkbox"
             name="acceptTerms"
+            defaultChecked={values.acceptTerms === "on"}
             className="mt-0.5 size-4 accent-primary"
             aria-invalid={Boolean(fieldErrors?.acceptTerms)}
           />

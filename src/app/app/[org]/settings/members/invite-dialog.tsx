@@ -17,7 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { FormState } from "@/lib/forms";
+import { isMemberRole } from "@/lib/auth/roles";
+import { type FormState, valuesFrom } from "@/lib/forms";
 import { type InvitationLinkResult, inviteMemberAction } from "@/modules/members/actions";
 import { CopyLink } from "./copy-link";
 import { RoleSelect } from "./role-select";
@@ -28,6 +29,7 @@ function InviteForm({ orgId, onDone }: { orgId: string; onDone: () => void }) {
   const t = useTranslations("members");
   const [state, formAction] = useActionState(inviteMemberAction, initialState);
   const fieldErrors = state.status === "error" ? state.fieldErrors : undefined;
+  const values = valuesFrom(state);
 
   if (state.status === "success" && state.data) {
     return (
@@ -51,12 +53,23 @@ function InviteForm({ orgId, onDone }: { orgId: string; onDone: () => void }) {
       <input type="hidden" name="orgId" value={orgId} />
       <div className="space-y-2">
         <Label htmlFor="invite-email">{t("invite.email")}</Label>
-        <Input id="invite-email" name="email" type="email" required autoComplete="off" />
+        <Input
+          id="invite-email"
+          name="email"
+          type="email"
+          required
+          autoComplete="off"
+          defaultValue={values.email}
+        />
         <FieldError messages={fieldErrors?.email} />
       </div>
       <div className="space-y-2">
         <Label htmlFor="invite-role">{t("invite.role")}</Label>
-        <RoleSelect id="invite-role" name="role" defaultValue="employee" />
+        <RoleSelect
+          id="invite-role"
+          name="role"
+          defaultValue={isMemberRole(values.role) ? values.role : "employee"}
+        />
         <p className="text-xs text-muted-foreground">{t("invite.roleHelp")}</p>
         <FieldError messages={fieldErrors?.role} />
       </div>

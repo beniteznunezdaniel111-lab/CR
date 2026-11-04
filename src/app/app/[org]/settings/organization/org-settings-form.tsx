@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { CountryCode, CurrencyCode } from "@/lib/countries/types";
-import { idleState } from "@/lib/forms";
+import { idleState, valuesFrom } from "@/lib/forms";
 import { updateOrganizationAction } from "@/modules/organizations/actions";
 
 export type OrgSettingsValues = {
@@ -55,6 +55,9 @@ export function OrgSettingsForm({
   const [currency, setCurrency] = useState<CurrencyCode>(initial.currency);
   const [timezone, setTimezone] = useState(initial.timezone);
   const fieldErrors = state.status === "error" ? state.fieldErrors : undefined;
+  // Tras un error se muestran los valores enviados; si no, los guardados.
+  const submitted = valuesFrom(state);
+  const value = (key: keyof OrgSettingsValues) => submitted[key] ?? String(initial[key]);
   const options = countryOptions[country];
 
   const changeCountry = (next: CountryCode) => {
@@ -72,7 +75,7 @@ export function OrgSettingsForm({
         <legend className="mb-2 text-sm font-medium">{t("sections.general")}</legend>
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="name">{tOrg("name")}</Label>
-          <Input id="name" name="name" defaultValue={initial.name} required />
+          <Input id="name" name="name" defaultValue={value("name")} required />
           <FieldError messages={fieldErrors?.name} />
         </div>
         <div className="space-y-2">
@@ -122,17 +125,17 @@ export function OrgSettingsForm({
         <legend className="mb-2 text-sm font-medium">{t("sections.legal")}</legend>
         <div className="space-y-2">
           <Label htmlFor="legalName">{tOrg("legalName")}</Label>
-          <Input id="legalName" name="legalName" defaultValue={initial.legalName} />
+          <Input id="legalName" name="legalName" defaultValue={value("legalName")} />
           <FieldError messages={fieldErrors?.legalName} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="taxId">{country === "CR" ? tOrg("taxIdCR") : tOrg("taxIdES")}</Label>
-          <Input id="taxId" name="taxId" defaultValue={initial.taxId} />
+          <Input id="taxId" name="taxId" defaultValue={value("taxId")} />
           <FieldError messages={fieldErrors?.taxId} />
         </div>
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="address">{tOrg("address")}</Label>
-          <Input id="address" name="address" defaultValue={initial.address} />
+          <Input id="address" name="address" defaultValue={value("address")} />
           <FieldError messages={fieldErrors?.address} />
         </div>
         <div className="space-y-2 sm:col-span-2">
@@ -141,7 +144,7 @@ export function OrgSettingsForm({
             id="privacyEmail"
             name="privacyEmail"
             type="email"
-            defaultValue={initial.privacyEmail}
+            defaultValue={value("privacyEmail")}
           />
           <p className="text-xs text-muted-foreground">{tOrg("privacyEmailHelp")}</p>
           <FieldError messages={fieldErrors?.privacyEmail} />
@@ -158,7 +161,7 @@ export function OrgSettingsForm({
             type="number"
             min={1}
             max={60}
-            defaultValue={initial.cvRetentionMonths}
+            defaultValue={value("cvRetentionMonths")}
             aria-describedby="retention-help"
           />
           <p id="retention-help" className="text-xs text-muted-foreground">

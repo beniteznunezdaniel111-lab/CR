@@ -8,7 +8,9 @@ export function FieldError({ id, messages }: { id?: string; messages?: string[] 
   if (!messages?.length) return null;
   return (
     <p id={id} role="alert" className="text-sm text-destructive">
-      {messages.map((message) => (t.has(message) ? t(message) : t("invalid"))).join(" ")}
+      {[...new Set(messages.map((message) => (t.has(message) ? t(message) : t("invalid"))))].join(
+        " ",
+      )}
     </p>
   );
 }
