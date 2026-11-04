@@ -18,6 +18,8 @@ typecheck y tests en verde, commit, resumen y OK explícito del usuario antes de
 | `pnpm db:start` / `db:stop` / `db:reset` | Supabase local con Docker                                                |
 | `pnpm db:native start`                   | Postgres nativo + shim de Supabase, solo para `test:db` sin Docker       |
 | `pnpm env:local`                         | Genera `.env.local` desde `supabase status`                              |
+| `pnpm setup:local`                       | `db:start` + `env:local` + `db:seed` de una vez                          |
+| `pnpm diagnose`                          | Revisa Node, Docker, Supabase y `.env.local` y explica cómo arreglarlo   |
 | `pnpm db:seed`                           | Empresas demo ES y CR con admin, RRHH y empleado (contraseña `Demo1234`) |
 | `pnpm db:types`                          | Regenera `src/lib/supabase/database.types.ts` desde la BD local          |
 | `pnpm ai:smoke`                          | Llamada real mínima a Claude (requiere `ANTHROPIC_API_KEY`)              |

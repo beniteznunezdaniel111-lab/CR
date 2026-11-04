@@ -33,6 +33,9 @@ pnpm db:seed         # Empresas demo "Logística Iberia (Demo)" y "Café Volcán
 pnpm dev             # http://localhost:3000
 ```
 
+Los tres pasos de Supabase se pueden hacer de una vez con `pnpm setup:local`. Si algo no arranca,
+`pnpm diagnose` revisa Node, Docker, Supabase y `.env.local` y dice qué hacer.
+
 Cuentas demo (contraseña `Demo1234`):
 
 | Empresa                      | Admin                     | RRHH                     | Empleado                     |
@@ -45,6 +48,7 @@ locales (invitaciones, recuperación de contraseña) se ven en http://127.0.0.1:
 
 ### Problemas frecuentes
 
+- **Primero:** `pnpm diagnose` indica qué falta y cómo arreglarlo.
 - **«Falta NEXT_PUBLIC_SUPABASE_URL…» al abrir la app:** no existe `.env.local`. Con Docker Desktop
   abierto, ejecuta `pnpm db:start` (espera a que termine), después `pnpm env:local` y reinicia
   `pnpm dev` (Ctrl+C y otra vez). Next.js solo lee las variables al arrancar.

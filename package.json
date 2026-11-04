@@ -8,7 +8,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "tsx scripts/check-local-env.ts && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
@@ -27,6 +27,8 @@
     "db:types": "supabase gen types typescript --local --schema public > src/lib/supabase/database.types.ts && prettier --write src/lib/supabase/database.types.ts",
     "db:seed": "tsx scripts/seed.ts",
     "env:local": "tsx scripts/write-local-env.ts",
+    "setup:local": "pnpm db:start && pnpm env:local && pnpm db:seed",
+    "diagnose": "tsx scripts/diagnose.ts",
     "ai:smoke": "tsx --conditions=react-server scripts/ai-smoke.ts"
   },
   "dependencies": {
