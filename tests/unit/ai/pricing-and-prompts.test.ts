@@ -63,6 +63,29 @@ const SAMPLE_INPUTS: Record<string, unknown> = {
   "cv.identity": {
     cvText: "Ana Martín Ruiz\nana.martin@example.com · +34 612 345 678\nExperiencia en almacén",
   },
+  "interview.guide": {
+    job: {
+      title: "Técnico/a de logística",
+      level: "mid",
+      responsibilities: "Coordinar envíos",
+      requirements: [{ id: "r1", text: "Experiencia en almacén", kind: "required" }],
+    },
+    candidate: {
+      summary: "Experiencia en logística.",
+      gaps: [
+        { requirementId: "r1", requirement: "Experiencia en almacén", result: "partial", note: "" },
+      ],
+    },
+  },
+  "onboarding.plan": {
+    title: "Técnico/a de logística",
+    level: "mid",
+    department: "Operaciones",
+    workMode: "hybrid",
+    location: "Madrid",
+    responsibilities: "Coordinar envíos\nGestionar el almacén\nControlar inventarios",
+    requirements: [{ text: "Experiencia en almacén", kind: "required" }],
+  },
   "cv.analysis": {
     job: {
       title: "Técnico/a de logística",
