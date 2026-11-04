@@ -52,3 +52,28 @@ export async function selectOption(page: Page, label: string, option: string) {
   await page.getByLabel(label, { exact: true }).click();
   await page.getByRole("option", { name: option, exact: true }).click();
 }
+
+export type JobRequirement = { text: string; kind?: "Imprescindible" | "Deseable" };
+
+/** Crea un puesto desde el formulario. Devuelve la ruta de su ficha. */
+export async function createJob(
+  page: Page,
+  orgUrl: string,
+  { title, requirements }: { title: string; requirements: JobRequirement[] },
+) {
+  await page.goto(`${orgUrl}/jobs/new`);
+  await page.getByLabel("Título del puesto").fill(title);
+  await selectOption(page, "Nivel", "Intermedio");
+  await selectOption(page, "Modalidad", "Presencial");
+  await page.getByLabel("Responsabilidades clave").fill("Coordinar envíos\nGestionar el almacén");
+  for (const [index, requirement] of requirements.entries()) {
+    if (index > 0) await page.getByRole("button", { name: "Añadir requisito" }).click();
+    await page.getByLabel(`Requisito ${index + 1}`, { exact: true }).fill(requirement.text);
+    if (requirement.kind === "Deseable") {
+      await selectOption(page, `Tipo del requisito ${index + 1}`, "Deseable");
+    }
+  }
+  await page.getByRole("button", { name: "Crear puesto" }).click();
+  await expect(page.getByRole("heading", { name: title })).toBeVisible();
+  return new URL(page.url()).pathname;
+}

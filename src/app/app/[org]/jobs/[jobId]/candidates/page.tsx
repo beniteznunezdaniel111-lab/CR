@@ -54,7 +54,8 @@ export default async function JobCandidatesPage({
     return {
       id: candidate.id,
       title: candidate.name ?? alias,
-      subtitle: candidate.identityVisible ? (candidate.name ? candidate.filename : alias) : null,
+      // En modo anónimo no se muestra ni el nombre del fichero (suele llevar el nombre).
+      subtitle: candidate.identityVisible ? candidate.filename : null,
       status: candidate.status,
       processingStatus: candidate.processingStatus,
       processingMessage: failedMessage,
