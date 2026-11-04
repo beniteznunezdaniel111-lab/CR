@@ -1728,6 +1728,14 @@ export type Database = {
         Args: { p_due_date?: string; p_training_id: string; p_user_ids: string[] };
         Returns: number;
       };
+      close_organization: {
+        Args: { p_confirm_name: string; p_org_id: string };
+        Returns: undefined;
+      };
+      create_demo_organization: {
+        Args: { p_country: string; p_name: string };
+        Returns: Database["public"]["Tables"]["organizations"]["Row"];
+      };
       create_organization: {
         Args: {
           p_address?: string;
@@ -1742,6 +1750,10 @@ export type Database = {
       duplicate_training: {
         Args: { p_title: string; p_training_id: string };
         Returns: string;
+      };
+      erase_member_data: {
+        Args: { p_org_id: string; p_user_id: string };
+        Returns: undefined;
       };
       faq_question_clusters: {
         Args: { p_days?: number; p_min_similarity?: number; p_org_id: string };
@@ -1777,6 +1789,10 @@ export type Database = {
           score: number;
           similarity: number;
         }[];
+      };
+      org_ai_budget_status: {
+        Args: { p_org_id: string };
+        Returns: { limit_usd: number; spent_usd: number }[];
       };
       org_ai_spend_current_month: {
         Args: { p_org: string };
