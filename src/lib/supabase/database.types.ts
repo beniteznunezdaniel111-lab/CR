@@ -1345,6 +1345,362 @@ export type Database = {
         };
         Relationships: [];
       };
+      training_assignments: {
+        Row: {
+          assigned_by: string | null;
+          attempt_count: number;
+          best_score: number | null;
+          created_at: string;
+          due_date: string | null;
+          id: string;
+          org_id: string;
+          passed_at: string | null;
+          training_id: string;
+          user_id: string;
+        };
+        Insert: {
+          assigned_by?: string | null;
+          attempt_count?: number;
+          best_score?: number | null;
+          created_at?: string;
+          due_date?: string | null;
+          id?: string;
+          org_id: string;
+          passed_at?: string | null;
+          training_id: string;
+          user_id: string;
+        };
+        Update: {
+          assigned_by?: string | null;
+          attempt_count?: number;
+          best_score?: number | null;
+          created_at?: string;
+          due_date?: string | null;
+          id?: string;
+          org_id?: string;
+          passed_at?: string | null;
+          training_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "training_assignments_training_id_org_id_fkey";
+            columns: ["training_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "trainings";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      training_attempts: {
+        Row: {
+          answers: number[];
+          assignment_id: string;
+          correct_count: number;
+          created_at: string;
+          id: string;
+          org_id: string;
+          passed: boolean;
+          score: number;
+          total: number;
+          training_id: string;
+          user_id: string;
+        };
+        Insert: {
+          answers: number[];
+          assignment_id: string;
+          correct_count: number;
+          created_at?: string;
+          id?: string;
+          org_id: string;
+          passed: boolean;
+          score: number;
+          total: number;
+          training_id: string;
+          user_id: string;
+        };
+        Update: {
+          answers?: number[];
+          assignment_id?: string;
+          correct_count?: number;
+          created_at?: string;
+          id?: string;
+          org_id?: string;
+          passed?: boolean;
+          score?: number;
+          total?: number;
+          training_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "training_attempts_assignment_id_org_id_fkey";
+            columns: ["assignment_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "training_assignments";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      training_module_progress: {
+        Row: {
+          assignment_id: string;
+          completed_at: string;
+          module_id: string;
+          org_id: string;
+          user_id: string;
+        };
+        Insert: {
+          assignment_id: string;
+          completed_at?: string;
+          module_id: string;
+          org_id: string;
+          user_id?: string;
+        };
+        Update: {
+          assignment_id?: string;
+          completed_at?: string;
+          module_id?: string;
+          org_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "training_module_progress_assignment_id_org_id_fkey";
+            columns: ["assignment_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "training_assignments";
+            referencedColumns: ["id", "org_id"];
+          },
+          {
+            foreignKeyName: "training_module_progress_module_id_org_id_fkey";
+            columns: ["module_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "training_modules";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      training_modules: {
+        Row: {
+          content: string;
+          created_at: string;
+          examples: Json;
+          id: string;
+          objective: string;
+          org_id: string;
+          position: number;
+          summary: string;
+          title: string;
+          training_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          content?: string;
+          created_at?: string;
+          examples?: Json;
+          id?: string;
+          objective?: string;
+          org_id: string;
+          position: number;
+          summary?: string;
+          title: string;
+          training_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          content?: string;
+          created_at?: string;
+          examples?: Json;
+          id?: string;
+          objective?: string;
+          org_id?: string;
+          position?: number;
+          summary?: string;
+          title?: string;
+          training_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "training_modules_training_id_org_id_fkey";
+            columns: ["training_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "trainings";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      training_quiz_keys: {
+        Row: {
+          correct_index: number;
+          explanation: string;
+          org_id: string;
+          question_id: string;
+        };
+        Insert: {
+          correct_index: number;
+          explanation?: string;
+          org_id: string;
+          question_id: string;
+        };
+        Update: {
+          correct_index?: number;
+          explanation?: string;
+          org_id?: string;
+          question_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "training_quiz_keys_question_id_org_id_fkey";
+            columns: ["question_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "training_quiz_questions";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      training_quiz_questions: {
+        Row: {
+          created_at: string;
+          id: string;
+          options: string[];
+          org_id: string;
+          position: number;
+          question: string;
+          training_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          options: string[];
+          org_id: string;
+          position: number;
+          question: string;
+          training_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          options?: string[];
+          org_id?: string;
+          position?: number;
+          question?: string;
+          training_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "training_quiz_questions_training_id_org_id_fkey";
+            columns: ["training_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "trainings";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      training_sources: {
+        Row: {
+          content: string;
+          created_at: string;
+          file_mime: string | null;
+          file_path: string | null;
+          id: string;
+          kb_document_id: string | null;
+          kind: Database["public"]["Enums"]["training_source_kind"];
+          org_id: string;
+          title: string;
+          training_id: string;
+        };
+        Insert: {
+          content?: string;
+          created_at?: string;
+          file_mime?: string | null;
+          file_path?: string | null;
+          id?: string;
+          kb_document_id?: string | null;
+          kind: Database["public"]["Enums"]["training_source_kind"];
+          org_id: string;
+          title: string;
+          training_id: string;
+        };
+        Update: {
+          content?: string;
+          created_at?: string;
+          file_mime?: string | null;
+          file_path?: string | null;
+          id?: string;
+          kb_document_id?: string | null;
+          kind?: Database["public"]["Enums"]["training_source_kind"];
+          org_id?: string;
+          title?: string;
+          training_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "training_sources_training_id_org_id_fkey";
+            columns: ["training_id", "org_id"];
+            isOneToOne: false;
+            referencedRelation: "trainings";
+            referencedColumns: ["id", "org_id"];
+          },
+        ];
+      };
+      trainings: {
+        Row: {
+          audience: string | null;
+          created_at: string;
+          created_by: string | null;
+          description: string;
+          duplicated_from: string | null;
+          generation: Json;
+          id: string;
+          org_id: string;
+          published_at: string | null;
+          status: Database["public"]["Enums"]["training_status"];
+          title: string;
+          topic: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          audience?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          description?: string;
+          duplicated_from?: string | null;
+          generation?: Json;
+          id?: string;
+          org_id: string;
+          published_at?: string | null;
+          status?: Database["public"]["Enums"]["training_status"];
+          title: string;
+          topic?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          audience?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          description?: string;
+          duplicated_from?: string | null;
+          generation?: Json;
+          id?: string;
+          org_id?: string;
+          published_at?: string | null;
+          status?: Database["public"]["Enums"]["training_status"];
+          title?: string;
+          topic?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "trainings_org_id_fkey";
+            columns: ["org_id"];
+            isOneToOne: false;
+            referencedRelation: "organizations";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -1368,6 +1724,10 @@ export type Database = {
         };
         Returns: string;
       };
+      assign_training: {
+        Args: { p_due_date?: string; p_training_id: string; p_user_ids: string[] };
+        Returns: number;
+      };
       create_organization: {
         Args: {
           p_address?: string;
@@ -1378,6 +1738,10 @@ export type Database = {
           p_tax_id?: string;
         };
         Returns: Database["public"]["Tables"]["organizations"]["Row"];
+      };
+      duplicate_training: {
+        Args: { p_title: string; p_training_id: string };
+        Returns: string;
       };
       faq_question_clusters: {
         Args: { p_days?: number; p_min_similarity?: number; p_org_id: string };
@@ -1418,6 +1782,10 @@ export type Database = {
         Args: { p_org: string };
         Returns: number;
       };
+      publish_training: {
+        Args: { p_training_id: string };
+        Returns: undefined;
+      };
       register_candidates: {
         Args: { p_files: Json; p_job_id: string };
         Returns: { candidate_id: string; candidate_number: number; cv_path: string }[];
@@ -1447,6 +1815,10 @@ export type Database = {
         };
         Returns: string;
       };
+      save_training_quiz: {
+        Args: { p_questions: Json; p_training_id: string };
+        Returns: undefined;
+      };
       set_candidate_status: {
         Args: {
           p_candidate_id: string;
@@ -1458,6 +1830,10 @@ export type Database = {
       store_candidate_extraction: {
         Args: { p_candidate_id: string; p_identity: Json; p_redacted_text: string };
         Returns: undefined;
+      };
+      submit_training_attempt: {
+        Args: { p_answers: number[]; p_assignment_id: string };
+        Returns: Json;
       };
     };
     Enums: {
@@ -1477,6 +1853,8 @@ export type Database = {
       onboarding_phase: "d30" | "d60" | "d90";
       requirement_kind: "required" | "preferred";
       requirement_match: "meets" | "partial" | "not_found";
+      training_source_kind: "kb_document" | "upload";
+      training_status: "draft" | "published";
       work_mode: "onsite" | "hybrid" | "remote";
     };
     CompositeTypes: {
@@ -1513,6 +1891,8 @@ export const Constants = {
       onboarding_phase: ["d30", "d60", "d90"],
       requirement_kind: ["required", "preferred"],
       requirement_match: ["meets", "partial", "not_found"],
+      training_source_kind: ["kb_document", "upload"],
+      training_status: ["draft", "published"],
       work_mode: ["onsite", "hybrid", "remote"],
     },
   },
